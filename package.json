@@ -1,0 +1,26 @@
+{
+  "name": "tilepieces",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "start": "node index",
+    "start-dev": "node --trace-warnings --inspect index"
+  },
+  "realDependencies": {
+    "@tilepieces/node-API": "x",
+    "@tilepieces/node-server": "x"
+  },
+  "dependencies": {
+    "@tilepieces/node-API": "file:../node-API",
+    "@tilepieces/server": "file:../node-server",
+    "busboy": "^0.3.1",
+    "glob": "^7.1.6",
+    "minimatch": "^3.0.4",
+    "ncp": "^2.0.0",
+    "open": "^8.0.2"
+  }
+}

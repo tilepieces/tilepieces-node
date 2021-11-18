@@ -1,0 +1,12 @@
+{
+  "server": {
+    "port": 8546,
+    "host": "127.0.0.1"
+  },
+  "workspace": "www",
+  "applicationName": "tilepieces",
+  "panelPosition": "right",
+  "APIInterface": "./API.js",
+  "sandboxFrame": true,
+  "componentsPath": "components"
+}

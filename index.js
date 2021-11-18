@@ -1,18 +1,7 @@
-const server = require("@tilepieces/server");
-const open = require('open');
-const settingsPath = "./settings.json";
+const server = require("@tilepieces/node-server");
+const path = require("path");
+const pathPase = __dirname + path.sep;
+const settingsPath = pathPase + "settings.json";
+const startServer = require(pathPase + "startTilepiecesServer.js");
 let settings = require(settingsPath);
-function startServer() {
-    var a = server(settings);
-    a.then(res=> {
-        console.log("application name response",res.applicationName);
-        open(res.home);
-    }).catch(err=> {
-        if (err.code == "EADDRINUSE") {
-            console.log("port " + settings.server.port + " already in use. Try next number...");
-            settings.server.port+=1;
-            startServer();
-        }
-    });
-}
-startServer();
+startServer(settings,pathPase);

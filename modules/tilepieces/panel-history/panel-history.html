@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html><head><link href="panel-history.bundle.css" rel="stylesheet" data-tilepieces-component="panel-history"></head>
+<body>
+<section id="panel-history">
+  <ul>
+    <li data-foreach="history.entries"
+        data-index="${key.index}">
+      <span data-if="history.pointer == key.index" class="selected"></span>
+      <span class="entry">${key.method}</span>
+    </li>
+  </ul>
+</section>
+<script src="panel-history.bundle.js" data-tilepieces-component="panel-history"></script></body></html>

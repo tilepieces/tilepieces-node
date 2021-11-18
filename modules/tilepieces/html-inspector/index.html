@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html><head><link href="bundle/html-inspector.bundle.css" rel="stylesheet" data-tilepieces-component="tilepieces/html-inspector/bundle"></head><body><div class="menu-bar">
+    <div class="menu-bar-trigger">
+        <a id="search-trigger" href="javascript:void(0)">
+        </a>
+        <a id="multiselect" href="javascript:void(0)">M</a>
+        <a id="css" href="#css-view" class="menu-bar-tabs">CSS</a>
+        <a id="js" href="#js-view" class="menu-bar-tabs">JS</a>
+        <a id="dependencies" href="#dependencies-view" class="menu-bar-tabs">DEPENDENCIES</a>
+    </div>
+    <div id="search-bar">
+        <input id="find-button" placeholder="Find by Css selector">
+        <span id="search-bar-entries"><b></b>/<sub></sub></span>
+        <button id="search-bar-up" disabled="">↑</button>
+        <button id="search-bar-down" disabled="">↓</button>
+    </div>
+</div>
+<div id="overlay" tabindex="-1">
+    <div id="overlay-inner"></div>
+    <div class="frontart-tooltip" tabindex="-1">
+        <div data-name="add-attribute">Add Attribute</div>
+        <div data-name="edit-attribute">Edit Attribute</div>
+        <div data-name="edit-inner-html">Edit inner HTML</div>
+        <div data-name="edit-outer-html">Edit outer HTML</div>
+        <div data-name="delete-element">Delete element</div>
+        <hr>
+        <div data-name="cut-element">Cut Element</div>
+        <div data-name="copy-element">Copy Element</div>
+        <div data-name="paste-element">
+            <span class="not-multiselected">Paste Element</span><span class="multiselected">Paste Elements</span>
+        </div>
+        <hr>
+        <div data-name="expand-recursively">Expand recursively</div>
+        <div data-name="collapse-children">Collapse children</div>
+        <div data-name="scroll-into-view">Scroll Into View</div>
+        <section class="multiselection-tooltip">
+            <div data-name="delete-element">Delete elements</div>
+            <div data-name="cut-element">Cut Elements</div>
+            <div data-name="copy-element">Copy Elements</div>
+            <div data-name="paste-element">Paste Elements</div>
+        </section>
+    </div>
+</div>
+<div id="css-view" style="display:none">
+    <button id="add-stylesheet">+</button>
+    <ul class="html-tree-builder" id="css-view-list" tabindex="-1"></ul>
+    <div class="frontart-tooltip" id="css-view-tooltip" tabindex="-1">
+        <div data-name="reveal">reveal in inspector</div>
+        <div data-name="copy-element">copy</div>
+        <div data-name="cut-element">cut</div>
+        <div data-name="paste-element">paste</div>
+        <div data-name="remove-element">remove</div>
+        <div data-name="set-as-current">set as current stylesheet</div>
+        <div data-name="edit">edit</div>
+    </div>
+    <template id="add-stylesheet-modal-template">
+        <form id="add-stylesheet-form">
+            <fieldset>
+                <legend><label for="add-stylesheet-tag">Tag type:</label></legend>
+                <select id="add-stylesheet-tag" name="add-stylesheet-tag">
+                    <option value="link" selected="">link</option>
+                    <option value="style">style</option>
+                </select>
+            </fieldset>
+            <fieldset id="add-stylesheet-href-field">
+                <legend><label for="add-stylesheet-href">Href:</label></legend>
+                <input id="add-stylesheet-href" name="add-stylesheet-href">
+            </fieldset>
+            <fieldset>
+                <legend><label for="add-stylesheet-current">is current stylesheet</label></legend>
+                <input type="checkbox" id="add-stylesheet-current" name="add-stylesheet-current" checked="">
+            </fieldset>
+            <div><button type="submit">OK</button></div>
+        </form>
+    </template>
+</div>
+<div id="js-view" style="display:none">
+    <button id="add-script">+</button>
+    <ul class="html-tree-builder" id="js-view-list" tabindex="-1"></ul>
+    <div class="frontart-tooltip" id="js-view-tooltip" tabindex="-1">
+        <div data-name="reveal">reveal in inspector</div>
+        <div data-name="copy-element">copy</div>
+        <div data-name="cut-element">cut</div>
+        <div data-name="paste-element">paste</div>
+        <div data-name="remove-element">remove</div>
+        <div data-name="edit">edit</div>
+    </div>
+    <template id="add-script-modal-template">
+        <form id="add-script-form">
+            <fieldset id="add-script-src-field">
+                <legend><label for="add-script-src-enable">Src:</label></legend>
+                <input id="add-script-src-enable" type="checkbox" name="add-script-src-enable">
+                <input id="add-script-src" name="add-script-src">
+            </fieldset>
+            <div><button type="submit">OK</button></div>
+        </form>
+    </template></div>
+<div id="dependencies-view" style="display:none">dependencies view</div><div class="tilepieces-dialog" id="tilepieces-alert-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
+    <div class="tilepieces-dialog-content">
+        <form id="tilepieces-dialog-alert-form">
+            <span id="tilepieces-alert-dialog-label"></span>
+            <div>
+                <button type="submit" id="tilepieces-alert-dialog-button">OK</button>
+            </div>
+        </form>
+    </div>
+    <div class="tilepieces-dialog-close" aria-label="close"></div>
+</div><div class="tilepieces-dialog" id="tilepieces-confirm-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
+    <div class="tilepieces-dialog-content">
+        <span id="tilepieces-confirm-dialog-label"></span>
+        <div>
+            <button id="tilepieces-confirm-dialog-button">Ok</button>
+            <button id="tilepieces-reject-dialog-button">Cancel</button>
+        </div>
+    </div>
+    <div class="tilepieces-dialog-close" aria-label="close"></div>
+</div><div class="tilepieces-dialog" id="tilepieces-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
+    <div class="tilepieces-dialog-content">
+        <!-- insert content here -->
+    </div>
+    <div class="tilepieces-dialog-close" aria-label="close"></div>
+</div><div class="tilepieces-dialog" id="tilepieces-prompt-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
+    <div class="tilepieces-dialog-content">
+        <form id="tilepieces-dialog-prompt-form">
+            <label for="tilepieces-dialog-prompt">
+                <span id="tilepieces-prompt-dialog-label"></span>
+                <input name="tilepieces-dialog-prompt" id="tilepieces-dialog-prompt" title="" autocomplete="off" required="">
+            </label>
+            <div>
+                <button type="submit" id="tilepieces-prompt-dialog-button"></button>
+            </div>
+        </form>
+    </div>
+    <div class="tilepieces-dialog-close" aria-label="close"></div>
+</div><script src="bundle/html-inspector.bundle.js" data-tilepieces-component="tilepieces/html-inspector/bundle"></script></body></html>

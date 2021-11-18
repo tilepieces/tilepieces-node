@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html><head>
+    <title>Package Manager</title>
+    <link href="bundle/package-manager-panel.bundle.css" rel="stylesheet"
+          data-tilepieces-component="tilepieces/package-manager-panel/bundle">
+</head>
+<body>
+<div class="tab-buttons" data-tilepieces-component="tilepieces/tabs/template" id="main-tab">
+    <a class="tab-prev" href="javascript:void(0)">...</a>
+    <a class="tab-next" href="javascript:void(0)">...</a>
+    <div class="tab-buttons-wrap">
+        <div class="tab-buttons-inside"><a href="#projects-list" class="selected">Projects</a><a href="#current-project-data">Project Settings</a><a href="#general-settings">General Settings</a><a href="#component-settings">Component properties</a>
+            
+            <a href="#local-components">Local Components</a><a href="#global-components">Global Components</a>
+        </div>
+    </div>
+</div>
+<div id="projects">
+    
+    <div id="projects-list"><div class="flex-box">
+  <button id="new-project">+</button>
+  <div class="upload-button"><label class="as-button">UPLOAD
+<input type="file" id="import-projects" accept=".zip"></label></div>
+  <button id="export-projects">Export</button>
+</div>
+<div>
+  <input type="checkbox" data-if="projects.length" class="toggle-projects" data-bind="projectsChecked" data-bind-dom-prop="__project,project">
+  <ul>
+    <li data-foreach="projects" data-foreach-key-name="project" class="project-list">
+      <input type="checkbox" class="toggle-projects" data-bind="project.checked" data-bind-dom-prop="__project,project">
+      <span data-bind-dom-prop="__project,project">${project.name}</span>
+      <button data-remove-project="" data-bind-dom-prop="__project,project">-</button>
+      <button data-if="project.name != projectName" class="project-name-open" data-bind-dom-prop="__project,project">Open</button>
+    </li>
+  </ul>
+</div>
+    </div>
+    <div id="current-project-data" style="display:none"><div ${hiddenattr}=""><fieldset>
+            <legend>Files</legend>
+            <button class="current-project-data__add-files">+</button>
+            <div data-foreach="project.files">
+                <input class="current-project-data__file-value" data-bind="key.value">
+                <button class="current-project-data__remove-files" data-index="${key.index}">-</button>
+            </div>
+        </fieldset><fieldset>
+            <legend><label for="component-path">components path</label></legend>
+            <input data-bind="project.componentPath" id="component-path">
+        </fieldset><fieldset>
+            <legend><label for="currentStyleSheetAttribute">currentStyleSheetAttribute</label></legend>
+            <input data-bind="project.currentStyleSheetAttribute" id="currentStyleSheetAttribute">
+        </fieldset><fieldset>
+            <legend><label for="imageDir">imageDir</label></legend>
+            <input data-bind="project.imageDir" id="imageDir">
+        </fieldset><fieldset>
+            <legend><label for="miscDir">miscDir</label></legend>
+            <input data-bind="project.miscDir" id="miscDir">
+        </fieldset><fieldset>
+            <legend><label for="delayUpdateFileMs">delayUpdateFileMs</label></legend>
+            <input data-bind="project.delayUpdateFileMs" id="delayUpdateFileMs">
+        </fieldset><fieldset>
+            <legend>
+                <label for="imageTypeProcess">imageTypeProcess</label>
+            </legend>
+            <select data-bind="project.imageTypeProcess" id="imageTypeProcess">
+                <option value="0">file system</option>
+                <option value="64">base64</option>
+            </select>
+        </fieldset><fieldset>
+            <legend>sandbox page(scripts will not be executed)</legend>
+            <input type="checkbox" data-bind="project.sandboxFrame">
+        </fieldset></div></div>
+    <div id="general-settings" style="display:none">
+        <fieldset>
+            <legend>Panels dock positions</legend>
+            <div>
+                <input type="radio" id="panel-free-position" name="panel-position" data-bind="globalSettings.panelPosition" value="free">
+                <label for="panel-free-position">Free</label>
+            </div>
+            <div>
+                <input type="radio" id="panel-dock-to-right" name="panel-position" data-bind="globalSettings.panelPosition" value="right">
+                <label for="panel-dock-to-right">dock to right</label>
+            </div>
+            <div>
+                <input type="radio" id="panel-dock-to-bottom" data-bind="globalSettings.panelPosition" name="panel-position" value="bottom">
+                <label for="panel-dock-to-bottom">dock to bottom</label>
+            </div>
+            <div>
+                <input type="radio" id="panel-dock-to-left" name="panel-position" value="left" data-bind="globalSettings.panelPosition">
+                <label for="panel-dock-to-left">dock to left</label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>sandbox page(scripts will not be executed)</legend>
+            <input type="checkbox" data-bind="globalSettings.sandboxFrame">
+        </fieldset>
+    </div>
+</div>
+<div id="components" style="">
+    
+        <div id="component-settings" hidden="">
+            <form id="component-settings-form">
+                <button data-if="iscomponent == 'hidden'" class="component-settings-save">Create</button>
+                <!--<button data-if="iscomponent != 'hidden'"
+                        class="component-settings-save"
+                        type="submit" ${disabled}>Save</button>-->
+                <div ${iscomponent}="">
+                    
+                    <div id="settings-component-metadata" style="">
+    <details>
+        <summary><h1 style="display: inline;">Component metadata</h1></summary><fieldset>
+                            <legend><label for="component-properties-name">NAME:</label></legend>
+                            <input id="component-properties-name" name="component-properties-name" data-bind="name" disabled="">
+                        </fieldset><fieldset>
+                            <legend>
+                                <label for="component-properties-version">VERSION:</label>
+                            </legend>
+                            <input id="component-properties-version" name="component-properties-version" data-bind="version">
+                        </fieldset><fieldset>
+                            <legend>
+                                <label for="component-properties-author">AUTHOR:</label>
+                            </legend>
+                            <input id="component-properties-author" name="component-properties-author" data-bind="author">
+                        </fieldset><fieldset>
+                            <legend>
+                                <label for="component-properties-description">DESCRIPTION:</label>
+                            </legend>
+                            <input id="component-properties-description" name="component-properties-description" data-bind="description">
+                        </fieldset><fieldset>
+                            <legend>
+                                <label for="component-properties-repository">REPOSITORY:</label>
+                            </legend>
+                            <input id="component-properties-repository" name="component-properties-repository" data-bind="repository">
+                        </fieldset><fieldset>
+                            <legend>
+                                <label for="component-properties-website">WEBSITE:</label>
+                            </legend>
+                            <input id="component-properties-website" name="component-properties-website" data-bind="website">
+                        </fieldset>
+    </details>
+
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                    <div id="settings-component-file-links" style="">
+                        <details>
+        <summary><h1 style="display: inline;">Component properties</h1></summary><fieldset>
+                            <legend>
+                                <label for="component-properties-html">HTML:</label>
+                            </legend>
+                            <input id="component-properties-html" name="component-properties-html" data-bind="html">
+                            <button data-if="cangetfromdocument" class="component-settings-create-html-from-document">Create from document</button>
+                            <iframe data-if="html" data-src="${iframePath}" style="max-width:100%;"></iframe>
+                            <div>
+                                <label for="fixedHTML">Is fixed</label>
+                            <input type="checkbox" id="fixedHTML" data-bind="fixedHTML">
+                            </div>
+                        </fieldset><details>
+                            <summary>DEPENDENCIES:</summary>
+                            <label for="addDependenciesToBundles">
+                                <input id="addDependenciesToBundles" type="checkbox" data-bind="addDependenciesToBundles">
+                                add to bundle
+                            </label>
+                            <button data-add-component-property="dependencies">+</button>
+                            <div data-foreach="dependencies">
+                                <input data-bind="key.name">
+                                <button class="component-properties-remove-template" data-index="${key.index}" data-remove-component-property="dependencies">-</button>
+                            </div>
+                        </details><details>
+                            <summary>BUNDLES:</summary>
+                            <fieldset>
+                                <legend>STYLESHEET:
+                                </legend>
+                                <button data-add-component-property="bundle.stylesheet">+</button>
+                                <div data-foreach="bundle.stylesheet">
+                                    <input data-index="${key.index}" data-bind="key.name">:
+                                    <input data-index="${key.index}" data-bind="key.value">
+                                    <button class="component-properties-remove-bundle-stylesheet-attr" data-index="${key.index}" data-remove-component-property="bundle.stylesheet">-</button>
+                                </div>
+                                <div>
+                                <label>header for stylesheet</label>
+                                <textarea data-bind="bundle.stylesheetHeader"></textarea>
+                                </div>
+                                <div>
+                                <label>footer for stylesheet</label>
+                                <textarea data-bind="bundle.stylesheetFooter"></textarea>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>SCRIPT:</legend>
+                                <button data-add-component-property="bundle.script">+</button>
+                                <div data-foreach="bundle.script">
+                                    <input data-index="${key.index}" data-bind="key.name">:
+                                    <input data-index="${key.index}" data-bind="key.value">
+                                    <button data-index="${key.index}" data-remove-component-property="bundle.script">-</button>
+                                </div>
+                                <div>
+                                <label>header for script</label>
+                                <textarea data-bind="bundle.scriptHeader"></textarea>
+                                </div>
+                                <div>
+                                <label>footer for script</label>
+                                <textarea data-bind="bundle.scriptFooter"></textarea>
+                                </div>
+                            </fieldset>
+                        </details><details>
+                            <summary>SOURCES:</summary>
+                            <fieldset>
+                                <legend>STYLESHEETS:</legend>
+                                <button data-add-component-property="sources.stylesheet">+</button>
+                                <button data-if="cangetfromdocument" class="get-styles-from-document">Create from document</button>
+                                <button data-if="sources.stylesheets.length" class="concatenate-sources" data-type="stylesheets">Concatenate</button>
+                                <button data-if="sources.stylesheets.length" class="minify-source-stylesheets">Minify</button>
+                                <div data-foreach="sources.stylesheets" data-foreach-key-name="style">
+                                    <input data-index="style.index" data-bind="style.value">
+                                    <button class="component-properties-remove-stylesheet" data-index="${style.index}" data-remove-component-property="sources.stylesheet">-</button>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>SCRIPTS:</legend>
+                                <button data-add-component-property="sources.script">+</button>
+                                <button data-if="cangetfromdocument" class="get-scripts-from-document">Create from document</button>
+                                <button data-if="sources.scripts.length" class="concatenate-sources" data-type="scripts">Concatenate</button>
+                                <button data-if="sources.scripts.length" class="minify-source-scripts">Minify</button>
+                                <div data-foreach="sources.scripts" data-foreach-key-name="script">
+                                    <input data-index="script.index" data-bind="script.value">
+                                    <button class="component-properties-remove-script" data-index="${script.index}" data-remove-component-property="sources.script">-</button>
+                                </div>
+                            </fieldset>
+                        </details><details>
+                            <summary>MISCELLANEOUS:</summary>
+                            <button data-add-component-property="miscellaneous">+</button>
+                            <div data-foreach="miscellaneous">
+                                <input data-index="${key.index}" data-bind="key.src">
+                                <button data-index="${key.index}" class="component-properties-remove-miscellaneous" data-remove-component-property="miscellaneous">-</button>
+                            </div>
+                        </details>
+                        <fieldset>
+                            <legend>
+                                <label for="mergeMiscellaneous">MERGE MISCELLANEOUS:</label>
+                            </legend>
+                            <input id="mergeMiscellaneous" type="checkbox" data-bind="mergeMiscellaneous">
+                        </fieldset>
+                        <fieldset>
+                            <legend>INTERFACE:</legend>
+                            <input id="component-properties-interface" name="component-properties-interface" data-bind="interface">
+                            <button data-if="cangetfromdocument" class="set-component-interface-as-document">Set this document</button>
+                        </fieldset><fieldset>
+                            <legend>PARSEHTML FUNCTION FILE PATH:</legend>
+                            <input id="component-properties-parseHTML" name="component-properties-parseHTML" data-bind="parseHTML">
+                        </fieldset><fieldset>
+                            <legend>SELECTOR:</legend>
+                            <input id="component-properties-selector" name="component-properties-selector" data-bind="selector">
+                        </fieldset>
+    </details>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="local-components" style="display:none">
+            <button data-if="isComponent" class="add-new-local-component" data-parent="${projectName}">+</button>
+            <input type="file" id="import-local-components">
+            <button id="export-local-components">Export</button>
+            <div>
+                <input data-if="localComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project">
+                <ul class="list-components-root">
+                    <li data-foreach="localComponents" data-foreach-key-name="component" class="component-list">
+                        <div data-use="project-component-UI" data-params="project,component">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="global-components" style="display:none">
+            <input type="file" id="import-global-components">
+            <button id="export-global-components">Export</button>
+            <div>
+                <input data-if="globalComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project">
+                <ul class="list-components-root">
+                    <li data-foreach="globalComponents" data-foreach-key-name="component" class="component-list">
+                        <div data-use="project-component-UI" data-params="project,component">
+                        </div>
+                        <div data-if="globalComponents.find(lp=>lp.name == project.name)" data-bind-dom-prop="__project,project" class="project-list-add-to-local">+</div>
+                    </li>
+                </ul>
+            </div>
+        </div></div>
+<!-- component/project UI template list -->
+<template id="project-component-UI">
+    <input type="checkbox" class="package-name" data-bind="project.checked" data-bind-dom-prop="__project,project">
+    <span data-bind-dom-prop="__project,project">${project.name}</span>
+    <button data-if="!project.noSet" data-bind-dom-prop="__project,project" class="set-component">set</button>
+    <button class="add-new-local-component" data-bind-dom-prop="__project,project" data-parent="${project.name}">+</button>
+    <button data-bind-dom-prop="__project,project" class="remove-component">-</button>
+    <button data-if="project.fixedHTML" data-bind-dom-prop="__project,project" class="set-fixed-HTML">update HTML</button>
+    <span class="as-detail" data-parent="${project.name}" onclick="this.classList.toggle('open')">▶</span>
+    <div class="global-local" hidden="">
+        <ul>
+            <li><b>Version</b>:${project.version}</li>
+            <li><b>Description</b>:${project.description}</li>
+            <li><b>Author</b>:${project.author}</li>
+            <li><b>Repository</b>:
+                <a href="${project.repository}" target="_blank">${project.repository}</a></li>
+            <li><b>Website</b>:
+                <a href="${project.website}" target="_blank">${project.website}</a></li>
+            <li data-if="project.components &amp;&amp; Object.keys(project.components).length">
+                <b>Components</b>
+                <span class="as-detail components-children" data-parent="${project.name}" data-bind-dom-prop="__project,project">▶</span>
+            </li>
+        </ul>
+    </div>
+</template>
+<template id="project-child">
+    <li data-use="project-component-UI" data-params="project,component">
+    </li>
+</template>
+<div class="tilepieces-dialog" id="tilepieces-alert-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
+    <div class="tilepieces-dialog-content">
+        <form id="tilepieces-dialog-alert-form">
+            <span id="tilepieces-alert-dialog-label"></span>
+            <div>
+                <button type="submit" id="tilepieces-alert-dialog-button">OK</button>
+            </div>
+        </form>
+    </div>
+    <div class="tilepieces-dialog-close" aria-label="close"></div>
+</div><div class="tilepieces-dialog" id="tilepieces-confirm-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
+    <div class="tilepieces-dialog-content">
+        <span id="tilepieces-confirm-dialog-label"></span>
+        <div>
+            <button id="tilepieces-confirm-dialog-button">Ok</button>
+            <button id="tilepieces-reject-dialog-button">Cancel</button>
+        </div>
+    </div>
+    <div class="tilepieces-dialog-close" aria-label="close"></div>
+</div><div class="tilepieces-dialog" id="tilepieces-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
+    <div class="tilepieces-dialog-content">
+        <!-- insert content here -->
+    </div>
+    <div class="tilepieces-dialog-close" aria-label="close"></div>
+</div><div class="tilepieces-dialog" id="tilepieces-prompt-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
+    <div class="tilepieces-dialog-content">
+        <form id="tilepieces-dialog-prompt-form">
+            <label for="tilepieces-dialog-prompt">
+                <span id="tilepieces-prompt-dialog-label"></span>
+                <input name="tilepieces-dialog-prompt" id="tilepieces-dialog-prompt" title="" autocomplete="off" required="">
+            </label>
+            <div>
+                <button type="submit" id="tilepieces-prompt-dialog-button"></button>
+            </div>
+        </form>
+    </div>
+    <div class="tilepieces-dialog-close" aria-label="close"></div>
+</div>
+<script src="bundle/package-manager-panel.bundle.js"
+        data-tilepieces-component="tilepieces/package-manager-panel"></script>
+</body></html>

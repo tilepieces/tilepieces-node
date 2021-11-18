@@ -2,10 +2,13 @@
   "name": "tilepieces",
   "version": "0.0.1",
   "description": "",
-  "main": "",
+  "main": "startTilepiecesServer",
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "bin": {
+    "tilepieces": "./bin/tilepieces.js"
+  },
   "scripts": {
     "start": "node index",
     "start-dev": "node --trace-warnings --inspect index"
@@ -16,11 +19,7 @@
   },
   "dependencies": {
     "@tilepieces/node-API": "file:../node-API",
-    "@tilepieces/server": "file:../node-server",
-    "busboy": "^0.3.1",
-    "glob": "^7.1.6",
-    "minimatch": "^3.0.4",
-    "ncp": "^2.0.0",
+    "@tilepieces/node-server": "file:../node-server",
     "open": "^8.0.2"
   }
 }

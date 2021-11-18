@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html><head><title> css viewer</title>
+    <link href="../bundle/css-viewer.bundle.css" rel="stylesheet" data-tilepieces-component="css-viewer/bundle"></head><body style="display:none"><div id="css-viewer" class="${isVisible}" data-tilepieces-component="tilepieces/css-viewer/css-viewer-html">
+    <div class="css-selector">
+      <details>
+        <summary>Grouping rule:
+          <span data-if="grChosen">
+            <span data-if="grChosen.inheritedConditionText">${grChosen.inheritedConditionText},</span>
+            ${grChosen.conditionText}
+          </span>
+          <button id="add-gr-rule">+</button>
+        </summary>
+        <ul>
+          <li data-foreach="groupingRules" data-foreach-key-name="gr" data-index="${gr.index}" data-iscurrent="${gr.isCurrentGr}" class="grouping-rule-item">
+            <span class="grouping-condition">
+              <span data-if="gr.inheritedConditionText">${gr.inheritedConditionText},</span>
+              ${gr.conditionText}
+            </span>
+            <button class="delete-gr-rule" data-index="${gr.index}">-</button>
+          </li>
+        </ul>
+      </details>
+      <div>
+          Rule:
+        <div data-bind="currentSelector" data-bind-events="blur,input" contenteditable=""></div>
+        <div class="related-selectors">
+          <a href="#" class="related-selectors-select">${relatedSelectors.length}</a> affected by this rule
+        </div>
+        <div data-if="!selectorMatch" class="rule-sector-wrong">Selector doesn't apply to current element</div>
+      </div>
+    </div>
+    <!-- modal new gr -->
+    <div id="modal-new-gr">
+        <section>
+            <div class="modal-new-gr-close"></div>
+            <div class="modal-new-gr-select">
+                <select data-bind="newGroupingType">
+                    <option value="0">@media</option>
+                    <option value="1">@supports</option>
+                </select>
+            </div>
+            <div data-if="newGroupingType == '1'">
+                @supports <input data-bind="supportCondition">
+                <div>
+                    Set css in this @supports rule <input type="checkbox" data-bind="mediaQueryUICheck">
+                </div>
+                <div>
+                    <button class="support-done" ${newgrbuttondisabled}="">Done</button>
+                </div>
+            </div>
+            <div id="modal-media-queries" data-if="newGroupingType == '0'">
+                <div class="modal-media-content">
+                    Min-max width<input type="radio" data-bind="mediaQueryUIMask" name="media-query-UI" value="min-max-width">
+                    Freehand<input type="radio" data-bind="mediaQueryUIMask" name="media-query-UI" value="freehand">
+                </div>
+                <div data-if="mediaQueryUIMask == 'min-max-width'" id="media-query-UI-mask">
+                    @media
+                    <select class="media-logical-operator" data-bind="mediaQueryMainLogicalOperator">
+                        <option value=""></option>
+                        <option value="not">not</option>
+                        <option value="only">only</option>
+                    </select>
+                    <div>
+                        <select data-bind="mediaQueryUIMaskMediaType">
+                            <option value="all">all</option>
+                            <option value="print">print</option>
+                            <option value="screen">screen</option>
+                            <option value="speech">speech</option>
+                        </select>
+                        <button data-if="!mediaQueryUIMaskFeatures.length" class="add-media-feature" title="add media feature">+</button>
+                    </div>
+                    <div data-foreach="mediaQueryUIMaskFeatures">
+                        <div>
+                            <select class="media-logical-operator" data-bind="key.logicalOperator">
+                                <option value="and">and</option>
+                                <option value="not">not</option>
+                                <option value="only">only</option>
+                            </select>
+                        </div>
+                        <select class="media-feature" data-index="${key.index}" data-bind="key.feature">
+                            <option value="max-width">max-width</option>
+                            <option value="min-width">min-width</option>
+                            <option value="max-height">max-height</option>
+                            <option value="min-height">min-height</option>
+                            <option value="orientation">orientation</option>
+                        </select>
+                        <div data-if="key.featureInput == 'input'">
+                            <div class="input-css" data-index="${key.index}" data-value="${key.value}" data-bind="key.value" data-bind-events="blur" contenteditable="">
+                            </div>
+                        </div>
+                        <select data-if="key.featureInput == 'orientation'" data-bind="key.value">
+                            <option value="landscape">landscape</option>
+                            <option value="portrait">portrait</option>
+                        </select>
+                        <button data-index="${key.index}" class="delete-feature" title="delete media feature">-</button>
+                        <button data-if="key.index == mediaQueryUIMaskFeatures.length-1" class="add-media-feature" title="add media feature">+</button>
+                    </div>
+                </div>
+                <div data-if="mediaQueryUIMask == 'freehand'">
+                    <input data-bind="mediaQueryUIFreeHand" data-bind-events="input">
+                </div>
+                <div>
+                    Set css in this media query <input type="checkbox" data-bind="mediaQueryUICheck">
+                </div>
+                <div>
+                    <button class="modal-media-done" ${mediaqueryuidisabled}="">Done</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="tab-buttons" id="main-tab">
+    <a class="tab-prev" href="javascript:void(0)">...</a>
+    <a class="tab-next" href="javascript:void(0)">...</a>
+    <div class="tab-buttons-wrap">
+        <div class="tab-buttons-inside">
+            <a href="#css-inspector" class="selected">inspector</a>
+            <a href="#layout-box">layout</a>
+            <a href="#css-text">text</a>
+            <a href="#background-box">background</a>
+            <a href="#border-style">border</a>
+            <a href="#transform">transform</a>
+            <a href="#animations">animations</a>
+            <a href="#fonts">fonts</a>
+        </div>
+    </div>
+</div><template id="gradient-template" data-tilepieces-component="tilepieces/gradient">
+    <section class="gradient">
+        <div class="gradient-inputs">
+            <select data-bind="gradientType">
+                <option value="linear-gradient">linear gradient</option>
+                <option value="repeating-linear-gradient">repeating linear gradient</option>
+                <option value="radial-gradient">radial gradient</option>
+                <option value="repeating-radial-gradient">repeating radial gradient</option>
+            </select>
+            <div class="input-css parameters" data-bind="parameters" contenteditable="">
+            </div>
+        </div>
+        <div class="color-interpolation-slider ${canAdd}">
+            <div data-foreach="colorStops" data-foreach-key-name="colorStop" class="color-interpolation ${colorStop.endPos}" data-index="${colorStop.index}" style="left:${colorStop.endPos}">
+                <div class="color-interpolation-colors">
+                    <div class="color-interpolation-left" style="background-color:${colorStop.c}"></div>
+                    <div class="color-interpolation-right" style="background-color:${colorStop.nextColor}"></div>
+                </div>
+            </div>
+        </div>
+        <div class="gradient-image">
+            <div class="gradient-image-gradient" style="background-image:${declarationForView}"></div>
+            <div class="gradient-image-transparent"></div>
+        </div>
+        <div class="color-stops ${canAdd}">
+            <div data-foreach="colorStops" class="color-stop" data-foreach-key-name="colorStop" data-index="${colorStop.index}" data-color="${colorStop.c}" style="left:calc(${colorStop.stopPos} - 12px)">
+                <div class="color-stop-dragger"></div>
+                <button class="color-stop-button" style="background-color:${colorStop.c}" data-index="${colorStop.index}"></button>
+                <div class="remove-color-stop" data-if="colorStops.length>2" data-index="${colorStop.index}">-</div>
+            </div>
+        </div>
+        <div class="knob ${knobIsVisible}">
+            <div class="knob-index"></div>
+        </div>
+    </section>
+</template><template id="css-properties-list" data-tilepieces-component="tilepieces/css-rule-modification">
+    <ul class="rule-block__list" data-bind-dom-prop="__css-viewer-rule,rule">
+        <li data-foreach="rule.properties" data-foreach-key-name="property" data-index="${property.index}" class="rule__property ${property.isInheritedClass} ${rule.contenteditable}">
+            <input class="rule-block__checked" type="checkbox" data-bind="property.checked" ${property.disabled}="">
+            <div class="rule-block__key autocomplete" data-bind-dom-prop="__autocomplete_suggestions,cssDefaultProperties" data-key="${property.property}" data-bind="property.property" data-contenteditable="${rule.contenteditable}"></div>
+            <div class="rule-block__divider">:</div>
+            <div class="input-css rule-block__value autocomplete" data-bind-dom-prop="__autocomplete_suggestions,property.autocomplete_suggestions" data-prop="${property.property}" data-bind="property.value" ${property.contenteditable}=""></div><div>;</div>
+        </li>
+    </ul>
+    <button class="rule-block__add-property">+</button>
+</template><div id="css-inspector" class="${isVisible}" data-tilepieces-component="tilepieces/css-inspector">
+    <div class="css-inspector__menu-bar">
+        <span id="css-target-new-rule">+</span>
+        <span id="css-target-delete-rule" class="${deleteRuleDisabled}">-</span>
+        <span id="toggle-pseudo-states">:</span>
+        <span id="toggle-pseudo-elements">::</span>
+    </div>
+    <div id="main-rules" class="css-inspector__container ${showMainRules}">
+        <!-- rules associated -->
+        <div data-foreach="rules" data-foreach-key-name="rule" data-type="rules" data-bind-dom-prop="__css-viewer-rule,rule" class="css-inspector__rule-block ${rule.contenteditable} ${rule.selected}">
+            <div data-if="rule.isStyle">
+                <span class="selector-style">element.style</span>{
+            </div>
+            <div class="css-inspector__rule__selector" data-if="!rule.isStyle">
+                <div data-if="rule.parentRules.length">
+                    <div data-foreach="rule.parentRules" data-foreach-key-name="pr">
+                        ${pr.type} ${pr.conditionText}
+                    </div>
+                </div>
+                <div class="css-inspector__rule__selector-name">
+                    <div data-if="!rule.editSelector">
+                        <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="rule-selector selector ${selector.match}">${selector.selectorText} </span>{
+                    </div>
+                    <div data-if="rule.editSelector" class="rule-selector-edit" contenteditable="">${rule.rule.selectorText}</div>
+                    <div data-if="!rule.selectorMatch" class="rule-sector-wrong">Selector doesn't apply to current element</div>
+                </div>
+            </div>
+            <a data-if="!rule.isStyle" class="css-inspector__href" href="#" title="${rule.loc}">${rule.locPop}</a>
+            <div data-use="css-properties-list" data-params="rule,rule"></div>}
+        </div>
+        <!-- ancestor rules -->
+        <div data-foreach="ancestors" data-foreach-key-name="ancestor">
+            <!-- ancestor element link -->
+            <div data-if="ancestor.matches.length || ancestor.ancestorstyle">
+                <div class="css-inspector__rule-block__inherited-divider">
+                    Inherited from
+                    <span class="css-inspector__show-element" data-bind-dom-prop="__ancestor,ancestor.ancestor">${ancestor.elementRepresentation}</span>
+                </div>
+            </div>
+            <!-- ancestor element properties -->
+            <div data-if="ancestor.ancestorstyle">
+                <div data-type="ancestorstyle" data-bind-dom-prop="__css-viewer-rule,ancestor.ancestorstyle" class="css-inspector__rule-block ${ancestor.ancestorstyle.contenteditable} css-inspector__rule-block__inherited ${ancestor.ancestorstyle.selected}">
+                    <div>
+                        <span class="selector-style">element.style</span>{
+                    </div>
+                    <a data-if="!ancestor.ancestorstyle.isStyle" class="css-inspector__href" href="#" title="${rule.loc}">${rule.locPop}</a>
+                    <div data-use="css-properties-list" data-params="rule,ancestor.ancestorstyle"></div>}
+                </div>
+            </div>
+            <!-- ancestor rules -->
+            <div data-type="ancestor.matches" data-foreach="ancestor.matches" data-foreach-key-name="rule" data-bind-dom-prop="__css-viewer-rule,rule,__ancestor,ancestor" class="css-inspector__rule-block ${rule.contenteditable} css-inspector__rule-block__inherited ${rule.selected}">
+                <div data-use="css-rule" data-params="rule,rule"></div>}
+            </div>
+        </div>
+    </div>
+    <div id="pseudo-states" class="css-inspector__container ${showPseudoStates}">
+        <div data-foreach="pseudoStates" data-foreach-key-name="pseudoState" class="css-inspector__container">
+            <div class="css-inspector__rule-block__inherited-divider">Pseudo ${pseudoState.name} state</div>
+            <div data-foreach="pseudoState.rules" data-foreach-key-name="rule" data-bind-dom-prop="__css-viewer-rule,rule" class="css-inspector__rule-block ${rule.contenteditable} ${rule.selected} css-inspector__pseudo-states">
+                <div data-use="css-rule" data-params="rule,rule"></div>}
+            </div>
+        </div>
+    </div>
+    <div id="pseudo-elements" class="${showPseudoElements}">
+        <div data-foreach="pseudoElements" data-foreach-key-name="pseudoElement" class="css-inspector__container">
+            <div class="css-inspector__rule-block__inherited-divider">Pseudo ${pseudoElement.name} element</div>
+            <div data-foreach="pseudoElement.rules" data-foreach-key-name="rule" data-bind-dom-prop="__css-viewer-rule,rule" class="css-inspector__rule-block ${rule.contenteditable} ${rule.selected} css-inspector__pseudo-elements">
+                <div data-use="css-rule" data-params="rule,rule"></div>}
+            </div>
+        </div>
+    </div>
+</div><template id="css-rule" data-tilepieces-component="tilepieces/css-inspector">
+    <!-- params : rule -->
+    <div class="css-inspector__rule__selector">
+        <div data-if="rule.parentRules.length">
+            <div data-foreach="rule.parentRules" data-foreach-key-name="pr">
+                ${pr.type} ${pr.conditionText}
+            </div>
+        </div>
+        <div class="css-inspector__rule__selector-name">
+            <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="selector ${selector.match}">${selector.selectorText}</span>{
+        </div>
+    </div>
+    <a data-if="!rule.isStyle" class="css-inspector__href" href="#" title="${rule.loc}">${rule.locPop}</a>
+    <div data-use="css-properties-list" data-params="rule,rule"></div>
+</template><section id="border-style" class="${isVisible}" data-tilepieces-component="tilepieces/border" style="display:none">
+    <div class="tab-buttons" id="tab-border">
+        <a class="tab-prev" href="javascript:void(0)">...</a>
+        <a class="tab-next" href="javascript:void(0)">...</a>
+        <div class="tab-buttons-wrap">
+            <div class="tab-buttons-inside">
+                <a href="#border-border" class="selected">General</a>
+                <a href="#border-image">Border image</a>
+                <a href="#box-shadow">Box Shadow</a>
+                <a href="#outline">Outline</a>
+            </div>
+        </div>
+    </div>
+    <div id="border-border">
+        <div class="property-box">
+            <div>border: </div>
+            <div class="input-css autocomplete " data-css-prop="border" data-css-prop-js="border" data-value="${border}" data-auto-global-suggestion="cssDefaults.border" data-bind="border" contenteditable=""></div>
+        </div>
+        <!-- border width -->
+        <fieldset>
+            <legend>border width</legend>
+            <button data-prop="borderWidth" class="border-width-link ${borderWidthLink} link-button">
+                <svg width="24" height="24" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m19.818 8.9715c-1.4849-1.4849-3.8891-1.2021-5.9397-1.2728 0.14142 0.14142 0.42426 0.28284 0.6364 0.49497 0.35355 0.35355 0.6364 0.77782 0.84853 1.2728 1.1314 0 2.3335-0.070711 3.182 0.77782 0.42426 0.42426 0.70711 1.1314 0.77782 1.7678 0 1.4142-1.1314 2.5456-2.5456 2.5456h-3.677c-0.56568 0-1.3435-0.35355-1.7678-0.77782-0.98995-0.98995-0.84853-2.1213-0.42426-3.2527h-1.8385c-0.49497 1.6263-0.42426 3.2527 0.84853 4.5255 0.84853 0.84853 1.9799 1.2728 3.0406 1.2021h3.677c1.2728 0 2.4749-0.35355 3.3941-1.2728 1.4142-1.6971 1.3435-4.4548-0.21213-6.0104zm-11.597 5.5154h-1.2728c-0.56569 0-1.3435-0.35355-1.7678-0.77782-0.42426-0.42426-0.70711-1.1314-0.77782-1.7678 0-1.4142 1.2021-2.6163 2.5456-2.5456h3.677c0.56568 0 1.3435 0.35355 1.7678 0.77782 0.98995 0.98995 0.77782 2.192 0.42426 3.2527h1.8385c0.49498-1.6263 0.42426-3.2527-0.84853-4.5255-0.84853-0.84853-1.9799-1.2728-3.0406-1.2021h-3.677c-2.4042 0-4.3134 1.9092-4.2426 4.2426 0 2.2627 1.9092 4.3134 4.1719 4.1719h2.687c-0.28284-0.14142-0.49497-0.35355-0.70711-0.56568-0.35355-0.35355-0.6364-0.6364-0.77782-1.0607z"></path>
+                </svg>
+            </button>
+            <div class="property-box ${borderWidthLink}">
+                <div>border width: </div>
+                <div class="input-css autocomplete " data-css-prop="border-width" data-css-prop-js="borderWidth" data-value="${borderWidth}" data-auto-global-suggestion="cssDefaults.border-width" data-bind="borderWidth" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderWidthUnlink}">
+                <div>border top width: </div>
+                <div class="input-css autocomplete " data-css-prop="border-top-width" data-css-prop-js="borderTopWidth" data-value="${borderTopWidth}" data-auto-global-suggestion="cssDefaults.border-width" data-bind="borderTopWidth" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderWidthUnlink}">
+                <div>border left width: </div>
+                <div class="input-css autocomplete " data-css-prop="border-left-width" data-css-prop-js="borderLeftWidth" data-value="${borderLeftWidth}" data-auto-global-suggestion="cssDefaults.border-width" data-bind="borderLeftWidth" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderWidthUnlink}">
+                <div>border bottom width: </div>
+                <div class="input-css autocomplete " data-css-prop="border-bottom-width" data-css-prop-js="borderBottomWidth" data-value="${borderBottomWidth}" data-auto-global-suggestion="cssDefaults.border-width" data-bind="borderBottomWidth" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderWidthUnlink}">
+                <div>border right width: </div>
+                <div class="input-css autocomplete " data-css-prop="border-right-width" data-css-prop-js="borderRightWidth" data-value="${borderRightWidth}" data-auto-global-suggestion="cssDefaults.border-width" data-bind="borderRightWidth" contenteditable=""></div>
+            </div>
+        </fieldset>
+        <!-- border style -->
+        <fieldset>
+            <legend>border style</legend>
+            <button data-prop="borderStyle" class="border-width-link ${borderStyleLink} link-button">
+                <svg width="24" height="24" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m19.818 8.9715c-1.4849-1.4849-3.8891-1.2021-5.9397-1.2728 0.14142 0.14142 0.42426 0.28284 0.6364 0.49497 0.35355 0.35355 0.6364 0.77782 0.84853 1.2728 1.1314 0 2.3335-0.070711 3.182 0.77782 0.42426 0.42426 0.70711 1.1314 0.77782 1.7678 0 1.4142-1.1314 2.5456-2.5456 2.5456h-3.677c-0.56568 0-1.3435-0.35355-1.7678-0.77782-0.98995-0.98995-0.84853-2.1213-0.42426-3.2527h-1.8385c-0.49497 1.6263-0.42426 3.2527 0.84853 4.5255 0.84853 0.84853 1.9799 1.2728 3.0406 1.2021h3.677c1.2728 0 2.4749-0.35355 3.3941-1.2728 1.4142-1.6971 1.3435-4.4548-0.21213-6.0104zm-11.597 5.5154h-1.2728c-0.56569 0-1.3435-0.35355-1.7678-0.77782-0.42426-0.42426-0.70711-1.1314-0.77782-1.7678 0-1.4142 1.2021-2.6163 2.5456-2.5456h3.677c0.56568 0 1.3435 0.35355 1.7678 0.77782 0.98995 0.98995 0.77782 2.192 0.42426 3.2527h1.8385c0.49498-1.6263 0.42426-3.2527-0.84853-4.5255-0.84853-0.84853-1.9799-1.2728-3.0406-1.2021h-3.677c-2.4042 0-4.3134 1.9092-4.2426 4.2426 0 2.2627 1.9092 4.3134 4.1719 4.1719h2.687c-0.28284-0.14142-0.49497-0.35355-0.70711-0.56568-0.35355-0.35355-0.6364-0.6364-0.77782-1.0607z"></path>
+                </svg>
+            </button>
+            <div class="property-box ${borderStyleLink}">
+                <div>border style: </div>
+                <div class="input-css autocomplete " data-css-prop="border-style" data-css-prop-js="borderStyle" data-value="${borderStyle}" data-auto-global-suggestion="cssDefaults.border-style" data-bind="borderStyle" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderStyleUnlink}">
+                <div>border top style: </div>
+                <div class="input-css autocomplete " data-css-prop="border-top-style" data-css-prop-js="borderTopStyle" data-value="${borderTopStyle}" data-auto-global-suggestion="cssDefaults.border-top-style" data-bind="borderTopStyle" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderStyleUnlink}">
+                <div>border left style: </div>
+                <div class="input-css autocomplete " data-css-prop="border-left-style" data-css-prop-js="borderLeftStyle" data-value="${borderLeftStyle}" data-auto-global-suggestion="cssDefaults.border-left-style" data-bind="borderLeftStyle" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderStyleUnlink}">
+                <div>border bottom style: </div>
+                <div class="input-css autocomplete " data-css-prop="border-bottom-style" data-css-prop-js="borderBottomStyle" data-value="${borderBottomStyle}" data-auto-global-suggestion="cssDefaults.border-bottom-style" data-bind="borderBottomStyle" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderStyleUnlink}">
+                <div>border right style: </div>
+                <div class="input-css autocomplete " data-css-prop="border-right-style" data-css-prop-js="borderRightStyle" data-value="${borderRightStyle}" data-auto-global-suggestion="cssDefaults.border-right-style" data-bind="borderRightStyle" contenteditable=""></div>
+            </div>
+        </fieldset>
+        <!-- border color -->
+        <fieldset>
+            <legend>border color</legend>
+            <button data-prop="borderColor" class="border-width-link ${borderColorLink} link-button">
+                <svg width="24" height="24" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m19.818 8.9715c-1.4849-1.4849-3.8891-1.2021-5.9397-1.2728 0.14142 0.14142 0.42426 0.28284 0.6364 0.49497 0.35355 0.35355 0.6364 0.77782 0.84853 1.2728 1.1314 0 2.3335-0.070711 3.182 0.77782 0.42426 0.42426 0.70711 1.1314 0.77782 1.7678 0 1.4142-1.1314 2.5456-2.5456 2.5456h-3.677c-0.56568 0-1.3435-0.35355-1.7678-0.77782-0.98995-0.98995-0.84853-2.1213-0.42426-3.2527h-1.8385c-0.49497 1.6263-0.42426 3.2527 0.84853 4.5255 0.84853 0.84853 1.9799 1.2728 3.0406 1.2021h3.677c1.2728 0 2.4749-0.35355 3.3941-1.2728 1.4142-1.6971 1.3435-4.4548-0.21213-6.0104zm-11.597 5.5154h-1.2728c-0.56569 0-1.3435-0.35355-1.7678-0.77782-0.42426-0.42426-0.70711-1.1314-0.77782-1.7678 0-1.4142 1.2021-2.6163 2.5456-2.5456h3.677c0.56568 0 1.3435 0.35355 1.7678 0.77782 0.98995 0.98995 0.77782 2.192 0.42426 3.2527h1.8385c0.49498-1.6263 0.42426-3.2527-0.84853-4.5255-0.84853-0.84853-1.9799-1.2728-3.0406-1.2021h-3.677c-2.4042 0-4.3134 1.9092-4.2426 4.2426 0 2.2627 1.9092 4.3134 4.1719 4.1719h2.687c-0.28284-0.14142-0.49497-0.35355-0.70711-0.56568-0.35355-0.35355-0.6364-0.6364-0.77782-1.0607z"></path>
+                </svg>
+            </button>
+            <div class="property-box ${borderColorLink}">
+                <div>border color: </div>
+                <span style="background:${realBorderColor}" data-css-prop="border-color" data-css-prop-js="borderColor" data-name="realBorderColor" class="color-button"></span>
+                <div class="input-css autocomplete" data-css-prop="border-color" data-css-prop-js="borderColor" data-value="${borderColor}" data-auto-global-suggestion="cssDefaults.border-color" data-bind="borderColor" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderColorUnlink}">
+                <div>border top color: </div>
+                <span style="background:${realBorderTopColor}" data-css-prop="border-top-color" data-css-prop-js="borderTopColor" data-name="realBorderTopColor" class="color-button"></span>
+                <div class="input-css autocomplete " data-css-prop="border-top-color" data-css-prop-js="borderTopColor" data-value="${borderTopColor}" data-auto-global-suggestion="cssDefaults.border-color" data-bind="borderTopColor" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderColorUnlink}">
+                <div>border left color: </div>
+                <span style="background:${realBorderLeftColor}" data-css-prop="border-left-color" data-css-prop-js="borderLeftColor" data-name="realBorderLeftColor" class="color-button"></span>
+                <div class="input-css autocomplete " data-css-prop="border-left-color" data-css-prop-js="borderLeftColor" data-value="${borderLeftColor}" data-auto-global-suggestion="cssDefaults.border-color" data-bind="borderLeftColor" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderColorUnlink}">
+                <div>border bottom color: </div>
+                <span style="background:${realBorderBottomColor}" data-css-prop="border-bottom-color" data-css-prop-js="borderBottomColor" data-name="realBorderBottomColor" class="color-button"></span>
+                <div class="input-css autocomplete " data-css-prop="border-bottom-color" data-css-prop-js="borderBottomColor" data-value="${borderBottomColor}" data-auto-global-suggestion="cssDefaults.border-color" data-bind="borderBottomColor" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderColorUnlink}">
+                <div>border right color: </div>
+                <span style="background:${realBorderRightColor}" data-css-prop="border-right-color" data-css-prop-js="borderRightColor" data-name="realBorderRightColor" class="color-button"></span>
+                <div class="input-css autocomplete " data-css-prop="border-right-color" data-css-prop-js="borderRightColor" data-value="${borderRightColor}" data-auto-global-suggestion="cssDefaults.border-color" data-bind="borderRightColor" contenteditable=""></div>
+            </div>
+        </fieldset>
+        <!-- border radius -->
+        <fieldset>
+            <legend>border radius</legend>
+            <button data-prop="borderRadius" class="border-width-link ${borderRadiusLink} link-button">
+                <svg width="24" height="24" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m19.818 8.9715c-1.4849-1.4849-3.8891-1.2021-5.9397-1.2728 0.14142 0.14142 0.42426 0.28284 0.6364 0.49497 0.35355 0.35355 0.6364 0.77782 0.84853 1.2728 1.1314 0 2.3335-0.070711 3.182 0.77782 0.42426 0.42426 0.70711 1.1314 0.77782 1.7678 0 1.4142-1.1314 2.5456-2.5456 2.5456h-3.677c-0.56568 0-1.3435-0.35355-1.7678-0.77782-0.98995-0.98995-0.84853-2.1213-0.42426-3.2527h-1.8385c-0.49497 1.6263-0.42426 3.2527 0.84853 4.5255 0.84853 0.84853 1.9799 1.2728 3.0406 1.2021h3.677c1.2728 0 2.4749-0.35355 3.3941-1.2728 1.4142-1.6971 1.3435-4.4548-0.21213-6.0104zm-11.597 5.5154h-1.2728c-0.56569 0-1.3435-0.35355-1.7678-0.77782-0.42426-0.42426-0.70711-1.1314-0.77782-1.7678 0-1.4142 1.2021-2.6163 2.5456-2.5456h3.677c0.56568 0 1.3435 0.35355 1.7678 0.77782 0.98995 0.98995 0.77782 2.192 0.42426 3.2527h1.8385c0.49498-1.6263 0.42426-3.2527-0.84853-4.5255-0.84853-0.84853-1.9799-1.2728-3.0406-1.2021h-3.677c-2.4042 0-4.3134 1.9092-4.2426 4.2426 0 2.2627 1.9092 4.3134 4.1719 4.1719h2.687c-0.28284-0.14142-0.49497-0.35355-0.70711-0.56568-0.35355-0.35355-0.6364-0.6364-0.77782-1.0607z"></path>
+                </svg>
+            </button>
+            <div class="property-box ${borderRadiusLink}">
+                <div>border radius: </div>
+                <div class="input-css autocomplete" data-css-prop="border-radius" data-css-prop-js="borderRadius" data-value="${borderRadius}" data-auto-global-suggestion="cssDefaults.border-radius" data-bind="borderRadius" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderRadiusUnlink}">
+                <div>border top left radius: </div>
+                <div class="input-css autocomplete " data-css-prop="border-top-left-radius" data-css-prop-js="borderTopLeftRadius" data-value="${borderTopLeftRadius}" data-auto-global-suggestion="cssDefaults.border-radius" data-bind="borderTopLeftRadius" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderRadiusUnlink}">
+                <div>border top right radius: </div>
+                <div class="input-css autocomplete" data-css-prop="border-top-right-color" data-css-prop-js="borderTopRightRadius" data-value="${borderTopRightRadius}" data-auto-global-suggestion="cssDefaults.border-radius" data-bind="borderTopRightRadius" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderRadiusUnlink}">
+                <div>border bottom right color: </div>
+                <div class="input-css autocomplete" data-css-prop="border-bottom-right-radius" data-css-prop-js="borderBottomRightRadius" data-value="${borderBottomRightRadius}" data-auto-global-suggestion="cssDefaults.border-radius" data-bind="borderBottomRightRadius" contenteditable=""></div>
+            </div>
+            <div class="property-box ${borderRadiusUnlink}">
+                <div>border bottom left radius: </div>
+                <div class="input-css autocomplete" data-css-prop="border-bottom-left-radius" data-css-prop-js="borderBottomLeftRadius" data-value="${borderBottomLeftRadius}" data-auto-global-suggestion="cssDefaults.border-radius" data-bind="borderBottomLeftRadius" contenteditable=""></div>
+            </div>
+        </fieldset>
+    </div>
+    <div id="border-image" style="display:none">
+        <div class="property-box">
+            <div>border image: </div>
+            <div class="input-css autocomplete " data-css-prop="border-image" data-css-prop-js="borderImage" data-value="${borderImage}" data-auto-global-suggestion="cssDefaults.border-image" data-bind="borderImage" contenteditable=""></div>
+        </div>
+        <fieldset>
+            <legend>Border Image</legend>
+            <div>
+                Image type:
+                <select data-bind="imageType" class="image-type-select">
+                    <option value="none">none</option>
+                    <option value="url">url</option>
+                    <option value="gradient">gradient</option>
+                </select>
+            </div>
+            <div class="property-box">
+                <div>border image source</div>
+                <div class="input-css autocomplete" data-css-prop="border-image-source" data-css-prop-js="borderImageSource" data-value="${borderImageSource}" data-auto-global-suggestion="cssDefaults.border-image-source" data-bind="borderImageSource" contenteditable=""></div>
+            </div>
+            <div data-if="hasUrl">
+                <img data-src="${imageSrc}">
+            </div>
+            <fieldset class="${hasGradient}">
+                <legend>Gradient</legend>
+                <div data-isolate="">
+                    <section class="gradient">
+                        <div class="gradient-inputs">
+                            <select data-bind="gradientType">
+                                <option value="linear-gradient">linear gradient</option>
+                                <option value="repeating-linear-gradient">repeating linear gradient</option>
+                                <option value="radial-gradient">radial gradient</option>
+                                <option value="repeating-radial-gradient">repeating radial gradient</option>
+                            </select>
+                            <div class="input-css parameters" data-bind="parameters" contenteditable="">
+                            </div>
+                        </div>
+                        <div class="color-interpolation-slider ${canAdd}">
+                            <div data-foreach="colorStops" data-foreach-key-name="colorStop" class="color-interpolation ${colorStop.endPos}" data-index="${colorStop.index}" style="left:${colorStop.endPos}">
+                                <div class="color-interpolation-colors">
+                                    <div class="color-interpolation-left" style="background-color:${colorStop.c}"></div>
+                                    <div class="color-interpolation-right" style="background-color:${colorStop.nextColor}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gradient-image">
+                            <div class="gradient-image-gradient" style="background-image:${declarationForView}"></div>
+                            <div class="gradient-image-transparent"></div>
+                        </div>
+                        <div class="color-stops ${canAdd}">
+                            <div data-foreach="colorStops" class="color-stop" data-foreach-key-name="colorStop" data-index="${colorStop.index}" data-color="${colorStop.c}" style="left:calc(${colorStop.stopPos} - 12px)">
+                                <div class="color-stop-dragger"></div>
+                                <button class="color-stop-button" style="background-color:${colorStop.c}" data-index="${colorStop.index}"></button>
+                                <div class="remove-color-stop" data-if="colorStops.length>2" data-index="${colorStop.index}">-</div>
+                            </div>
+                        </div>
+                        <div class="knob ${knobIsVisible}">
+                            <div class="knob-index"></div>
+                        </div>
+                    </section>
+                </div>
+            </fieldset>
+        </fieldset>
+        <div class="property-box">
+            <div>border image slice</div>
+            <div class="input-css autocomplete" data-css-prop="border-image-slice" data-css-prop-js="borderImageSlice" data-value="${borderImageSlice}" data-auto-global-suggestion="cssDefaults.border-image-slice" data-bind="borderImageSlice" contenteditable=""></div>
+        </div>
+        <div class="property-box">
+            <div>border image width</div>
+            <div class="input-css autocomplete" data-css-prop="border-image-width" data-css-prop-js="borderImageWidth" data-value="${borderImageWidth}" data-auto-global-suggestion="cssDefaults.border-image-width" data-bind="borderImageWidth" contenteditable=""></div>
+        </div>
+        <div class="property-box">
+            <div>border image outset</div>
+            <div class="input-css autocomplete" data-css-prop="border-image-outset" data-css-prop-js="borderImageOutset" data-value="${borderImageOutset}" data-auto-global-suggestion="cssDefaults.border-image-outset" data-bind="borderImageOutset" contenteditable=""></div>
+        </div>
+        <div class="property-box">
+            <div>border image repeat</div>
+            <div class="input-css autocomplete" data-css-prop="border-image-repeat" data-css-prop-js="borderImageRepeat" data-value="${borderImageRepeat}" data-auto-global-suggestion="cssDefaults.border-image-repeat" data-bind="borderImageRepeat" contenteditable=""></div>
+        </div>
+    </div>
+    <div id="box-shadow" style="display:none">
+        <!-- text-shadow -->
+        <div class="property-box">
+            <div>box-shadow: </div>
+            <div class="input-css autocomplete" data-css-prop="box-shadow" data-css-prop-js="boxShadow" data-value="${boxShadow}" data-auto-global-suggestion="cssDefaults.box-shadow" data-bind="boxShadow" contenteditable=""></div>
+        </div>
+        <button class="add-box-shadow">Add</button>
+        <fieldset data-foreach="boxShadows" data-foreach-key-name="boxShadowValue" data-index="${boxShadowValue.index}" class="shadow">
+            <legend>Box Shadow #${boxShadowValue.index}</legend>
+            <button class="remove-box-shadow" data-index="${boxShadowValue.index}">Remove</button>
+            <div style="float:left;width:calc(100% - 220px)">
+                <div>
+                    <select data-bind="boxShadowValue.type" data-shadow="type">
+                        <option value="inset">inset</option>
+                        <option value="outset">outset</option>
+                    </select>
+                </div>
+                <label for="x-offset-${boxShadowValue.index}">offset X</label>
+                <input id="x-offset-${boxShadowValue.index}" data-index="${boxShadowValue.index}" data-shadow="offsetX" type="number" data-bind="boxShadowValue.offsetX">px<br>
+                <label for="y-offset-${boxShadowValue.index}">offset Y</label>
+                <input id="y-offset-${boxShadowValue.index}" data-index="${boxShadowValue.index}" data-shadow="offsetY" type="number" data-bind="boxShadowValue.offsetY">px<br>
+                <label for="blur-offset-${boxShadowValue.index}">blur</label>
+                <input id="blur-offset-${boxShadowValue.index}" type="number" data-index="${boxShadowValue.index}" min="0" step="0.5" data-shadow="blur" data-bind="boxShadowValue.blur">px<br>
+                <label for="spread-offset-${boxShadowValue.index}">spread</label>
+                <input id="spread-offset-${boxShadowValue.index}" type="number" data-index="${boxShadowValue.index}" min="0" step="0.5" data-shadow="spread" data-bind="boxShadowValue.spread">px<br>
+                <button data-shadow="color" class="color-button" data-index="${boxShadowValue.index}" style="background:${boxShadowValue.color}"></button>
+            </div>
+            <div style="float:right">
+                <svg data-index="${boxShadowValue.index}" style="border:1px solid;display:block;margin:auto;width:200px;height:200px">
+                    <line x1="0" y1="50%" x2="100%" y2="50%" stroke="black" stroke-width="1" stroke-dasharray="10"></line>
+                    <line x1="50%" y1="0%" x2="50%" y2="100%" stroke="black" stroke-width="1" stroke-dasharray="10"></line>
+                    <line x1="50%" y1="50%" x2="50%" y2="50%" stroke="black" stroke-width="2" class="line-test"></line>
+                    <circle cx="50%" cy="50%" r="10" fill="lightblue" class="circle-test"></circle>
+                </svg>
+            </div>
+        </fieldset>
+    </div>
+    <div id="outline" style="display:none">
+        <div class="property-box">
+            <div>outline: </div>
+            <div class="input-css autocomplete" data-css-prop="outline" data-css-prop-js="outline" data-value="${outline}" data-auto-global-suggestion="cssDefaults.outline" data-bind="outline" contenteditable=""></div>
+        </div>
+        <!-- outline width -->
+        <div class="property-box">
+            <div>outline width: </div>
+            <div class="input-css autocomplete " data-css-prop="outline-width" data-css-prop-js="outlineWidth" data-value="${outlineWidth}" data-auto-global-suggestion="cssDefaults.outline-width" data-bind="outlineWidth" contenteditable=""></div>
+        </div>
+        <!-- outline style -->
+        <div class="property-box">
+            <div>outline style: </div>
+            <div class="input-css autocomplete " data-css-prop="outline-style" data-css-prop-js="outlineStyle" data-value="${outlineStyle}" data-auto-global-suggestion="cssDefaults.outline-style" data-bind="outlineStyle" contenteditable=""></div>
+        </div>
+        <div class="property-box">
+            <div>outline color: </div>
+            <span style="background:${realOutlineColor}" data-css-prop="outlineColor" data-css-prop-js="outlineColor" data-name="realOutlineColor" class="color-button"></span>
+            <div class="input-css autocomplete" data-css-prop="outline-color" data-css-prop-js="outlineColor" data-value="${outlineColor}" data-auto-global-suggestion="cssDefaults.outline-color" data-bind="outlineColor" contenteditable=""></div>
+        </div>
+        <!-- outline offset -->
+        <div class="property-box">
+            <div>outline offset: </div>
+            <div class="input-css autocomplete " data-css-prop="outline-offset" data-css-prop-js="outlineOffset" data-value="${outlineOffset}" data-auto-global-suggestion="cssDefaults.outline-offset" data-bind="outlineOffset" contenteditable=""></div>
+        </div>
+    </div>
+</section><section id="fonts" data-tilepieces-component="tilepieces/fonts" style="display:none">
+    <div class="tab-buttons" id="font-tabs">
+        <a class="tab-prev" href="javascript:void(0)">...</a>
+        <a class="tab-next" href="javascript:void(0)">...</a>
+        <div class="tab-buttons-wrap">
+            <div class="tab-buttons-inside">
+                <a href="#" id="add-font">+</a>
+                <a href="#" data-foreach="fonts" data-foreach-key-name="font" class="tab-link ${font.isSelected}" data-target-index="${font.index}">${font.mapped.fontFamily}</a>
+            </div>
+        </div>
+    </div>
+    <div data-foreach="fonts" data-foreach-key-name="font" class="font ${font.isSelected}" data-index="${font.index}" data-bind-object="__fontFaceRule,font.fontFaceRule">
+        <button data-if="!font.disabled" class="remove-font" data-index-font="${font.index}">- remove font</button>
+        <fieldset>
+            <legend>src</legend>
+            <button data-if="!font.disabled" class="add-src" data-index-font="${font.index}">+ add src</button>
+            <fieldset data-foreach="font.srcResources" data-foreach-key-name="srcRes" class="src" data-index-src="${srcRes.index}">
+                <legend>${srcRes.type}</legend>
+                <button data-if="!font.disabled" class="remove-src" data-index-font="${font.index}" data-index-src="${srcRes.index}">- remove src</button>
+                <div data-if="!font.disabled">
+                    <input type="radio" name="src_res_type_${font.index}_${srcRes.index}" data-bind="srcRes.type" class="change-src-type" value="local">local<br>
+                    <input type="radio" name="src_res_type_${font.index}_${srcRes.index}" data-bind="srcRes.type" class="change-src-type" value="url">url
+                </div>
+                <div data-if="srcRes.type == 'local'">
+                    local
+                    <input class="change-src-local" data-bind="srcRes.local" ${font.disabled}="">
+                </div>
+                <div data-if="srcRes.type == 'url'">
+                    <div>
+                        url
+                        <input class="change-src-url" data-bind="srcRes.url" ${font.disabled}="">
+
+
+                        <input data-if="!font.disabled" class="change-src-url" type="file">
+                    </div>
+                    format
+                    <input class="change-src-format" data-bind="srcRes.format" ${font.disabled}="">
+                </div>
+            </fieldset>
+        </fieldset>
+        <fieldset>
+            <legend>font-family</legend>
+            <input class="font-family" data-bind="font.mapped.fontFamily" ${font.disabled}="">
+        </fieldset>
+        <fieldset>
+            <legend>font-weight</legend>
+            <input data-bind="font.mapped.fontWeight" ${font.disabled}="">
+        </fieldset>
+        <fieldset>
+            <legend>font-style</legend>
+            <input data-bind="font.mapped.fontStyle" ${font.disabled}="">
+        </fieldset>
+        <fieldset>
+            <legend>font-display</legend>
+            <input data-bind="font.mapped.fontDisplay" ${font.disabled}="">
+        </fieldset>
+        <fieldset>
+            <legend>unicode-range</legend>
+            <input data-bind="font.mapped.unicodeRange" ${font.disabled}="">
+        </fieldset>
+        <fieldset>
+            <legend>font-stretch</legend>
+            <input data-bind="font.mapped.fontStretch" ${font.disabled}="">
+        </fieldset>
+        <fieldset>
+            <legend>font-variant</legend>
+            <input data-bind="font.mapped.fontVariant" ${font.disabled}="">
+        </fieldset>
+        <fieldset>
+            <legend>font-feature-setting</legend>
+            <input data-bind="font.mapped.fontFeatureSettings" ${font.disabled}="">
+        </fieldset>
+        <fieldset>
+            <legend>font-variation-setting</legend>
+            <input data-bind="font.mapped.fontVariationSettings" ${font.disabled}="">
+        </fieldset>
+    </div>
+</section><section id="background-box" class="${isVisible}" data-tilepieces-component="tilepieces/background" style="display:none">
+    <div class="property-box">
+        <div>Background color: </div>
+        <span id="background-color" style="background:${realBgColor}" data-css-prop="background-color" class="color-button"></span>
+        <div class="input-css autocomplete" data-css-prop="background-color" data-css-prop-js="backgroundColor" data-value="${backgroundColor}" data-auto-global-suggestion="cssDefaults.background-color" data-bind="backgroundColor" contenteditable=""></div>
+    </div>
+    <div class="tab-component" id="background-tabs">
+        <div class="tab-buttons">
+            <a class="tab-prev" href="javascript:void(0)">...</a>
+            <a class="tab-next" href="javascript:void(0)">...</a>
+            <div class="tab-buttons-wrap">
+                <div class="tab-buttons-inside">
+                    <a href="#" id="add-background">+</a>
+                    <a data-foreach="backgrounds" href="#" data-foreach-key-name="background" class="tab-link ${background.isSelected}" data-target-index="${background.index}">${background.index}</a>
+                </div>
+            </div>
+        </div>
+        <h3>Images</h3>
+        <div data-foreach="backgrounds" data-foreach-key-name="b" class="backgrounds ${b.isSelected}" data-index="${b.index}">
+            <button data-if="b.index>0" class="move-background-up" data-index="${b.index}">↑</button>
+            <button data-if="b.index<backgrounds.length-1" class="move-background-down" data-index="${b.index}">↓</button>
+            <button data-if="backgrounds.length > 1" class="remove-background" data-index="${b.index}">- remove background</button>
+            <select data-bind="b.imageType" class="image-type-select" data-index="${b.index}">
+                <option value="url">url</option>
+                <option value="gradient">gradient</option>
+            </select>
+            <div data-if="b.hasUrl">
+                <input data-type="url-background" type="file" data-index="${b.index}">
+                <div data-dropzone="" data-type="url-background" data-index="${b.index}">
+                    <span class="add-from-project">+</span>
+                    <img data-src="${b.imageSrc}">
+                </div>
+            </div>
+            <div class="property-box">
+                <div>Image: </div>
+                <div class="input-css autocomplete" data-css-prop="background-image" data-css-prop-js="backgroundImage" data-value="${b.backgroundImage}" data-auto-global-suggestion="cssDefaults.background-image" data-bind="b.backgroundImage" contenteditable=""></div>
+            </div>
+            <div class="gradient-box" data-if="b.hasGradient" data-use="gradient-template" data-isolate="">
+            </div>
+            <div class="property-box">
+                <div>X Position: </div>
+                <div class="input-css autocomplete" data-css-prop="background-position-x" data-css-prop-js="backgroundPositionX" data-value="${b.backgroundPositionX}" data-auto-global-suggestion="cssDefaults.background-position-x" data-bind="b.backgroundPositionX" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>Y Position: </div>
+                <div class="input-css autocomplete" data-css-prop="background-position-y" data-css-prop-js="backgroundPositionY" data-value="${b.backgroundPositionY}" data-auto-global-suggestion="cssDefaults.background-position-y" data-bind="b.backgroundPositionY" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>Size: </div>
+                <div class="input-css autocomplete" data-css-prop="background-size" data-css-prop-js="backgroundSize" data-value="${b.backgroundSize}" data-auto-global-suggestion="cssDefaults.background-size" data-bind="b.backgroundSize" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>Repeat: </div>
+                <div class="input-css autocomplete" data-css-prop="background-repeat" data-css-prop-js="backgroundRepeat" data-value="${b.backgroundRepeat}" data-auto-global-suggestion="cssDefaults.background-repeat" data-bind="b.backgroundRepeat" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>Attachment: </div>
+                <div class="input-css autocomplete" data-css-prop="background-attachment" data-css-prop-js="backgroundAttachment" data-value="${b.backgroundAttachment}" data-auto-global-suggestion="cssDefaults.background-attachment" data-bind="b.backgroundAttachment" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>Clip: </div>
+                <div class="input-css autocomplete" data-css-prop="background-clip" data-css-prop-js="backgroundClip" data-value="${b.backgroundClip}" data-auto-global-suggestion="cssDefaults.background-clip" data-bind="b.backgroundClip" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>Origin: </div>
+                <div class="input-css autocomplete" data-css-prop="background-origin" data-css-prop-js="backgroundOrigin" data-value="${b.backgroundOrigin}" data-auto-global-suggestion="cssDefaults.background-origin" data-bind="b.backgroundOrigin" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>Background blend mode: </div>
+                <div class="input-css autocomplete" data-css-prop="background-blend-mode" data-css-prop-js="backgroundBlendMode" data-value="${b.backgroundBlendMode}" data-auto-global-suggestion="cssDefaults.background-blend-mode" data-bind="b.backgroundBlendMode" contenteditable=""></div>
+            </div>
+        </div>
+    </div>
+</section><section id="layout-box" class="${isVisible}" data-tilepieces-component="tilepieces/layout" style="display:none">
+    <div class="tab-buttons" id="tab-layout">
+        <a class="tab-prev" href="javascript:void(0)">...</a>
+        <a class="tab-next" href="javascript:void(0)">...</a>
+        <div class="tab-buttons-wrap">
+            <div class="tab-buttons-inside">
+                <a href="#layout" class="selected">General</a>
+                <a href="#box-model">Box model</a>
+            </div>
+        </div>
+    </div>
+    <div id="layout" class="selected">
+        <!-- display -->
+        <div class="property-box">
+            <div>display: </div>
+            <div class="input-css autocomplete" data-css-prop="display" data-css-prop-js="display" data-value="${display}" data-auto-global-suggestion="cssDefaults.display" data-bind="display" contenteditable=""></div>
+        </div>
+        <!-- float -->
+        <div class="property-box">
+            <div>float: </div>
+            <div class="input-css autocomplete" data-css-prop="float" data-css-prop-js="float" data-value="${float}" data-auto-global-suggestion="cssDefaults.float" data-bind="float" contenteditable=""></div>
+        </div>
+        <!-- visibility -->
+        <div class="property-box">
+            <div>visibility: </div>
+            <div class="input-css autocomplete" data-css-prop="visibility" data-css-prop-js="visibility" data-value="${visibility}" data-auto-global-suggestion="cssDefaults.visibility" data-bind="visibility" contenteditable=""></div>
+        </div>
+        <!-- Opacity -->
+        <div class="property-box">
+            <div>opacity: </div>
+            <div class="input-css autocomplete" data-css-prop="opacity" data-css-prop-js="opacity" data-value="${opacity}" data-auto-global-suggestion="cssDefaults.opacity" data-bind-events="input" data-bind="opacity" contenteditable=""></div>
+            <input data-css-prop="opacity" data-bind="opacity" type="range" min="0" max="1" step="0.05">
+        </div>
+        <!-- overflow -->
+        <div class="property-box">
+            <div>overflow: </div>
+            <div class="input-css autocomplete" data-css-prop="overflow" data-css-prop-js="overflow" data-value="${overflow}" data-auto-global-suggestion="cssDefaults.overflow" data-bind="overflow" contenteditable=""></div>
+        </div>
+        <!-- cursor -->
+        <div class="property-box">
+            <div>cursor: </div>
+            <div class="input-css autocomplete" data-css-prop="cursor" data-css-prop-js="cursor" data-value="${cursor}" data-auto-global-suggestion="cssDefaults.cursor" data-bind="cursor" contenteditable=""></div>
+        </div>
+        <!-- INLINE -->
+        <!-- vertical align -->
+        <div class="property-box ${inlineStyles}">
+            <div>vertical-align: </div>
+            <div class="input-css autocomplete" data-css-prop="vertical-align" data-css-prop-js="verticalAlign" data-value="${verticalAlign}" data-auto-global-suggestion="cssDefaults.vertical-align" data-bind="verticalAlign" contenteditable=""></div>
+        </div>
+        <!-- LIST -->
+        <!-- list-style-type -->
+        <div class="property-box ${listStyle}">
+            <div>list-style-type: </div>
+            <div class="input-css autocomplete" data-css-prop="list-style-type" data-css-prop-js="listStyleType" data-value="${listStyleType}" data-auto-global-suggestion="cssDefaults.list-style-type" data-bind="listStyleType" contenteditable=""></div>
+        </div>
+        <!-- list-style-position -->
+        <div class="property-box ${listStyle}">
+            <div>list-style-position: </div>
+            <div class="input-css autocomplete" data-css-prop="list-style-position" data-css-prop-js="listStylePosition" data-value="${listStylePosition}" data-auto-global-suggestion="cssDefaults.list-style-position" data-bind="listStylePosition" contenteditable=""></div>
+        </div>
+        <!-- list-style-Image -->
+        <div class="property-box ${listStyle}">
+            <div>list-style-image: </div>
+            <div class="input-css autocomplete" data-css-prop="list-style-image" data-css-prop-js="listStyleImage" data-value="${listStyleImage}" data-auto-global-suggestion="cssDefaults.list-style-image" data-bind="listStyleImage" contenteditable=""></div>
+        </div>
+        <!-- BLOCK -->
+        <!-- clear -->
+        <div class="property-box ${displayBlock}">
+            <div>clear: </div>
+            <div class="input-css autocomplete" data-css-prop="clear" data-css-prop-js="clear" data-value="${clear}" data-auto-global-suggestion="cssDefaults.clear" data-bind="clear" contenteditable=""></div>
+        </div>
+        <!-- FLEX -->
+        <!-- align-content -->
+        <div class="property-box ${flexContainer}">
+            <div>align-content: </div>
+            <div class="input-css autocomplete" data-css-prop="align-content" data-css-prop-js="alignContent" data-value="${alignContent}" data-auto-global-suggestion="cssDefaults.align-content" data-bind="alignContent" contenteditable=""></div>
+        </div>
+        <!-- align-self -->
+        <div class="property-box ${flexOrGridChildren}">
+            <div>align-self: </div>
+            <div class="input-css autocomplete" data-css-prop="align-self" data-css-prop-js="alignSelf" data-value="${alignSelf}" data-auto-global-suggestion="cssDefaults.align-self" data-bind="alignSelf" contenteditable=""></div>
+        </div>
+        <!-- flex-basis -->
+        <div class="property-box ${flexChildren}">
+            <div>flex-basis: </div>
+            <div class="input-css autocomplete" data-css-prop="flex-basis" data-css-prop-js="flexBasis" data-value="${flexBasis}" data-auto-global-suggestion="cssDefaults.flex-basis" data-bind="flexBasis" contenteditable=""></div>
+        </div>
+        <!-- flex-direction -->
+        <div class="property-box ${flexContainer}">
+            <div>flex-direction: </div>
+            <div class="input-css autocomplete" data-css-prop="flex-direction" data-css-prop-js="flexDirection" data-value="${flexDirection}" data-auto-global-suggestion="cssDefaults.flex-direction" data-bind="flexDirection" contenteditable=""></div>
+        </div>
+        <!--flex-grow-->
+        <div class="property-box ${flexChildren}">
+            <div>flex-grow: </div>
+            <div class="input-css autocomplete" data-css-prop="flex-grow" data-css-prop-js="flexGrow" data-value="${flexGrow}" data-auto-global-suggestion="cssDefaults.flex-grow" data-bind="flexGrow" contenteditable=""></div>
+        </div>
+        <!--flex-shrink-->
+        <div class="property-box ${flexChildren}">
+            <div>flex-shrink: </div>
+            <div class="input-css autocomplete" data-css-prop="flex-shrink" data-css-prop-js="flexShrink" data-value="${flexShrink}" data-auto-global-suggestion="cssDefaults.flex-shrink" data-bind="flexShrink" contenteditable=""></div>
+        </div>
+        <!-- flex-wrap -->
+        <div class="property-box ${flexContainer}">
+            <div>flex-wrap: </div>
+            <div class="input-css autocomplete" data-css-prop="flex-wrap" data-css-prop-js="flexWrap" data-value="${flexWrap}" data-auto-global-suggestion="cssDefaults.flex-wrap" data-bind="flexWrap" contenteditable=""></div>
+        </div>
+        <!-- justify-content -->
+        <div class="property-box ${flexContainer}">
+            <div>justify-content: </div>
+            <div class="input-css autocomplete" data-css-prop="justify-content" data-css-prop-js="justifyContent" data-value="${justifyContent}" data-auto-global-suggestion="cssDefaults.justify-content" data-bind="justifyContent" contenteditable=""></div>
+        </div>
+        <!-- order -->
+        <div class="property-box ${flexChildren}">
+            <div>order: </div>
+            <div class="input-css autocomplete" data-css-prop="order" data-css-prop-js="order" data-value="${order}" data-auto-global-suggestion="cssDefaults.order" data-bind="order" contenteditable=""></div>
+        </div>
+        <!-- TABLE -->
+        <!-- border-collapse -->
+        <div class="property-box ${tableContainer}">
+            <div>border-collapse: </div>
+            <div class="input-css autocomplete" data-css-prop="border-collapse" data-css-prop-js="borderCollapse" data-value="${borderCollapse}" data-auto-global-suggestion="cssDefaults.border-collapse" data-bind="borderCollapse" contenteditable=""></div>
+        </div>
+        <!-- border-spacing -->
+        <div class="property-box ${borderSpacingAllowed}">
+            <div>border-spacing: </div>
+            <div class="input-css autocomplete" data-css-prop="border-spacing" data-css-prop-js="borderSpacing" data-value="${borderSpacing}" data-auto-global-suggestion="cssDefaults.border-spacing" data-bind="borderSpacing" contenteditable=""></div>
+        </div>
+        <!-- caption-side -->
+        <div class="property-box ${tableContainer}">
+            <div>caption-side: </div>
+            <div class="input-css autocomplete" data-css-prop="caption-side" data-css-prop-js="captionSide" data-value="${captionSide}" data-auto-global-suggestion="cssDefaults.caption-side" data-bind="captionSide" contenteditable=""></div>
+        </div>
+        <!-- empty-cells -->
+        <div class="property-box ${emptyCellsAllowed}">
+            <div>empty-cells: </div>
+            <div class="input-css autocomplete" data-css-prop="empty-cells" data-css-prop-js="emptyCells" data-value="${emptyCells}" data-auto-global-suggestion="cssDefaults.empty-cells" data-bind="emptyCells" contenteditable=""></div>
+        </div>
+        <!-- table-layout -->
+        <div class="property-box ${tableContainer}">
+            <div>table-layout: </div>
+            <div class="input-css autocomplete" data-css-prop="table-layout" data-css-prop-js="tableLayout" data-value="${tableLayout}" data-auto-global-suggestion="cssDefaults.table-layout" data-bind="tableLayout" contenteditable=""></div>
+        </div>
+        <!-- GRID -->
+        <!-- grid-template-areas -->
+        <div class="grid-template-areas ${gridContainer}">
+            <div>grid-template-areas: </div>
+            <button data-if="gridAreasTemplate.length" id="add-css-grid-column">+ Col</button>
+            <button data-if="gridAreasTemplate.length &amp;&amp; gridAreasTemplate[0].cells.length > 1" id="remove-css-grid-column">- Col</button>
+            <div data-css-prop="grid-template-areas" data-foreach="gridAreasTemplate" data-foreach-key-name="row">
+                <div class="grid-row-area">
+                    <input class="grid-row-area-label" data-foreach="row.cells" data-foreach-key-name="cell" data-row-index="${cell.index}" data-cell-index="${row.index}" data-bind="cell.label">
+                </div>
+            </div>
+            <button id="add-css-grid-row">+ Row</button>
+            <button id="remove-css-grid-row">- Row</button>
+        </div>
+        <!-- grid-area -->
+        <div class="property-box ${gridChildren}">
+            <div>grid-area: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-area" data-css-prop-js="gridArea" data-value="${gridArea}" data-auto-global-suggestion="cssDefaults.grid-area" data-bind="gridArea" contenteditable=""></div>
+        </div>
+        <!-- grid-template-columns -->
+        <div class="property-box ${gridContainer}">
+            <div>grid-template-columns: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-template-columns" data-css-prop-js="gridTemplateColumns" data-value="${gridTemplateColumns}" data-auto-global-suggestion="cssDefaults.grid-template-columns" data-bind="gridTemplateColumns" contenteditable=""></div>
+        </div>
+        <!-- grid-template-rows -->
+        <div class="property-box ${gridContainer}">
+            <div>grid-template-rows: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-template-rows" data-css-prop-js="gridTemplateRows" data-value="${gridTemplateRows}" data-auto-global-suggestion="cssDefaults.grid-template-rows" data-bind="gridTemplateRows" contenteditable=""></div>
+        </div>
+        <!-- grid-auto-columns -->
+        <div class="property-box ${gridContainer}">
+            <div>grid-auto-columns: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-auto-columns" data-css-prop-js="gridAutoColumns" data-value="${gridAutoColumns}" data-auto-global-suggestion="cssDefaults.grid-auto-columns" data-bind="gridAutoColumns" contenteditable=""></div>
+        </div>
+        <!-- grid-auto-flow -->
+        <div class="property-box ${gridContainer}">
+            <div>grid-auto-flow: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-auto-flow" data-css-prop-js="gridAutoFlow" data-value="${gridAutoFlow}" data-auto-global-suggestion="cssDefaults.grid-auto-flow" data-bind="gridAutoFlow" contenteditable=""></div>
+        </div>
+        <!-- grid-auto-rows -->
+        <div class="property-box ${gridContainer}">
+            <div>grid-auto-rows: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-auto-rows" data-css-prop-js="gridAutoRows" data-value="${gridAutoRows}" data-auto-global-suggestion="cssDefaults.grid-auto-rows" data-bind="gridAutoRows" contenteditable=""></div>
+        </div>
+        <!-- grid-column-start -->
+        <div class="property-box ${gridChildren}">
+            <div>grid-column-start: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-column-start" data-css-prop-js="gridColumnStart" data-value="${gridColumnStart}" data-auto-global-suggestion="cssDefaults.grid-column-start" data-bind="gridColumnStart" contenteditable=""></div>
+        </div>
+        <!-- grid-column-end -->
+        <div class="property-box ${gridChildren}">
+            <div>grid-column-end: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-column-end" data-css-prop-js="gridColumnEnd" data-value="${gridColumnEnd}" data-auto-global-suggestion="cssDefaults.grid-column-end" data-bind="gridColumnEnd" contenteditable=""></div>
+        </div>
+        <!-- grid-column-gap -->
+        <div class="property-box ${gridContainer}">
+            <div>grid-column-gap: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-column-gap" data-css-prop-js="gridColumnGap" data-value="${gridColumnGap}" data-auto-global-suggestion="cssDefaults.grid-column-gap" data-bind="gridColumnGap" contenteditable=""></div>
+        </div>
+        <!-- grid-row-gap -->
+        <div class="property-box ${gridContainer}">
+            <div>grid-row-gap: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-row-gap" data-css-prop-js="gridRowGap" data-value="${gridRowGap}" data-auto-global-suggestion="cssDefaults.grid-row-gap" data-bind="gridRowGap" contenteditable=""></div>
+        </div>
+        <!-- grid-row-start -->
+        <div class="property-box ${gridChildren}">
+            <div>grid-row-start: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-row-start" data-css-prop-js="gridRowStart" data-value="${gridRowStart}" data-auto-global-suggestion="cssDefaults.grid-row-start" data-bind="gridRowStart" contenteditable=""></div>
+        </div>
+        <!-- grid-row-end -->
+        <div class="property-box ${gridChildren}">
+            <div>grid-row-end: </div>
+            <div class="input-css autocomplete" data-css-prop="grid-row-end" data-css-prop-js="gridRowEnd" data-value="${gridRowEnd}" data-auto-global-suggestion="cssDefaults.grid-row-end" data-bind="gridRowEnd" contenteditable=""></div>
+        </div>
+    </div>
+    <div id="box-model" style="display:none">
+        <!-- position -->
+        <div class="property-box">
+            <div>position: </div>
+            <div class="input-css autocomplete" data-css-prop="position" data-css-prop-js="position" data-value="${position}" data-auto-global-suggestion="cssDefaults.position" data-bind="position" contenteditable=""></div>
+        </div>
+        <!-- width -->
+        <div class="property-box">
+            <div>width: </div>
+            <div class="input-css autocomplete" data-css-prop="width" data-css-prop-js="width" data-value="${width}" data-auto-global-suggestion="cssDefaults.width" data-bind="width" contenteditable=""></div>
+        </div>
+        <!-- height -->
+        <div class="property-box">
+            <div>height: </div>
+            <div class="input-css autocomplete" data-css-prop="height" data-css-prop-js="height" data-value="${height}" data-auto-global-suggestion="cssDefaults.height" data-bind="height" contenteditable=""></div>
+        </div>
+        <!--measures -->
+        <div id="show-measure">
+            <div id="position" class="div ${positionVisible}">
+                <section class="label">
+                    <span>position</span>
+                </section>
+                <div id="position-top" class="top">
+                    <div class="input-css" data-css-prop="top" data-value="${top}" data-bind="top" contenteditable=""></div>
+                </div>
+                <div id="position-left" class="left">
+                    <div class="input-css" data-css-prop="left" data-value="${left}" data-bind="left" contenteditable=""></div>
+                </div>
+                <div id="position-right" class="right">
+                    <div class="input-css" data-css-prop="right" data-value="${right}" data-bind="right" contenteditable=""></div>
+                </div>
+                <div id="position-bottom" class="bottom">
+                    <div class="input-css" data-css-prop="bottom" data-value="${bottom}" data-bind="bottom" contenteditable=""></div>
+                </div>
+                <div id="margin" class="div">
+                    <section class="label ${marginLinked}">
+                        <span>margin</span>
+                        <button>
+                            <svg width="24" height="24" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m19.818 8.9715c-1.4849-1.4849-3.8891-1.2021-5.9397-1.2728 0.14142 0.14142 0.42426 0.28284 0.6364 0.49497 0.35355 0.35355 0.6364 0.77782 0.84853 1.2728 1.1314 0 2.3335-0.070711 3.182 0.77782 0.42426 0.42426 0.70711 1.1314 0.77782 1.7678 0 1.4142-1.1314 2.5456-2.5456 2.5456h-3.677c-0.56568 0-1.3435-0.35355-1.7678-0.77782-0.98995-0.98995-0.84853-2.1213-0.42426-3.2527h-1.8385c-0.49497 1.6263-0.42426 3.2527 0.84853 4.5255 0.84853 0.84853 1.9799 1.2728 3.0406 1.2021h3.677c1.2728 0 2.4749-0.35355 3.3941-1.2728 1.4142-1.6971 1.3435-4.4548-0.21213-6.0104zm-11.597 5.5154h-1.2728c-0.56569 0-1.3435-0.35355-1.7678-0.77782-0.42426-0.42426-0.70711-1.1314-0.77782-1.7678 0-1.4142 1.2021-2.6163 2.5456-2.5456h3.677c0.56568 0 1.3435 0.35355 1.7678 0.77782 0.98995 0.98995 0.77782 2.192 0.42426 3.2527h1.8385c0.49498-1.6263 0.42426-3.2527-0.84853-4.5255-0.84853-0.84853-1.9799-1.2728-3.0406-1.2021h-3.677c-2.4042 0-4.3134 1.9092-4.2426 4.2426 0 2.2627 1.9092 4.3134 4.1719 4.1719h2.687c-0.28284-0.14142-0.49497-0.35355-0.70711-0.56568-0.35355-0.35355-0.6364-0.6364-0.77782-1.0607z"></path>
+                            </svg>
+                        </button>
+                    </section>
+                    <div id="margin-top" class="top">
+                        <div class="input-css" data-linked="${marginLinked}" data-css-prop="margin-top" data-value="${marginTop}" data-bind="marginTop" contenteditable=""></div>
+                    </div>
+                    <div id="margin-left" class="left">
+                        <div class="input-css" data-linked="${marginLinked}" data-css-prop="margin-left" data-value="${marginLeft}" data-bind="marginLeft" contenteditable=""></div>
+                    </div>
+                    <div id="margin-right" class="right">
+                        <div class="input-css" data-linked="${marginLinked}" data-css-prop="margin-right" data-value="${marginRight}" data-bind="marginRight" contenteditable=""></div>
+                    </div>
+                    <div id="margin-bottom" class="bottom">
+                        <div class="input-css" data-linked="${marginLinked}" data-css-prop="margin-bottom" data-value="${marginBottom}" data-bind="marginBottom" contenteditable=""></div>
+                    </div>
+                    <div id="border" class="div">
+                        <section class="label ${borderLinked}">
+                            <span>border</span>
+                            <button>
+                                <svg width="24" height="24" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="m19.818 8.9715c-1.4849-1.4849-3.8891-1.2021-5.9397-1.2728 0.14142 0.14142 0.42426 0.28284 0.6364 0.49497 0.35355 0.35355 0.6364 0.77782 0.84853 1.2728 1.1314 0 2.3335-0.070711 3.182 0.77782 0.42426 0.42426 0.70711 1.1314 0.77782 1.7678 0 1.4142-1.1314 2.5456-2.5456 2.5456h-3.677c-0.56568 0-1.3435-0.35355-1.7678-0.77782-0.98995-0.98995-0.84853-2.1213-0.42426-3.2527h-1.8385c-0.49497 1.6263-0.42426 3.2527 0.84853 4.5255 0.84853 0.84853 1.9799 1.2728 3.0406 1.2021h3.677c1.2728 0 2.4749-0.35355 3.3941-1.2728 1.4142-1.6971 1.3435-4.4548-0.21213-6.0104zm-11.597 5.5154h-1.2728c-0.56569 0-1.3435-0.35355-1.7678-0.77782-0.42426-0.42426-0.70711-1.1314-0.77782-1.7678 0-1.4142 1.2021-2.6163 2.5456-2.5456h3.677c0.56568 0 1.3435 0.35355 1.7678 0.77782 0.98995 0.98995 0.77782 2.192 0.42426 3.2527h1.8385c0.49498-1.6263 0.42426-3.2527-0.84853-4.5255-0.84853-0.84853-1.9799-1.2728-3.0406-1.2021h-3.677c-2.4042 0-4.3134 1.9092-4.2426 4.2426 0 2.2627 1.9092 4.3134 4.1719 4.1719h2.687c-0.28284-0.14142-0.49497-0.35355-0.70711-0.56568-0.35355-0.35355-0.6364-0.6364-0.77782-1.0607z"></path>
+                                </svg>
+                            </button>
+                        </section>
+                        <div id="border-top" class="top">
+                            <div class="input-css" data-linked="${borderLinked}" data-css-prop="border-top-width" data-value="${borderTopWidth}" data-bind="borderTopWidth" contenteditable=""></div>
+                        </div>
+                        <div id="border-left" class="left">
+                            <div class="input-css" data-linked="${borderLinked}" data-css-prop="border-left-width" data-value="${borderLeftWidth}" data-bind="borderLeftWidth" contenteditable=""></div>
+                        </div>
+                        <div id="border-right" class="right">
+                            <div class="input-css" data-linked="${borderLinked}" data-css-prop="border-right-width" data-value="${borderRightWidth}" data-bind="borderRightWidth" contenteditable=""></div>
+                        </div>
+                        <div id="border-bottom" class="bottom">
+                            <div class="input-css" data-linked="${borderLinked}" data-css-prop="border-bottom-width" data-value="${borderBottomWidth}" data-bind="borderBottomWidth" contenteditable=""></div>
+                        </div>
+                        <div id="padding" class="div">
+                            <section class="label ${paddingLinked}">
+                                <span>padding</span>
+                                <button>
+                                    <svg width="24" height="24" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="m19.818 8.9715c-1.4849-1.4849-3.8891-1.2021-5.9397-1.2728 0.14142 0.14142 0.42426 0.28284 0.6364 0.49497 0.35355 0.35355 0.6364 0.77782 0.84853 1.2728 1.1314 0 2.3335-0.070711 3.182 0.77782 0.42426 0.42426 0.70711 1.1314 0.77782 1.7678 0 1.4142-1.1314 2.5456-2.5456 2.5456h-3.677c-0.56568 0-1.3435-0.35355-1.7678-0.77782-0.98995-0.98995-0.84853-2.1213-0.42426-3.2527h-1.8385c-0.49497 1.6263-0.42426 3.2527 0.84853 4.5255 0.84853 0.84853 1.9799 1.2728 3.0406 1.2021h3.677c1.2728 0 2.4749-0.35355 3.3941-1.2728 1.4142-1.6971 1.3435-4.4548-0.21213-6.0104zm-11.597 5.5154h-1.2728c-0.56569 0-1.3435-0.35355-1.7678-0.77782-0.42426-0.42426-0.70711-1.1314-0.77782-1.7678 0-1.4142 1.2021-2.6163 2.5456-2.5456h3.677c0.56568 0 1.3435 0.35355 1.7678 0.77782 0.98995 0.98995 0.77782 2.192 0.42426 3.2527h1.8385c0.49498-1.6263 0.42426-3.2527-0.84853-4.5255-0.84853-0.84853-1.9799-1.2728-3.0406-1.2021h-3.677c-2.4042 0-4.3134 1.9092-4.2426 4.2426 0 2.2627 1.9092 4.3134 4.1719 4.1719h2.687c-0.28284-0.14142-0.49497-0.35355-0.70711-0.56568-0.35355-0.35355-0.6364-0.6364-0.77782-1.0607z"></path>
+                                    </svg>
+                                </button>
+                            </section>
+                            <div id="padding-top" class="top">
+                                <div class="input-css" data-linked="${paddingLinked}" data-css-prop="padding-top" data-value="${paddingTop}" data-bind="paddingTop" contenteditable=""></div>
+                            </div>
+                            <div id="padding-left" class="left">
+                                <div class="input-css" data-linked="${paddingLinked}" data-css-prop="padding-left" data-value="${paddingLeft}" data-bind="paddingLeft" contenteditable="true"></div>
+                            </div>
+                            <div id="padding-right" class="right">
+                                <div class="input-css" data-linked="${paddingLinked}" data-css-prop="padding-right" data-value="${paddingRight}" data-bind="paddingRight" contenteditable="true"></div>
+                            </div>
+                            <div id="padding-bottom" class="bottom">
+                                <div class="input-css" data-linked="${paddingLinked}" data-css-prop="padding-bottom" data-value="${paddingBottom}" data-bind="paddingBottom" contenteditable="true"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- box-sizing -->
+        <div class="property-box">
+            <div>box-sizing: </div>
+            <div class="input-css autocomplete" data-css-prop="box-sizing" data-css-prop-js="boxSizing" data-value="${boxSizing}" data-auto-global-suggestion="cssDefaults.box-sizing" data-bind="boxSizing" contenteditable=""></div>
+        </div>
+        <!-- max-width -->
+        <div class="property-box">
+            <div>max-width: </div>
+            <div class="input-css autocomplete" data-css-prop="max-width" data-css-prop-js="maxWidth" data-value="${maxWidth}" data-auto-global-suggestion="cssDefaults.max-width" data-bind="maxWidth" contenteditable=""></div>
+        </div>
+        <!-- min-width -->
+        <div class="property-box">
+            <div>min-width: </div>
+            <div class="input-css autocomplete" data-css-prop="min-width" data-css-prop-js="minWidth" data-value="${minWidth}" data-auto-global-suggestion="cssDefaults.min-width" data-bind="minWidth" contenteditable=""></div>
+        </div>
+        <!-- max-height -->
+        <div class="property-box">
+            <div>max-height: </div>
+            <div class="input-css autocomplete" data-css-prop="max-height" data-css-prop-js="maxHeight" data-value="${maxHeight}" data-auto-global-suggestion="cssDefaults.min-height" data-bind="maxHeight" contenteditable=""></div>
+        </div>
+        <!-- min-height -->
+        <div class="property-box">
+            <div>min-height: </div>
+            <div class="input-css autocomplete" data-css-prop="min-height" data-css-prop-js="minHeight" data-value="${minHeight}" data-auto-global-suggestion="cssDefaults.min-height" data-bind="minHeight" contenteditable=""></div>
+        </div>
+        <!-- object-fit -->
+        <div class="property-box ${objectEl}">
+            <div>object-fit: </div>
+            <div class="input-css autocomplete" data-css-prop="object-fit" data-css-prop-js="objectFit" data-value="${objectFit}" data-auto-global-suggestion="cssDefaults.object-fit" data-bind="objectFit" contenteditable=""></div>
+        </div>
+        <!-- object-position -->
+        <div class="property-box ${objectEl}">
+            <div>object-position: </div>
+            <div class="input-css autocomplete" data-css-prop="object-position" data-css-prop-js="objectPosition" data-value="${objectPosition}" data-auto-global-suggestion="cssDefaults.object-position" data-bind="objectPosition" contenteditable=""></div>
+        </div>
+    </div>
+</section><section id="transform" class="${isVisible}" data-tilepieces-component="tilepieces/transform" style="display:none">
+    <div class="tab-buttons" id="transform-tabs">
+        <a class="tab-prev" href="javascript:void(0)">...</a>
+        <a class="tab-next" href="javascript:void(0)">...</a>
+        <div class="tab-buttons-wrap">
+            <div class="tab-buttons-inside">
+                <a href="#general-transform" class="selected">General</a>
+                <a href="#transform-functions">Transform functions</a>
+            </div>
+        </div>
+    </div>
+    <div id="general-transform">
+        <!-- transform -->
+        <div class="property-box">
+            <div>transform: </div>
+            <div class="input-css autocomplete" data-css-prop="transform" data-css-prop-js="transform" data-value="${transform}" data-auto-global-suggestion="cssDefaults.transform" data-bind="transform" contenteditable=""></div>
+        </div>
+        <!-- transform-origin -->
+        <div class="property-box">
+            <div>transform-origin: </div>
+            <div class="input-css autocomplete" data-css-prop="transform-origin" data-css-prop-js="transformOrigin" data-value="${transformOrigin}" data-auto-global-suggestion="cssDefaults.transform-origin" data-bind="transformOrigin" contenteditable=""></div>
+        </div>
+        <!-- transform-style -->
+        <div class="property-box">
+            <div>transform-style: </div>
+            <div class="input-css autocomplete" data-css-prop="transform-style" data-css-prop-js="transformStyle" data-value="${transformStyle}" data-auto-global-suggestion="cssDefaults.transform-style" data-bind="transformStyle" contenteditable=""></div>
+        </div>
+        <!-- perspective -->
+        <div class="property-box">
+            <div>perspective: </div>
+            <div class="input-css autocomplete" data-css-prop="perspective" data-css-prop-js="perspective" data-value="${perspective}" data-auto-global-suggestion="cssDefaults.perspective" data-bind="perspective" contenteditable=""></div>
+        </div>
+        <!-- perspective-origin -->
+        <div class="property-box">
+            <div>perspective-origin: </div>
+            <div class="input-css autocomplete" data-css-prop="perspective-origin" data-css-prop-js="perspectiveOrigin" data-value="${perspectiveOrigin}" data-auto-global-suggestion="cssDefaults.perspective-origin" data-bind="perspectiveOrigin" contenteditable=""></div>
+        </div>
+    </div>
+    <div id="transform-functions" style="display:none">
+        <ul>
+            <li data-foreach="functions" data-foreach-key-name="f" data-index="${f.index}">
+                <span class="handler">H</span>
+                <fieldset>
+                    <legend>${f.name}</legend>
+                    <div class="input-css" data-type="transform-function" data-value="${f.value}" data-index="${f.index}" data-bind="f.value" contenteditable="">
+                    </div>
+                </fieldset>
+                <button class="remove-function" data-index="${f.index}">- function</button>
+            </li>
+        </ul>
+        <div>
+            <select data-bind="transformNewType">
+                <option value="translate(0px,0px)">translate</option>
+                <option value="translateX(0px)">translateX</option>
+                <option value="translateY(0px)">translateY</option>
+                <option value="translateZ(0px)">translateZ</option>
+                <option value="translate3d(0px,0px,0px)">translate3d</option>
+                <option value="scale(1,1)">scale</option>
+                <option value="scaleX(1)">scaleX</option>
+                <option value="scaleY(1)">scaleY</option>
+                <option value="scaleZ(1)">scaleZ</option>
+                <option value="scale3d(1,1,1)">scale3d</option>
+                <option value="rotate(0deg)">rotate</option>
+                <option value="rotateX(0deg)">rotateX</option>
+                <option value="rotateY(0deg)">rotateY</option>
+                <option value="rotateZ(0deg)">rotateZ</option>
+                <option value="rotate3d(0,0,0,0deg)">rotate3d</option>
+                <option value="skew(0deg,0deg)">skew</option>
+                <option value="skewX(0deg)">skewX</option>
+                <option value="skewY(0deg)">skewY</option>
+                <option value="perspective(0px)">perspective</option>
+                <option value="matrix(1, 0, 0, 1, 0, 0)">matrix</option>
+                <option value="matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)">matrix3d</option>
+            </select>
+            <button class="add-function">+ function</button>
+        </div>
+    </div>
+</section><section id="animations" class="${isVisible}" data-tilepieces-component="tilepieces/animations" style="display:none">
+    <div class="tab-component">
+        <div class="tab-component-buttons">
+            <span data-href="general-animations" class="selected">general</span>
+            <span data-href="keyframes">animations</span>
+        </div>
+    </div>
+    <div id="general-animations">
+        <div class="property-box">
+            <div>animation: </div>
+            <div class="input-css autocomplete" data-css-prop="animation" data-css-prop-js="animation" data-value="${animation}" data-auto-global-suggestion="cssDefaults.animation" data-bind="animation" contenteditable=""></div>
+        </div>
+        <details>
+            <summary>animation properties</summary>
+            <div class="property-box">
+                <div>animation-name: </div>
+                <div class="input-css autocomplete" data-css-prop="animation-name" data-css-prop-js="animationName" data-value="${animationName}" data-auto-global-suggestion="cssDefaults.animation-name" data-bind="animationName" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>animation-duration: </div>
+                <div class="input-css autocomplete" data-css-prop="animation-duration" data-css-prop-js="animationDuration" data-value="${animationDuration}" data-auto-global-suggestion="cssDefaults.animation-duration" data-bind="animationDuration" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>animation-timing-function: </div>
+                <div class="input-css autocomplete" data-css-prop="animation-timing-function" data-css-prop-js="animationTimingFunction" data-value="${animationTimingFunction}" data-auto-global-suggestion="cssDefaults.animation-timing-function" data-bind="animationTimingFunction" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>animation-delay: </div>
+                <div class="input-css autocomplete" data-css-prop="animation-delay" data-css-prop-js="animationDelay" data-value="${animationDelay}" data-auto-global-suggestion="cssDefaults.animation-delay" data-bind="animationDelay" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>animation-iteration-count: </div>
+                <div class="input-css autocomplete" data-css-prop="animation-iteration-count" data-css-prop-js="animationIterationCount" data-value="${animationIterationCount}" data-auto-global-suggestion="cssDefaults.animation-iteration-count" data-bind="animationIterationCount" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>animation-direction: </div>
+                <div class="input-css autocomplete" data-css-prop="animation-direction" data-css-prop-js="animationDirection" data-value="${animationDirection}" data-auto-global-suggestion="cssDefaults.animation-direction" data-bind="animationDirection" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>animation-fill-mode: </div>
+                <div class="input-css autocomplete" data-css-prop="animation-fill-mode" data-css-prop-js="animationFillMode" data-value="${animationFillMode}" data-auto-global-suggestion="cssDefaults.animation-fill-mode" data-bind="animationFillMode" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>animation-play-state: </div>
+                <div class="input-css autocomplete" data-css-prop="animation-play-state" data-css-prop-js="animationPlayState" data-value="${animationPlayState}" data-auto-global-suggestion="cssDefaults.animation-play-state" data-bind="animationPlayState" contenteditable=""></div>
+            </div>
+        </details>
+        <div class="property-box">
+            <div>transition: </div>
+            <div class="input-css autocomplete" data-css-prop="transition" data-css-prop-js="transition" data-value="${transition}" data-auto-global-suggestion="cssDefaults.transition" data-bind="transition" contenteditable=""></div>
+        </div>
+        <details>
+            <summary>transition properties</summary>
+            <div class="property-box">
+                <div>transition css property: </div>
+                <div class="input-css autocomplete" data-css-prop="transition-property" data-css-prop-js="transitionProperty" data-value="${transitionProperty}" data-auto-global-suggestion="cssDefaults.transition-property" data-bind="transitionProperty" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>transition duration: </div>
+                <div class="input-css autocomplete" data-css-prop="transition-duration" data-css-prop-js="transitionDuration" data-value="${transitionDuration}" data-auto-global-suggestion="cssDefaults.transition-duration" data-bind="transitionDuration" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>transition timing function: </div>
+                <div class="input-css autocomplete" data-css-prop="transition-timing-function" data-css-prop-js="transitionTimingFunction" data-value="${transitionTimingFunction}" data-auto-global-suggestion="cssDefaults.transition-timing-function" data-bind="transitionTimingFunction" contenteditable=""></div>
+            </div>
+            <div class="property-box">
+                <div>transition delay: </div>
+                <div class="input-css autocomplete" data-css-prop="transition-delay" data-css-prop-js="transitionDelay" data-value="${transitionDelay}" data-auto-global-suggestion="cssDefaults.transition-delay" data-bind="transitionDelay" contenteditable=""></div>
+            </div>
+        </details>
+    </div>
+    <div id="keyframes" style="display:none">
+        <button id="new-animation">New Animation</button>
+        <div data-foreach="animations" data-foreach-key-name="animation" class="animation__rule-block" data-bind-dom-prop="__animation,animation" data-index="${animation.index}">
+            <div class="animation__rule-block__inherited-divider">
+                <span data-bind="animation.name" ${animation.contenteditable}=""></span>
+                <button class="delete-animation">-</button>
+                <button class="new-keyframe"><small>new keyframe</small></button>
+                <button class="open-animation">▼</button>
+            </div>
+            <div class="animation_keyframe ${animation.show} ${animation.contenteditable}">
+                <div data-foreach="animation.cssRules" data-foreach-key-name="keyframe" class="keyframe__rule-block" data-bind-dom-prop="__keyframe-rule,keyframe">
+                    <div class="keyframe__rule__selector">
+                        <div class="keyframe__rule__selector-name" data-bind="keyframe.keyText" ${animation.contenteditable}="">
+                        </div>
+                        <button data-if="keyframe.index != 0 &amp;&amp; keyframe.index<animation.cssRules.length-1" class="delete-keyframe" data-index="${keyframe.index}">-</button>
+                    </div>
+                    <div data-use="css-properties-list" data-params="rule,keyframe"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><div id="modal-new-animation" class="modal-animation" tabindex="-1" data-tilepieces-component="tilepieces/animations">
+    <section>
+        <div class="modal-animation-close"></div>
+        <form id="new-animation-form">
+            <label for="new-animation-name">
+                <span>new animation name</span>
+                <input name="new-animation-name" id="new-animation-name" title="" autocomplete="off" required="">
+            </label>
+            <small id="new-animation-error" style="display:none">Invalid syntax</small>
+            <div>
+                <button type="submit">create</button>
+            </div>
+        </form>
+    </section>
+</div><div id="modal-new-keyframe" class="modal-animation" tabindex="-1" data-tilepieces-component="tilepieces/animations">
+    <section>
+        <div class="modal-animation-close"></div>
+        <form id="new-keyframe-form">
+            <label for="new-animation-name">
+                <span>percentage position:</span>
+                <input name="new-animation-name" id="new-keyframe-name" type="number" min="0" max="100" required="">%
+            </label>
+            <small id="new-keyframe-error" style="display:none">Invalid syntax</small>
+            <div>
+                <button type="submit">insert</button>
+            </div>
+        </form>
+    </section>
+</div><section id="css-text" class="${isVisible}" data-tilepieces-component="tilepieces/css-text" style="display:none">
+    <div class="tab-buttons" id="tab-css-text">
+        <a class="tab-prev" href="javascript:void(0)">...</a>
+        <a class="tab-next" href="javascript:void(0)">...</a>
+        <div class="tab-buttons-wrap">
+            <div class="tab-buttons-inside">
+                <a href="#css-text-general" class="selected">General</a>
+                <a href="#text-shadow-tab">Text Shadow</a>
+            </div>
+        </div>
+    </div>
+    <div id="css-text-general">
+        <!-- Font family -->
+        <div class="property-box">
+            <div>Font-family: </div>
+            <div class="input-css autocomplete" data-css-prop="font-family" data-css-prop-js="fontFamily" data-value="${fontFamily}" id="font-family-input" data-auto-global-suggestion="app.core.fontSuggestions" data-bind="fontFamily" contenteditable=""></div>
+        </div>
+        <!-- Font Size -->
+        <div class="property-box">
+            <div>Font-size: </div>
+            <div class="input-css autocomplete" data-css-prop="font-size" data-css-prop-js="fontSize" data-value="${fontSize}" data-auto-global-suggestion="cssDefaults.font-size" data-bind="fontSize" contenteditable=""></div>
+        </div>
+        <!-- Font weight -->
+        <div class="property-box">
+            <div>Font-weight: </div>
+            <div class="input-css autocomplete" data-css-prop="font-weight" data-css-prop-js="fontWeight" data-value="${fontWeight}" data-auto-global-suggestion="cssDefaults.font-weight" data-bind="fontWeight" contenteditable=""></div>
+        </div>
+        <!-- Font style -->
+        <div class="property-box">
+            <div>Font-style: </div>
+            <div class="input-css autocomplete" data-css-prop="font-style" data-css-prop-js="fontStyle" data-value="${fontStyle}" data-auto-global-suggestion="cssDefaults.font-style" data-bind="fontStyle" contenteditable=""></div>
+        </div>
+        <!-- line-height -->
+        <div class="property-box">
+            <div>Line-height: </div>
+            <div class="input-css autocomplete" data-css-prop="line-height" data-css-prop-js="lineHeight" data-value="${lineHeight}" data-auto-global-suggestion="cssDefaults.line-height" data-bind="lineHeight" contenteditable=""></div>
+        </div>
+        <!-- text-align -->
+        <div class="property-box">
+            <div>Text-align: </div>
+            <div class="input-css autocomplete" data-css-prop="text-align" data-css-prop-js="textAlign" data-value="${textAlign}" data-auto-global-suggestion="cssDefaults.text-align" data-bind="textAlign" contenteditable=""></div>
+        </div>
+        <!-- color -->
+        <div class="property-box">
+            <div>Color: </div>
+            <span id="color" style="background:${realColor}" data-css-prop="color" class="color-button"></span>
+            <div class="input-css autocomplete" data-css-prop="color" data-css-prop-js="color" data-value="${color}" data-auto-global-suggestion="cssDefaults.color" data-bind="color" contenteditable=""></div>
+        </div>
+        <!-- text-decoration -->
+        <div class="property-box">
+            <div>Text-decoration: </div>
+            <div class="input-css autocomplete" data-css-prop="text-decoration" data-css-prop-js="textDecoration" data-value="${textDecoration}" data-auto-global-suggestion="cssDefaults.text-decoration" data-bind="textDecoration" contenteditable=""></div>
+        </div>
+        <!-- text-transform -->
+        <div class="property-box">
+            <div>Text-transform: </div>
+            <div class="input-css autocomplete" data-css-prop="text-transform" data-css-prop-js="textTransform" data-value="${textTransform}" data-auto-global-suggestion="cssDefaults.text-transform" data-bind="textTransform" contenteditable=""></div>
+        </div>
+        <!-- text-indent -->
+        <div class="property-box">
+            <div>Text-indent: </div>
+            <div class="input-css autocomplete" data-css-prop="text-indent" data-css-prop-js="textIndent" data-value="${textIndent}" data-auto-global-suggestion="cssDefaults.text-indent" data-bind="textIndent" contenteditable=""></div>
+        </div>
+        <!-- letter-spacing -->
+        <div class="property-box">
+            <div>Letter-spacing: </div>
+            <div class="input-css autocomplete" data-css-prop="letter-spacing" data-css-prop-js="letterSpacing" data-value="${letterSpacing}" data-auto-global-suggestion="cssDefaults.letter-spacing" data-bind="letterSpacing" contenteditable=""></div>
+        </div>
+        <!-- word-spacing -->
+        <div class="property-box">
+            <div>Word-spacing: </div>
+            <div class="input-css autocomplete" data-css-prop="word-spacing" data-css-prop-js="wordSpacing" data-value="${wordSpacing}" data-auto-global-suggestion="cssDefaults.word-spacing" data-bind="wordSpacing" contenteditable=""></div>
+        </div>
+    </div>
+    <div id="text-shadow-tab" style="display:none">
+        <!-- text-shadow -->
+        <div class="property-box">
+            <div>Text-shadow: </div>
+            <div class="input-css autocomplete" data-css-prop="text-shadow" data-css-prop-js="textShadow" data-value="${textShadow}" data-auto-global-suggestion="cssDefaults.text-shadow" data-bind="textShadow" contenteditable=""></div>
+        </div>
+        <button class="add-text-shadow">Add</button>
+        <fieldset data-foreach="textShadows" data-foreach-key-name="textShadowValue" class="text-shadow">
+            <legend>Text Shadow #${textShadowValue.index}</legend>
+            <button class="remove-text-shadow" data-index="${textShadowValue.index}">Remove</button>
+            <div style="float:left;width:calc(100% - 220px)">
+                <label for="x-offset-${textShadowValue.index}">X offset</label>
+                <input id="x-offset-${textShadowValue.index}" data-index="${textShadowValue.index}" data-text-shadow="offsetX" type="number" data-bind="textShadowValue.offsetX">px<br>
+                <label for="y-offset-${textShadowValue.index}">Y offset</label>
+                <input id="y-offset-${textShadowValue.index}" data-index="${textShadowValue.index}" data-text-shadow="offsetY" type="number" data-bind="textShadowValue.offsetY">px<br>
+                <label for="blur-offset-${textShadowValue.index}">Blur</label>
+                <input id="blur-offset-${textShadowValue.index}" type="number" data-index="${textShadowValue.index}" min="0" step="0.5" data-text-shadow="blur" data-bind="textShadowValue.blur">px
+                <input data-bind="textShadowValue.blurToSlider" data-text-shadow="blur" data-index="${textShadowValue.index}" type="range" min="0" max="30" step="0.5">
+                <div data-text-shadow="color" class="color-button" data-index="${textShadowValue.index}" style="background:${textShadowValue.color}"></div>
+            </div>
+            <div style="float:right">
+                <svg id="svg-text-shadow-${textShadowValue.index}" data-index="${textShadowValue.index}" style="border:1px solid;display:block;margin:auto;width:200px;height:200px">
+                    <line x1="0" y1="50%" x2="100%" y2="50%" stroke="black" stroke-width="1" stroke-dasharray="10"></line>
+                    <line x1="50%" y1="0%" x2="50%" y2="100%" stroke="black" stroke-width="1" stroke-dasharray="10"></line>
+                    <line x1="50%" y1="50%" x2="50%" y2="50%" stroke="black" stroke-width="2" class="line-test"></line>
+                    <circle cx="50%" cy="50%" r="10" fill="lightblue" class="circle-test"></circle>
+                </svg>
+            </div>
+        </fieldset>
+    </div>
+</section><div class="autocomplete-hint" data-tilepieces-component="tilepieces/autocomplete"></div><script src="../bundle/css-viewer.bundle.js" data-tilepieces-component="tilepieces/css-viewer/bundle"></script></body></html>

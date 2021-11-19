@@ -1,6 +1,6 @@
 const server = require("@tilepieces/node-server");
 const open = require('open');
-module.exports = function(settings,basePath) {
+function startServer(settings,basePath) {
   var a = server(settings,basePath);
   a.then(res=> {
     console.log("application name response",res.applicationName);
@@ -17,3 +17,4 @@ module.exports = function(settings,basePath) {
     }
   });
 }
+module.exports = startServer;

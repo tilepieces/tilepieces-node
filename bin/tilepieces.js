@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const path = require("path");
-const startServer = require("../startTilepiecesServer");
+const startServer = require("../startTilepiecesServer.js");
 let setStartPath;
 let settings;
 for(var i = 2;i<process.argv.length;i++){
@@ -9,7 +9,7 @@ for(var i = 2;i<process.argv.length;i++){
             command[0].trim().toLowerCase()) > -1
     ) {
       setStartPath = process.cwd() + path.sep;
-      settings = require("./settings.json");
+      settings = require(setStartPath + "settings.json");
     }
 }
 if(!settings){

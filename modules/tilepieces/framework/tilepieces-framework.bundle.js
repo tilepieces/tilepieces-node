@@ -3198,10 +3198,7 @@ window.tilepieces = {
   jsDefaultPath : "js",
   cssDefaultPath : "css",
   workspace : "www",
-  terserConfiguration : {
-    sourceMap : true,
-    JSON : {}
-  },
+  terserConfiguration : {compress:false,mangle:false},
   frameResourcePath : ()=>tilepieces.workspace ? (tilepieces.workspace + "/" + (tilepieces.currentProject || "")).replace(/\/\//g,"/") : "",
   serviceWorkers : [],
   utils:{
@@ -6370,6 +6367,8 @@ function notAdmittedTagNameInPosition(tagName,composedPath){
       );
   if(tagName == "LI")
     return !composedPath[0].tagName.match(/^(UL|OL)$/);
+  if(tagName.match(/^(DD|DT)$/))
+    return composedPath[0].tagName != "DL";
   if(tagName == "SOURCE")
     return !composedPath[0].tagName.match(/^(VIDEO|AUDIO|PICTURE)$/);
   if(tagName.match(/^(META|LINK)$/))
@@ -6384,6 +6383,10 @@ function notAdmittedTagNameInPosition(tagName,composedPath){
     return !composedPath[0].tagName.match(/THEAD|TBODY|TFOOT/);
   if(tagName == "TRACK")
     return !composedPath[0].tagName.match(/VIDEO|AUDIO/);
+  if(tagName == "OPTGROUP")
+    return composedPath[0].tagName != "SELECT";
+  if(tagName == "OPTION")
+    return !composedPath[0].tagName.match(/SELECT|OPTGROUP|DATALIST/);
   if(tagName.match(/^(HTML|BODY|HEAD)$/))
     return true;
   return composedPath.find((v,i)=>v.tagName && (
@@ -6421,44 +6424,6 @@ async function processFile(file,path,docPath){
   await tilepieces.storageInterface.update(path, file);
   return tilepieces.relativePaths ? tilepieces.utils.getRelativePath(docPath || tilepieces.utils.getDocumentPath(),
     path) : "/" + path;
-}
-function splitCssValue(cssStyle){
-    var swap = cssStyle;
-    var cursor = 0;
-    var tokens = [];
-    var values = [];
-    var value = "";
-    var currentToken;
-    while(cursor < swap.length) {
-        var sub = swap.substring(cursor);
-        if (sub[0] == '(') {
-            var newcurrentToken = {start: cursor,childs:[],father:currentToken||tokens};
-            if(currentToken && currentToken!=tokens) {
-                currentToken.childs.push(newcurrentToken);
-                currentToken = newcurrentToken;
-            }
-            else {
-                tokens.push(newcurrentToken);
-                currentToken = newcurrentToken
-            }
-        }
-        if(sub[0] == ')'){
-            currentToken.end=cursor+1;
-            currentToken = currentToken.father;
-        }
-        if(sub[0] == "," && (!currentToken || currentToken==tokens)){
-            values.push(value.trim());
-            value = "";
-        }
-        else if(cursor == swap.length-1){
-            value+=sub[0];
-            values.push(value.trim());
-        }
-        else
-            value+=sub[0];
-        cursor+=1;
-    }
-    return values;
 }
 // https://stackoverflow.com/questions/33704791/how-do-i-uninstall-a-service-worker
 function unregisterSw(){
@@ -9425,7 +9390,8 @@ async function searchForLastProject(){
     }
   }
   else{
-      tilepieces.setFrame("");
+    dialog.close();
+    tilepieces.setFrame("");
   }
 }
 window.addEventListener("set-project",async e=>{

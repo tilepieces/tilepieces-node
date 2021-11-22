@@ -250,11 +250,16 @@ async function addComponentHTML(component){
     opener.dialog.open(e);
     return;
   }
+  var fixedPlaceholder;
   // remove all previous element labeled as this component
-  toRemove.forEach(v=>{
+  toRemove.forEach((v,i)=>{
     if(v.tagName != "LINK" && v.tagName != "STYLE" &&
       (v.tagName != "SCRIPT" || app.utils.javascriptMimeTypes.indexOf(v.type)==-1) &&
       component.fixedHTML){
+      if(i==0) {
+        fixedPlaceholder = app.core.currentDocument.createComment(component.name + " placeholder")
+        app.core.htmlMatch.replaceWith(v, fixedPlaceholdert)
+      }
       app.core.htmlMatch.removeChild(v)
     }
   });
@@ -287,13 +292,21 @@ async function addComponentHTML(component){
   });
   var newHTMLElement = fragment.children[0];
   if(component.fixedHTML){
-    var scriptToAppendBefore,scriptMatch;
-    var scriptsToAppendBefore = app.core.htmlMatch.source.querySelectorAll("body > script");
-    scriptToAppendBefore = scriptsToAppendBefore ? [...scriptsToAppendBefore].find(s=>app.utils.javascriptMimeTypes.indexOf(s.type)>-1) : null;
-    if(scriptToAppendBefore)
-      scriptMatch = app.core.htmlMatch.match(scriptToAppendBefore,false,false,true);
-    app.core.htmlMatch.
-      insertAdjacentElement(scriptMatch || app.core.currentDocument.body,scriptMatch ? "before" : "append",fragment);
+    if(fixedPlaceholder){
+      // TODO replaceWith doesn't work with documentFragment
+      app.core.htmlMatch.
+        insertAdjacentElement(fixedPlaceholder, "after", fragment);
+      app.core.htmlMatch.removeChild(fixedPlaceholder);
+    }
+    else {
+      var scriptToAppendBefore, scriptMatch;
+      var scriptsToAppendBefore = app.core.htmlMatch.source.querySelectorAll("body > script");
+      scriptToAppendBefore = scriptsToAppendBefore ? [...scriptsToAppendBefore].find(s=>app.utils.javascriptMimeTypes.indexOf(s.type) > -1) : null;
+      if (scriptToAppendBefore)
+        scriptMatch = app.core.htmlMatch.match(scriptToAppendBefore, false, false, true);
+      app.core.htmlMatch.
+        insertAdjacentElement(scriptMatch || app.core.currentDocument.body, scriptMatch ? "before" : "append", fragment);
+    }
   }
   else{
     var iel = 0;

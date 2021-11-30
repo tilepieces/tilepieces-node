@@ -5,7 +5,7 @@
   },
   "workspace": "www",
   "applicationName": "tilepieces",
-  "panelPosition": "free",
+  "panelPosition": "right",
   "APIInterface": "./API.js",
   "sandboxFrame": true,
   "componentsPath": "components"

@@ -240,29 +240,6 @@ async function addComponentHTML(component){
   if(!component.html || (!elementSelected && !component.fixedHTML))
     return;
   var currentDoc = app.core.currentDocument;
-  // search in the document with [data-tilepieces-component]
-  try {
-    var toRemove = currentDoc.
-      querySelectorAll(component.selector || `[${app.componentAttribute}="${component.name}"]`);
-  }
-  catch(e){
-    console.error(e);
-    opener.dialog.open(e);
-    return;
-  }
-  var fixedPlaceholder;
-  // remove all previous element labeled as this component
-  toRemove.forEach((v,i)=>{
-    if(v.tagName != "LINK" && v.tagName != "STYLE" &&
-      (v.tagName != "SCRIPT" || app.utils.javascriptMimeTypes.indexOf(v.type)==-1) &&
-      component.fixedHTML){
-      if(i==0) {
-        fixedPlaceholder = app.core.currentDocument.createComment(component.name + " placeholder")
-        app.core.htmlMatch.replaceWith(v, fixedPlaceholdert)
-      }
-      app.core.htmlMatch.removeChild(v)
-    }
-  });
   var newElText = await app.storageInterface.read((component.path||"") + "/" + component.html);
   if(component.parseHTML){
     try {
@@ -278,6 +255,32 @@ async function addComponentHTML(component){
     }
     catch(e){console.error(e)}
   }
+  // search in the document with [data-tilepieces-component]
+  try {
+    var toRemove = currentDoc.
+      querySelectorAll(component.selector || `[${app.componentAttribute}="${component.name}"]`);
+  }
+  catch(e){
+    console.error(e);
+    opener.dialog.open(e);
+    return;
+  }
+  var fixedPlaceholder;
+  var indexHTML = 0;
+  // remove all previous element labeled as this component
+  toRemove.forEach((v,i)=>{
+    if(v.tagName != "LINK" && v.tagName != "STYLE" &&
+      (v.tagName != "SCRIPT" || app.utils.javascriptMimeTypes.indexOf(v.type)==-1) &&
+      component.fixedHTML){
+      if(indexHTML==0) {
+        fixedPlaceholder = app.core.currentDocument.createComment(component.name + " placeholder")
+        app.core.htmlMatch.replaceWith(v, fixedPlaceholder)
+      }
+      else
+        app.core.htmlMatch.removeChild(v)
+      indexHTML++;
+    }
+  });
   var parser = new DOMParser();
   var doc = parser.parseFromString(newElText, "text/html");
   var fragment = currentDoc.createDocumentFragment();
@@ -673,7 +676,11 @@ async function clickOnComponent(e){
       return;
   }
   //newHTMLElement && app.core.selectElement(newHTMLElement);
-  opener.dialog.close();
+  if(!newHTMLElement){
+    opener.dialog.open("component installed correctly");
+  }
+  else
+    opener.dialog.close();
 }
 componentSection.addEventListener("click",clickOnComponent);
 utf8CharsSection.addEventListener("click",e=>{
@@ -834,21 +841,6 @@ function turnComponentsToArray(comps,isDep = false){
         if(c.components)
             c.components = turnComponentsToArray(c.components,true);
     }
-    /*
-    if(app.isComponent && !isDep){
-        var mainComponent = Object.assign({},app.isComponent);
-        mainComponent.components = toArray;
-        if(mainComponent.html){
-            mainComponent.__iframe_path = "/" + mainComponent.html
-        }
-        if(!mainComponent.html && !mainComponent.miscellaneous.length &&
-            !Object.keys(mainComponent.bundle.script).length &&
-            !Object.keys(mainComponent.bundle.stylesheet).length &&
-            !mainComponent.sources.scripts.length && !mainComponent.sources.stylesheets.length){
-            mainComponent.noAdd = true;
-        }
-        toArray = [mainComponent];
-    }*/
     return toArray;
 }
 

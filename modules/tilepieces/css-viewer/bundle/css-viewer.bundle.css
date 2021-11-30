@@ -302,7 +302,7 @@ body{
 .css-inspector__rule-block .rule-block__add-property{
     visibility:hidden;
 }
-.css-inspector__rule-block.selected .rule-block__add-property{
+.css-inspector__rule-block.selected.contenteditable .rule-block__add-property{
     visibility:visible;
 }
 .is-not-inherited{

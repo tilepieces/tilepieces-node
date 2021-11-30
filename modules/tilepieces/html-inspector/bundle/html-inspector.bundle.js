@@ -1,3 +1,4 @@
+"use strict";
 (()=>{
 HtmlTreeBuilder.prototype.collapseChildren = function(){
     var carets = this.selected.querySelectorAll(".html-tree-builder__caret");
@@ -72,11 +73,18 @@ function createElementRepresentation(target) {
         `<span class="html-tree-builer__tag-span">${closure}</span>`;
 }
 function createMenuToggler(div) {
-    var menuToggler = document.createElement("span");
-    menuToggler.className = "menu-toggle";
-    menuToggler.innerHTML = "<a href='javascript:void(0)'>...</a>";
-    div.insertBefore(menuToggler, div.firstChild);
-    return menuToggler;
+  var divWrapper = document.createElement("div");
+  divWrapper.className = "menu-toggle-wrapper"
+  var dragToggler = document.createElement("span");
+  dragToggler.className = "html-tree-build-dragger";
+  dragToggler.innerHTML = "&#x21c5;";
+  divWrapper.prepend(dragToggler);
+  var menuToggler = document.createElement("a");
+  menuToggler.setAttribute("href","javascript:void(0)");
+  menuToggler.className="menu-toggle";
+  menuToggler.textContent="..."
+  divWrapper.prepend(menuToggler);
+  div.prepend(divWrapper);
 }
 function escapeHtml(unsafe) {
     return unsafe
@@ -89,7 +97,7 @@ function escapeHtml(unsafe) {
 function handleClick(e,$self){
     if(e.target.classList.contains("html-tree-builder__caret"))
         return;
-    if(e.target.parentNode.classList.contains("menu-toggle"))
+    if(e.target.closest(".menu-toggle-wrapper"))
         return;
     /* get target */
     var target = e.target.closest(".html-tree-builder-el");
@@ -105,8 +113,9 @@ function handleClick(e,$self){
             opener.dispatchEvent(
                 new CustomEvent("html-tree-remove-multiselection", {
                     detail: {
-                        index:multiSelectionIndex,
-                        target
+                      el,
+                      index:multiSelectionIndex,
+                      target
                     }
                 })
             );
@@ -187,13 +196,15 @@ HtmlTreeBuilder.prototype.highlightElement = function(target,highlight=true){
     });
     // get rootElement immediately visible by scrolling html-tree-builder container
     if(highlight){
-        this.toggleClassListHighlight(rootElement);
+      this.toggleClassListHighlight(rootElement);
         //var y = (rootElement.offsetTop - (treeBuilderDOMRepr.offsetHeight/2));
+      /*
         var c = rootElement.querySelector(".html-tree-builder__caret");
         c && !c.classList.contains("open") && c.click();
-        var win = treeBuilderDOMRepr.ownerDocument.defaultView;
+        */
+      var win = treeBuilderDOMRepr.ownerDocument.defaultView;
         //treeBuilderDOMRepr.scrollTop = (rootElement.offsetTop - (treeBuilderDOMRepr.offsetHeight/2)) + "px";
-        win.scrollTo(0,rootElement.offsetTop);
+      win.scrollTo(0,rootElement.offsetTop);
     }
     return rootElement;
 }
@@ -283,7 +294,6 @@ function HtmlTreeBuilder(target,el,options = {}) {
     this.treeBuilder= treeBuilder;
     this.createAttributes= createAttributes;
     this.isInView = isInView;
-    this.setTogglerPosition = setTogglerPosition;
     this.destroy = ()=>{
         target.removeEventListener("click",openTree);
         target.removeEventListener("click",hc);
@@ -324,7 +334,7 @@ function openTree(e){
                 var link = doc.createElement("a");
                 link.href="javascript:void(0)";
                 link.className="link-to-iframe";
-                link.innerHTML = "<span>"+el.src+"</span>";
+                link.innerHTML = "<span>"+(el.src||'""')+"</span>";
                 ul.append(link);
             }
             else if(el.shadowRoot || win.customElements.get(el.tagName.toLowerCase()) ||
@@ -380,10 +390,6 @@ HtmlTreeBuilder.prototype.toggleClassListHighlight = function(element){
     // add highlight to element
     element && element.classList.add("html-tree-builder__highlight");
     var treeBuilderElement = element && element.querySelector(".html-tree-builer__tag");
-    treeBuilderElement &&
-    setTogglerPosition(treeBuilderElement,
-        htmlTreeBuilderTarget,
-        element.querySelector(".menu-toggle"),element.querySelector(".span-close"));
     this.multiselection &&
     !this.multiselected.find(v=>v.listEl == element) &&
     this.multiselected.push({listEl:element,el:element["__html-tree-builder-el"]});
@@ -401,15 +407,15 @@ function treeBuilder(el,whereAppend,t) {
     var html = doc.createDocumentFragment();
     //exclude comments and empty text fragments
     if(!showEmptyNodes) {
-        if (el.nodeName == "#text" && !el.nodeValue.length)
+        if (el.nodeName == "#text" && !el.nodeValue.trim().length)
             return html;
     }
     var li = doc.createElement("li");
     var div = doc.createElement("div");
-    div.className = "html-tree-builer__tag";
+    div.className = "html-tree-builder__tag";
     if (el.nodeName != "#text" && el.nodeName != "#comment")
         div.innerHTML = createElementRepresentation(el);
-    else if (el.nodeName == "#text" && el.nodeValue.length)
+    else if (el.nodeName == "#text" && el.nodeValue.trim().length)
         div.innerHTML = "<span class='html-tree-builder-node-value' spellcheck='false'>" +
             escapeHtml(el.nodeValue) + "</span>";
     else if (el.nodeName == "#text")
@@ -436,7 +442,7 @@ function treeBuilder(el,whereAppend,t) {
     }
     li.classList.add("html-tree-builder-el");
     li["__html-tree-builder-el"] = el;
-    var menuToggler = createMenuToggler(div);
+    createMenuToggler(div);
     html.appendChild(li);
     whereAppend.appendChild(html);
     return li;
@@ -1387,8 +1393,6 @@ window.addEventListener('blur',e=>{
 });
 overlay.addEventListener('keydown',onKeyDown);
 overlay.addEventListener('click',e=>{
-    if(e.target.closest(".CodeMirror"))
-        return;
     if(!treeBuilder) // on load, when we open the html and the body.
         return;
     var target = e.target;
@@ -1441,36 +1445,51 @@ opener.addEventListener("highlight-click",function(e){
 });
 opener.addEventListener("tilepieces-mutation-event",mutation);
 // ON READY
-if(app && app.core && app.core.currentDocument) {
-    treeBuilder = htmlTreeBuilder(overlayInner, app.core.currentDocument,htmlTreeBuilderOptions);
-    if(app.elementSelected) {
-        selected = treeBuilder.highlightElement(app.elementSelected);
-        if(!toMatch(app.selectorObj.match))
-            selected.classList.add("not-match");
-    }
-    app.treeBuilder = treeBuilder;
-    if(app.multiselected)
+function htmlInspectorInit(){
+  if(app && app.core && app.core.currentDocument) {
+      treeBuilder = htmlTreeBuilder(overlayInner, app.core.currentDocument,htmlTreeBuilderOptions);
+      if(app.elementSelected) {
+          selected = treeBuilder.highlightElement(app.elementSelected);
+          if(!toMatch(app.selectorObj.match))
+              selected.classList.add("not-match");
+      }
+      app.treeBuilder = treeBuilder;
+      if(app.multiselected) {
+        multiselectButton.classList.add("selected")
         treeBuilder.activateMultiSelection();
+      }
+  }
 }
-/*
+htmlInspectorInit();
 opener.addEventListener("deselect-multielement",e=>{
-    if(internalMultiremove){
-        internalMultiremove = false;
-        return;
-    }
-    var el = e.detail;
-    var index = treeBuilder.findIndex(v=>v.el==el);
-    console.warn("el ->",el," index ->",index);
-    treeBuilder.removeItemSelected(index);
-    selected = treeBuilder.selected;
-});*/
+  if(internalMultiremove){
+    internalMultiremove = false;
+    console.warn("exit from multiselected",e);
+    return;
+  }
+  var el = e.detail;
+  var index = treeBuilder.multiselected.findIndex(v=>v.el==el);
+  if(index<0){
+    console.error("[html-inspector] deselect multielement not exists in treeBuilder.multiselected",e);
+    return;
+  }
+  treeBuilder.removeItemSelected(index);
+  selected = treeBuilder.selected;
+});
 opener.addEventListener("html-tree-remove-multiselection",e=>{
-    internalMultiremove = true;
-    selected = treeBuilder.selected;
-    app.removeItemSelected(e.detail.index);
-    console.warn(app.multiselections,treeBuilder.multiselected,app.elementSelected)
-    var d = app.multiselections.every((v,i)=>v.el = treeBuilder.multiselected[i].el)
-    console.warn(d)
+  internalMultiremove = true;
+  selected = treeBuilder.selected;
+  var index = app.multiselections.findIndex(v=>v.el==e.detail.el);
+  if(index<0){
+    console.error("[html-inspector] deselect multielement not exists in treeBuilder.multiselected",e);
+    return;
+  }
+  app.removeItemSelected(index);
+  /*
+  app.multiselections.forEach((v,i)=>{
+    if(treeBuilder.multiselected[i])
+      v.el = treeBuilder.multiselected[i].el
+  })*/
 });
 opener.addEventListener("deselect-element",e=>{
     if(!treeBuilder.multiselection){
@@ -1485,12 +1504,12 @@ opener.addEventListener("multiselection-enabled",e=>{
         app.enableMultiselection();
     }
 })
+ */
 opener.addEventListener("multiselection-canceled",e=>{
-    if(multiselectButton.classList.contains("selected")){
-        treeBuilder.removeMultiSelection();
-        app.destroyMultiselection();
-    }
-})*/
+  if(multiselectButton.classList.contains("selected")){
+      multiselectButton.click();
+  }
+})
 function destroyTreeBuilder(){
     treeBuilder.destroy();
     overlayInner.innerHTML = "";
@@ -1510,8 +1529,9 @@ window.addEventListener("window-popup-open",e=>{
     });
 });
 window.addEventListener("window-popup-close",e=>{
-    var newWindow = e.detail.panelElementIframe.contentWindow;
-    selected && newWindow.scrollTo(0,selected.offsetTop);
+  //htmlInspectorInit();
+  var newWindow = e.detail.panelElementIframe.contentWindow;
+  selected && newWindow.scrollTo(0,selected.offsetTop);
 });
 function toMatch(match){
     var sourceTarget = selected["__html-tree-builder-el"];
@@ -1689,89 +1709,91 @@ function editOuterHtml() {
         })
 }
 const dragList = __dragList(overlay,{
-    convalidateStart : function(el,originalEl){
-        if(originalEl.closest("[contenteditable]") || originalEl.closest(".CodeMirror"))
-            return;
-        var selectedEl = selected ? selected["__html-tree-builder-el"] : null;
-        var targetEl = el["__html-tree-builder-el"];
-        if(treeBuilder.multiselected.length && targetEl &&
-            treeBuilder.multiselected.find(n=>n.el == targetEl)){
-            return {multiselection:treeBuilder.multiselected.map(v=>v.listEl).sort((a,b)=>a.offsetTop - b.offsetTop)}
-        }
-        if(selectedEl &&
-            selectedIsMatch &&
-            targetEl &&
-            el == selected &&
-            !selectedEl.nodeName.match(/(HTML|HEAD|BODY)$/) &&
-            !targetEl.nodeName.match(/(HTML|HEAD|BODY)$/))
-            return true
-    },
-    convalidate : function(el){
-        var selectedEl = selected ? selected["__html-tree-builder-el"] : null;
-        var targetEl = el["__html-tree-builder-el"];
-        var targetElMatch = targetEl && app.core.htmlMatch.find(targetEl);
-        if(targetElMatch &&
-            selectedEl &&
-            selectedIsMatch &&
-            targetEl &&
-            selectedEl != targetEl &&
-            !selectedEl.contains(targetEl) &&
-            !selectedEl.nodeName.match(/(HTML|HEAD|BODY)$/) &&
-            !targetEl.nodeName.match(/(HTML|HEAD|BODY)$/) &&
-            el.parentNode != overlay.children[0] &&
-            el.parentNode != overlay)
-            return true;
+  convalidateStart : function(el,originalEl){
+    if(originalEl.closest("[contenteditable]"))
+        return;
+    var selectedEl = selected ? selected["__html-tree-builder-el"] : null;
+    var targetEl = el["__html-tree-builder-el"];
+    if(treeBuilder.multiselected.length && targetEl &&
+        treeBuilder.multiselected.find(n=>n.el == targetEl)){
+        return {multiselection:treeBuilder.multiselected.map(v=>v.listEl).sort((a,b)=>a.offsetTop - b.offsetTop)}
     }
+    if(selectedEl &&
+        selectedIsMatch &&
+        targetEl &&
+        el == selected &&
+        !selectedEl.nodeName.match(/(HTML|HEAD|BODY)$/) &&
+        !targetEl.nodeName.match(/(HTML|HEAD|BODY)$/))
+        return true
+  },
+  convalidate : function(el){
+    var selectedEl = selected ? selected["__html-tree-builder-el"] : null;
+    var targetEl = el["__html-tree-builder-el"];
+    var targetElMatch = targetEl && app.core.htmlMatch.find(targetEl);
+    if(targetElMatch &&
+        selectedEl &&
+        selectedIsMatch &&
+        targetEl &&
+        selectedEl != targetEl &&
+        !selectedEl.contains(targetEl) &&
+        !selectedEl.nodeName.match(/(HTML|HEAD|BODY)$/) &&
+        !targetEl.nodeName.match(/(HTML|HEAD|BODY)$/) &&
+        el.parentNode != overlay.children[0] &&
+        el.parentNode != overlay)
+        return true;
+    },
+  handlerSelector : ".html-tree-build-dragger"
 });
 dragList.on("move",e=>{
-    var nodes = e.target;
+  var nodes = e.target;
+  var prevEl = e.prev && e.prev["__html-tree-builder-el"];
+  var prevFound = prevEl && app.core.htmlMatch.find(prevEl);
+  if (prevFound){
     for(var i = nodes.length-1;i>=0;i--){
-        isAutoInsertionFlag = true;
-        var node = nodes[i];
-        var el = node["__html-tree-builder-el"];
-        var prevEl = e.prev && e.prev["__html-tree-builder-el"];
-        var prevFound = prevEl && app.core.htmlMatch.find(prevEl);
-        if (prevFound)
-            app.core.htmlMatch.move(prevEl, el, "after");
-        else
-            app.core.htmlMatch.move(e.next["__html-tree-builder-el"], el,"before");
+      app.core.htmlMatch.move(prevEl,
+        nodes[i]["__html-tree-builder-el"],
+        "after");
     }
+  }
+  else{
+    for(var i = 0;i<nodes.length;i++){
+      app.core.htmlMatch.move(e.next["__html-tree-builder-el"],
+        nodes[i]["__html-tree-builder-el"],
+        "before");
+    }
+  }
 })
-// pivotEl for css/js view
+// pivotEl for css/js view TODO remove
 function pasteEl(pivotEl,insertionMode){
-    var els = pivotEl ?
-        [{el:pivotEl["__html-tree-builder-el"]}] :
-    treeBuilder.multiselection ? treeBuilder.multiselected : [{el:selected["__html-tree-builder-el"]}];
-    var copyElements = cut || copy;
-    isPasteEvent = !(!!pivotEl);
-    copyElements.sort((a,b)=>a.listEl.offsetTop - b.listEl.offsetTop).forEach(n=>{
-        var toAppend = n.el;
-        /*
-        if(cut && toAppend.contains(el)){
-            console.warn("pasteEl - trying to put an element inside itself");
-            return;
-        }*/
-        els.forEach(multiObj=>{
-            /*
-             if(el.tagName.match(app.utils.notEditableTags)){
-             console.warn("pasteEl - trying to put elements inside a void element");
-             return;
-             }*/
-            /*
-             if(copy)
-             toAppend = toAppend.cloneNode(true);
-             app.core.htmlMatch[insertionMode || app.insertionMode](multiObj.el, toAppend, !(!!copy));*/
-            var newEl = toAppend.cloneNode(true);
-            app.core.htmlMatch[insertionMode || app.insertionMode](multiObj.el, newEl);
-            if(cut)
-                app.core.htmlMatch.removeChild(toAppend);
-        })
-    });
-
-    if(pivotEl){
-        cut = null;
-        copy = null;
-    }
+  var els = treeBuilder.multiselection ? treeBuilder.multiselected : [{el:selected["__html-tree-builder-el"]}];
+  var copyElements = cut || copy;
+  //isPasteEvent = !(!!pivotEl);
+  copyElements.sort((a,b)=>a.listEl.offsetTop - b.listEl.offsetTop).forEach(n=>{
+    var toAppend = n.el;
+    /*
+    if(cut && toAppend.contains(el)){
+        console.warn("pasteEl - trying to put an element inside itself");
+        return;
+    }*/
+    els.forEach(multiObj=>{
+      /*
+       if(el.tagName.match(app.utils.notEditableTags)){
+       console.warn("pasteEl - trying to put elements inside a void element");
+       return;
+       }*/
+      /*
+       if(copy)
+       toAppend = toAppend.cloneNode(true);
+       app.core.htmlMatch[insertionMode || app.insertionMode](multiObj.el, toAppend, !(!!copy));*/
+      var newEl = toAppend.cloneNode(true);
+      app.core.htmlMatch[insertionMode || app.insertionMode](multiObj.el, newEl);
+      if(cut)
+          app.core.htmlMatch.removeChild(toAppend);
+    })
+  });
+  copyElements.forEach(n=>n.listEl.classList.remove("cutted,copied"));
+  cut = null;
+  copy = null;
 }
 addStyleSheetButton.addEventListener("click",e=>{
     var isFormAlreadyInDialog = cssViewDOM.ownerDocument.getElementById("add-stylesheet-form");
@@ -1794,337 +1816,282 @@ function stylesheetTagChange(e){
         v != "link" ? "none" : "block";
 }
 async function createNewStylesheet(e){
-    e.preventDefault();
-    var newTagName = e.target["add-stylesheet-tag"].value;
-    var newTag = app.core.currentDocument.createElement(newTagName);
-    var isCurrent = e.target["add-stylesheet-current"].checked;
-    if(newTagName == "link") {
-        newTag.rel = "stylesheet";
-        var href = e.target["add-stylesheet-href"].value.trim();
-        opener.dialog.open("loading stylesheet...",true);
-        app.core.fetchingStylesheet(href).then(async ()=>{
-            newTag.href = href;
-            opener.dialog.close();
-            await closeDialogNewStylesheet(newTag,isCurrent);
-        },err=>{
-            if(err.status && err.status == 404 &&
-                !href.match(app.utils.URLIsAbsolute) &&
-                href.endsWith('.css') &&
-                app.storageInterface) {
-                newTag.href = href;
-                var urlToUpdate = new URL(href,app.core.currentWindow.location.href);
-                urlToUpdate = urlToUpdate.pathname.replace(app.frameResourcePath(),"").replace(/\/\//g,"/");
-                app.storageInterface.update(urlToUpdate, new Blob([""]))
-                    .then(async ()=> {
-                        opener.dialog.close();
-                        await closeDialogNewStylesheet(newTag, isCurrent)
-                    }, err=> {
-                        opener.dialog.close();
-                        console.error("[error in creating path" + newTag.href + "]", err);
-                        opener.dialog.open("creating stylesheet error");
-                    })
-            }
-            else {
-                console.log("[fetch stylesheet " + newTag.href + " error]",err);
+  e.preventDefault();
+  var newTagName = e.target["add-stylesheet-tag"].value;
+  var newTag = app.core.currentDocument.createElement(newTagName);
+  var isCurrent = e.target["add-stylesheet-current"].checked;
+  if(newTagName == "link") {
+    newTag.rel = "stylesheet";
+    var href = e.target["add-stylesheet-href"].value.trim();
+    opener.dialog.open("loading stylesheet...",true);
+    app.core.fetchingStylesheet(href).then(async ()=>{
+        newTag.href = href;
+        opener.dialog.close();
+        await closeDialogNewStylesheet(newTag,isCurrent);
+    },err=>{
+      if(err.status && err.status == 404 &&
+        !href.match(app.utils.URLIsAbsolute) &&
+        href.endsWith('.css') &&
+        app.storageInterface) {
+        newTag.href = href;
+        var urlToUpdate = new URL(href,app.core.currentWindow.location.href);
+        urlToUpdate = urlToUpdate.pathname.replace(app.frameResourcePath(),"").replace(/\/\//g,"/");
+        app.storageInterface.update(urlToUpdate, new Blob([""]))
+            .then(async ()=> {
                 opener.dialog.close();
-                opener.dialog.open("loading stylesheet error");
-            }
-        })
-    }
-    else await closeDialogNewStylesheet(newTag,isCurrent);
+                await closeDialogNewStylesheet(newTag, isCurrent)
+            }, err=> {
+                opener.dialog.close();
+                console.error("[error in creating path" + newTag.href + "]", err);
+                opener.dialog.open("creating stylesheet error");
+            })
+      }
+      else {
+        console.log("[fetch stylesheet " + newTag.href + " error]",err);
+        opener.dialog.close();
+        opener.dialog.open("loading stylesheet error");
+      }
+    })
+  }
+  else await closeDialogNewStylesheet(newTag,isCurrent);
 }
 async function closeDialogNewStylesheet(newTag,isCurrent){
-    var insertionMode = app.insertionMode == "prepend" ?
-        "before" :
-        app.insertionMode == "append" ?
-            "after" :
-            app.insertionMode;
-    if(selectedJsCSS)
-        app.core.htmlMatch[insertionMode](selectedJsCSS["__html-tree-builder-el"],
-            newTag);
-    else
-        app.core.htmlMatch.append(app.core.currentDocument.head,newTag);
-    if(isCurrent)
-        await app.core.setCurrentStyleSheet(newTag);
-
-    selectedJsCSS = {"__html-tree-builder-el":newTag};
-    dialog.close();
+  var insertionMode = app.insertionMode == "prepend" ?
+      "before" :
+      app.insertionMode == "append" ?
+          "after" :
+          app.insertionMode;
+  if(selectedJsCSS)
+      app.core.htmlMatch[insertionMode](selectedJsCSS["__html-tree-builder-el"],
+          newTag);
+  else
+      app.core.htmlMatch.append(app.core.currentDocument.head,newTag);
+  selectedJsCSS = {"__html-tree-builder-el":newTag};
+  if(isCurrent)
+      await app.core.setCurrentStyleSheet(newTag);
+  dialog.close();
 }
 function handleCssTooltip(li,e){
     var el = li["__html-tree-builder-el"];
     var notDisplay = [];
     if(li.classList.contains("not-match"))
-        notDisplay = [1,2,3,4,5,6];
+        notDisplay = [1,2,3];
     if(el.sheet == app.core.currentStyleSheet)
-        notDisplay.push(5);
-    if(!cut && !copy)
-        notDisplay.push(3);
+        notDisplay.push(2);
     var sameDomain = el.tagName == "STYLE" ||
         (el.tagName == "LINK" &&
         el.getAttribute("href") &&
     !el.getAttribute("href").match(/^(http:\/\/)|^(https:\/\/)/));
     if(!sameDomain || (el.tagName == "LINK" &&!app.storageInterface))
-        notDisplay.push(6);
+        notDisplay.push(3);
     [...cssViewTooltip.children].forEach((v,i)=>
         v.style.display = notDisplay.indexOf(i)>-1 ? "none" : "block");
     tooltip(e,cssViewTooltip);
 }
 function cssJsView(tagSelector,DOMContainer,DOMlist){
-    var tags = app.core.currentDocument.querySelectorAll(tagSelector);
-    DOMlist.innerHTML = "";
-    var frag = DOMContainer.ownerDocument.createDocumentFragment();
-    var updateSelectCss;
-    [...tags].forEach(obj=>{
-        treeBuilder.treeBuilder(obj, frag,DOMContainer);
-        var el = frag.lastElementChild;
-        var elMatch = app.core.htmlMatch.find(el["__html-tree-builder-el"]);
-        if(!elMatch)
-            el.classList.add("not-match");
-        var clipBoard = cut || copy;
-        if(multiSelectionJsCss)
-            multiSelectionJsCss.find(v=>v.el == obj) &&
-            el.classList.add("html-tree-builder__highlight");
-        if(clipBoard) {
-            clipBoard.find(v=>v.el == obj) &&
-            el.classList.add(copy ? "copied" : "cutted");
-        }
-        updateSelectCss = updateSelectCss ||(
-        selectedJsCSS && selectedJsCSS["__html-tree-builder-el"] == el["__html-tree-builder-el"] && el);
-    });
-    DOMlist.appendChild(frag);
-    [...DOMlist.children].forEach(c=>{
-        var treeBuilderElement = c.querySelector(".html-tree-builer__tag");
-        treeBuilderElement &&
-        treeBuilder.setTogglerPosition(treeBuilderElement,
-            DOMContainer,
-            c.querySelector(".menu-toggle"),c.querySelector(".span-close"));
-    });
+  var tags = app.core.currentDocument.querySelectorAll(tagSelector);
+  DOMlist.innerHTML = "";
+  var frag = DOMContainer.ownerDocument.createDocumentFragment();
+  var updateSelectCss;
+  [...tags].forEach(obj=>{
+    treeBuilder.treeBuilder(obj, frag,DOMContainer);
+    var el = frag.lastElementChild;
+    var elMatch = app.core.htmlMatch.find(el["__html-tree-builder-el"]);
+    if(!elMatch)
+        el.classList.add("not-match");
+    if(multiSelectionJsCss) {
+      var findInMultiSelection = multiSelectionJsCss.find(v=>v.el == obj);
+      if(findInMultiSelection) {
+        findInMultiSelection.listEl = el;
+        el.classList.add("html-tree-builder__highlight");
+      }
+    }
+    if(selectedJsCSS && selectedJsCSS["__html-tree-builder-el"] == el["__html-tree-builder-el"]){
+      selectedJsCSS = el;
+      el.classList.add("html-tree-builder__highlight");
+      app.elementSelected = el["__html-tree-builder-el"];
+    }
+  });
+  DOMlist.appendChild(frag);
+  /*
     updateSelectCss && updateSelectCss.click();
     if(!updateSelectCss && selectedJsCSS)
         selectedJsCSS = null;
+        */
 }
 function createEditorCssJs(src,value,mode,originalElement) {
-    app.codeMirrorEditor(value,mode)
-        .then(res=>{
-            if(src) {
-                app.storageInterface.update(src, new Blob([res]))
-                    .then(ok=>app.core.htmlMatch.replaceWith(originalElement, originalElement.cloneNode()),
-                        err=> {
-                        console.error("[update resource error]", err);
-                        opener.dialog.open("update resource error")
-                    })
-                    .finally(()=> {
-                        dialog.close();
-                    })
-            }
-            else{
-                var newScript = originalElement.cloneNode();
-                newScript.innerHTML = res;
-                app.core.htmlMatch.replaceWith(originalElement,newScript);
-                dialog.close();
-            }
-        },e=>console.error(e));
+  app.codeMirrorEditor(value,mode)
+    .then(res=>{
+      if(src) {
+        var urlToUpdate = new URL(src,app.core.currentWindow.location.href);
+        urlToUpdate = urlToUpdate.pathname.replace(app.frameResourcePath(),"").replace(/\/\//g,"/");
+        app.storageInterface.update(urlToUpdate, new Blob([res]))
+          .then(ok=> {
+            var newElement = originalElement.cloneNode();
+            app.core.htmlMatch.replaceWith(originalElement,newElement)
+            selectedJsCSS = {"__html-tree-builder-el":newElement};
+          },
+          err=> {
+            console.error("[update resource error]", err);
+            opener.alertDialog("update resource error")
+          })
+      }
+      else{
+        var newScript = originalElement.cloneNode();
+        newScript.innerHTML = res;
+        app.core.htmlMatch.replaceWith(originalElement,newScript);
+        selectedJsCSS = {"__html-tree-builder-el":newScript};
+      }
+    },e=>console.error(e));
 }
 function cssJsMove(DOMList) {
-    var dragList = __dragList(DOMList, {
-        convalidateStart: function (el) {
-            if (treeBuilder.multiselection && multiSelectionJsCss.find(v=>v.listEl == el)) {
-                return {multiselection: multiSelectionJsCss.map(v=>v.listEl).sort((a, b)=>a.offsetTop - b.offsetTop)}
-            }
-            if (el == selectedJsCSS)
-                return true
-        },
-        convalidate: function (el) {
-            if (!el.classList.contains("not-match"))
-                return true;
-        }
-    });
-    dragList.on("move", e=> {
-        var nodes = e.target;
-        for(var i = nodes.length-1;i>=0;i--){
-            var node = nodes[i];
-            var el = node["__html-tree-builder-el"];
-            var prevEl = e.prev && e.prev["__html-tree-builder-el"];
-            var prevFound = prevEl && app.core.htmlMatch.find(prevEl);
-            if (prevFound)
-                app.core.htmlMatch.move(prevEl, el, "after");
-            else
-                app.core.htmlMatch.move(e.next["__html-tree-builder-el"], el,"before");
-        }
-    });
-    return dragList;
+  var dragList = __dragList(DOMList, {
+    convalidateStart: function (el) {
+      console.log(multiSelectionJsCss.find(v=>v.listEl == el),);
+      if (app.multiselected && multiSelectionJsCss.find(v=>v.listEl == el)) {
+          return {multiselection: multiSelectionJsCss.map(v=>v.listEl).sort((a, b)=>a.offsetTop - b.offsetTop)}
+      }
+      if (el == selectedJsCSS)
+          return true
+    },
+    convalidate: function (el) {
+        if (!el.classList.contains("not-match"))
+            return true;
+    },
+    handlerSelector : ".html-tree-build-dragger"
+  });
+  dragList.on("move", e=> {
+    var nodes = e.target;
+    var prevEl = e.prev && e.prev["__html-tree-builder-el"];
+    var prevFound = prevEl && app.core.htmlMatch.find(prevEl);
+    if (prevFound){
+      for(var i = nodes.length-1;i>=0;i--){
+        app.core.htmlMatch.move(prevEl,
+          nodes[i]["__html-tree-builder-el"],
+          "after");
+      }
+    }
+    else{
+      for(var i = 0;i<nodes.length;i++){
+        app.core.htmlMatch.move(e.next["__html-tree-builder-el"],
+          nodes[i]["__html-tree-builder-el"],
+          "before");
+      }
+    }
+  });
+  return dragList;
 }
 function cssJsKeyDown(DOMlist) {
-    DOMlist.addEventListener("keydown", e=> {
-        if (e.key == "Delete" && selectedJsCSS) {
-            if (treeBuilder.multiselection)
-                multiSelectionJsCss.forEach(mc=>delEl(mc.el, mc.listEl, false));
-            else
-                delEl(selectedJsCSS["__html-tree-builder-el"], selectedJsCSS, false);
-            return;
-        }
-        if (e.ctrlKey && selectedJsCSS) {
-            switch (e.key) {
-                case "c":
-                case "C":
-                    e.preventDefault();
-                    var elementsToCopy = treeBuilder.multiselection ? multiSelectionJsCss :
-                        [{el: selectedJsCSS["__html-tree-builder-el"], listEl: selectedJsCSS}];
-                    copyEl(elementsToCopy);
-                    multiSelectionJsCss.forEach(v=>v!=selectedJsCSS &&
-                    v.listEl.classList.add("html-tree-builder__highlight"));
-                    multiSelectionJsCss = [];
-                    break;
-                case "x":
-                case "X":
-                    e.preventDefault();
-                    var elementsToCut = treeBuilder.multiselection ? multiSelectionJsCss :
-                        [{el: selectedJsCSS["__html-tree-builder-el"], listEl: selectedJsCSS}];
-                    cutEl(elementsToCut);
-                    multiSelectionJsCss.forEach(v=>v!=selectedJsCSS &&
-                    v.listEl.classList.add("html-tree-builder__highlight"));
-                    multiSelectionJsCss = [];
-                    break;
-                case "v":
-                case "V":
-                    e.preventDefault();
-                    if (!cut && !copy)
-                        return;
-                    var insertionMode = app.insertionMode == "prepend" ?
-                        "before" :
-                        app.insertionMode == "append" ?
-                            "after" :
-                            app.insertionMode;
-                    pasteEl(selectedJsCSS,insertionMode);
-                    break;
-            }
-        }
-    });
+  DOMlist.addEventListener("keydown", e=> {
+    if (e.key == "Delete" && selectedJsCSS) {
+      autoInsertionJsCss = true;
+      if (treeBuilder.multiselection)
+        multiSelectionJsCss.forEach(mc=>delEl(mc.el, mc.listEl, false));
+      else
+        delEl(selectedJsCSS["__html-tree-builder-el"], selectedJsCSS, false);
+      selectedJsCSS = null;
+      selected = null;
+      app.core.deselectElement();
+    }
+  });
 }
 function onListClick(DOMlist,tooltip,handleTooltipFunction) {
     DOMlist.addEventListener("click", e=> {
-        var li = e.target.closest("li");
-        if (!li) return;
-        // activate tooltip
-        if (e.target.parentNode.classList.contains("menu-toggle")) {
-            if (treeBuilder.multiselection && selectedJsCSS != li)
-                selectedJsCSS = li;
-            if (tooltip.style.display != "block")
-                handleTooltipFunction(li, e);
-            return;
-        }
-        if (li.classList.contains("not-match")) return;
-        var multiSelectionIndex = multiSelectionJsCss.findIndex(v=>v.listEl == li);
-        if (selectedJsCSS && selectedJsCSS == li) {
-            if (treeBuilder.multiselection) {
-                multiSelectionJsCss.splice(multiSelectionIndex, 1);
-                li.classList.remove("html-tree-builder__highlight");
-                selectedJsCSS = multiSelectionJsCss.length ? multiSelectionJsCss[multiSelectionJsCss.length - 1] : null;
-            }
-            return;
-        }
-        else if(multiSelectionIndex>-1){
-            multiSelectionJsCss.splice(multiSelectionIndex, 1);
-            li.classList.remove("html-tree-builder__highlight");
-            return;
-        }
-        /*
-        if (app.elementSelected)
-            app.core.deselectElement();*/
-        li.classList.add("html-tree-builder__highlight");
-        treeBuilder.multiselection && multiSelectionJsCss.push({listEl: li, el: li["__html-tree-builder-el"]});
-        selectedJsCSS &&
-        selectedJsCSS instanceof HTMLElement &&
-        selectedJsCSS != li &&
-        !treeBuilder.multiselection &&
-        selectedJsCSS.classList.remove("html-tree-builder__highlight");
-        selectedJsCSS = li;
-        var DOMelement = li["__html-tree-builder-el"];
-        selectedJsCSSMatch = app.core.htmlMatch.find(DOMelement);
-        app.core.selectElement(DOMelement,selectedJsCSSMatch);
-    });
+      var li = e.target.closest("li");
+      if (!li) return;
+      var multiSelected = app.multiselected;
+      // activate tooltip
+      if (e.target.closest(".menu-toggle")) {
+          if (multiSelected && selectedJsCSS != li)
+              selectedJsCSS = li;
+          if (tooltip.style.display != "block")
+              handleTooltipFunction(li, e);
+          return;
+      }
+      if(e.target.closest(".menu-toggle-wrapper"))
+        return;
+      if (li.classList.contains("not-match")) return;
+      var multiSelectionIndex = multiSelectionJsCss.findIndex(v=>v.listEl == li);
+      if (selectedJsCSS && selectedJsCSS == li) {
+          if (multiSelected) {
+              multiSelectionJsCss.splice(multiSelectionIndex, 1);
+              li.classList.remove("html-tree-builder__highlight");
+              selectedJsCSS = multiSelectionJsCss.length ? multiSelectionJsCss[multiSelectionJsCss.length - 1] : null;
+          }
+          return;
+      }
+      else if(multiSelectionIndex>-1){
+          multiSelectionJsCss.splice(multiSelectionIndex, 1);
+          li.classList.remove("html-tree-builder__highlight");
+          return;
+      }
+      /*
+      if (app.elementSelected)
+          app.core.deselectElement();*/
+      li.classList.add("html-tree-builder__highlight");
+      multiSelected && multiSelectionJsCss.push({listEl: li, el: li["__html-tree-builder-el"]});
+      selectedJsCSS &&
+      selectedJsCSS instanceof HTMLElement &&
+      selectedJsCSS != li &&
+      !multiSelected &&
+      selectedJsCSS.classList.remove("html-tree-builder__highlight");
+      selectedJsCSS = li;
+      var DOMelement = li["__html-tree-builder-el"];
+      selectedJsCSSMatch = app.core.htmlMatch.find(DOMelement);
+      app.core.selectElement(DOMelement,selectedJsCSSMatch);
+  });
 }
 function cssJsTooltipEvent(tooltipEl) {
-    tooltipEl.addEventListener("click", e=> {
-        var actionName = e.target.dataset.name;
-        if (!actionName) return;
-        switch (actionName) {
-            case "reveal":
-                var cacheSel = selectedJsCSS["__html-tree-builder-el"];
-                selectedTab.click();
-                var el = treeBuilder.highlightElement(cacheSel);
-                //el.click();
-                break;
-            case "copy-element":
-                var elementsToCopy = treeBuilder.multiselection ? multiSelectionJsCss :
-                    [{el: selectedJsCSS["__html-tree-builder-el"], listEl: selectedJsCSS}];
-                copyEl(elementsToCopy);
-                multiSelectionJsCss.forEach(v=>v!=selectedJsCSS &&
-                v.listEl.classList.remove("html-tree-builder__highlight"));
-                multiSelectionJsCss = [];
-                break;
-            case "cut-element":
-                var elementsToCut = treeBuilder.multiselection ? multiSelectionJsCss :
-                    [{el: selectedJsCSS["__html-tree-builder-el"], listEl: selectedJsCSS}];
-                cutEl(elementsToCut);
-                multiSelectionJsCss.forEach(v=>v!=selectedJsCSS &&
-                v.listEl.classList.remove("html-tree-builder__highlight"));
-                multiSelectionJsCss = [];
-                break;
-            case "paste-element":
-                var insertionMode = app.insertionMode == "prepend" ?
-                    "before" :
-                    app.insertionMode == "append" ?
-                        "after" :
-                        app.insertionMode;
-                pasteEl(selectedJsCSS,insertionMode);
-                break;
-            case "remove-element":
-                autoInsertionJsCss = true;
-                if (treeBuilder.multiselection)
-                    multiSelectionJsCss.forEach(mc=>delEl(mc.el, mc.listEl, false));
-                else
-                    delEl(selectedJsCSS["__html-tree-builder-el"], selectedJsCSS, false);
-                selectedJsCSS = null;
-                selected = null;
-                app.core.deselectElement();
-                break;
-            case "edit":
-                var t = document.createElement("div");
-                var sel = selectedJsCSS["__html-tree-builder-el"];
-                var mode = sel.tagName == "SCRIPT" ? "js" : "css";
-                var valueFetch = (sel.tagName == "SCRIPT" && sel.src) || sel.tagName == "LINK";
-                dialog.open(t);
-                if(valueFetch){
-                    var originalSrc = sel.tagName == "SCRIPT" ? sel.getAttribute("src") : sel.getAttribute("href");
-                    var src = sel.tagName == "SCRIPT" ? sel.src : sel.href;
-                    fetch(src)
-                    .then(res=>{
-                            if(res.status == 200){
-                                return res.text();
-                            }
-                            else {
-                                dialog.close();
-                                console.error("[trying edit, resource status not 200]",res);
-                                opener.dialog.open("fail to edit")
-                            }
-                        },err=>{
-                            dialog.close();
-                            console.error("[trying edit, network error]",err);
-                            opener.dialog.open("fail to edit")
-                        })
-                    .then(value=>{
-                            createEditorCssJs(originalSrc,value,mode,sel)
-                        })
-                }
-                else createEditorCssJs("",sel.innerHTML,mode,sel);
-                break;
-            case "set-as-current":
-                app.core.setCurrentStyleSheet(selectedJsCSS["__html-tree-builder-el"]);
-                break;
-        }
-        tooltipEl.style.display = "none";
-    });
+  tooltipEl.addEventListener("click", e=> {
+    var actionName = e.target.dataset.name;
+    if (!actionName) return;
+    switch (actionName) {
+        case "reveal":
+          selectedTab.click();
+          break;
+        case "remove-element":
+          autoInsertionJsCss = true;
+          if (treeBuilder.multiselection)
+              multiSelectionJsCss.forEach(mc=>delEl(mc.el, mc.listEl, false));
+          else
+              delEl(selectedJsCSS["__html-tree-builder-el"], selectedJsCSS, false);
+          selectedJsCSS = null;
+          selected = null;
+          app.core.deselectElement();
+          break;
+        case "edit":
+          var sel = selectedJsCSS["__html-tree-builder-el"];
+          var mode = sel.tagName == "SCRIPT" ? "js" : "css";
+          var valueFetch = (sel.tagName == "SCRIPT" && sel.src) || sel.tagName == "LINK";
+          if(valueFetch){
+              var originalSrc = sel.tagName == "SCRIPT" ? sel.getAttribute("src") : sel.getAttribute("href");
+              var src = sel.tagName == "SCRIPT" ? sel.src : sel.href;
+              fetch(src)
+              .then(res=>{
+                      if(res.status == 200){
+                          return res.text();
+                      }
+                      else {
+                          console.error("[trying edit, resource status not 200]",res);
+                          opener.alertDialog("fail to edit",true)
+                      }
+                  },err=>{
+                      dialog.close();
+                      console.error("[trying edit, network error]",err);
+                      opener.alertDialog("fail to edit",true)
+                  })
+              .then(value=>{
+                    createEditorCssJs(originalSrc,value,mode,sel)
+                })
+          }
+          else createEditorCssJs("",sel.innerHTML,mode,sel);
+          break;
+        case "set-as-current":
+          app.core.setCurrentStyleSheet(selectedJsCSS["__html-tree-builder-el"]);
+          break;
+    }
+    tooltipEl.style.display = "none";
+  });
 }
 cssViewTooltip.addEventListener("blur",e=>{
     cssViewTooltip.style.display = "none"
@@ -2212,55 +2179,70 @@ function handleJsTooltip(li,e){
     var el = li["__html-tree-builder-el"];
     var notDisplay = [];
     if(li.classList.contains("not-match"))
-        notDisplay = [1,2,3,4,5];
-    if(!cut && !copy)
-        notDisplay.push(3);
+        notDisplay = [1,2];
     var sameDomain = !el.src || (el.tagName == "SCRIPT" && el.src
     && !el.getAttribute("src").match(/^(http:\/\/)|^(https:\/\/)/));
     if(!sameDomain || (el.src && !app.storageInterface))
-        notDisplay.push(5);
+        notDisplay.push(3);
     [...jsViewTooltip.children].forEach((v,i)=>
         v.style.display = notDisplay.indexOf(i)>-1 ? "none" : "block");
     tooltip(e,jsViewTooltip);
 }
 let selectedTab = null;
 [...menuBarTabs].forEach(mbt=>mbt.addEventListener("click",e=>{
-    var target = e.target;
-    var doc = target.getRootNode();
-    var isSelected = target.classList.toggle("selected");
-    if(selectedTab && selectedTab!=target){
-        selectedTab.classList.remove("selected");
-        doc.querySelector(selectedTab.getAttribute("href")).style.display = "none";
+  var target = e.target;
+  var doc = target.getRootNode();
+  var isSelected = target.classList.toggle("selected");
+  if(selectedTab && selectedTab!=target){
+      selectedTab.classList.remove("selected");
+      doc.querySelector(selectedTab.getAttribute("href")).style.display = "none";
+  }
+  var cacheSel = selectedJsCSS && selectedJsCSS["__html-tree-builder-el"];
+  multiSelectionJsCss = [];
+  selectedJsCSS = null;
+  var href = e.target.getAttribute("href");
+  if(isSelected) {
+    if(app.multiselected) {
+      app.multiselections.slice(0).forEach((v, i)=>{
+        internalMultiremove = true;
+        app.removeItemSelected()
+      });
+      treeBuilder.removeMultiSelection();
     }
-    /* empty clipboard */
-    var clipboard = copy || cut;
-    clipboard && clipboard.forEach(n=>n.listEl.classList.remove("cutted","copied"));
-    copy = null;
-    cut = null;
-    //multiSelectionJsCss.length && multiSelectionJsCss.forEach(v=>v.classList.remove("html-tree-builder__highlight"));
-    multiSelectionJsCss = [];
-    //selectedJsCSS && selectedJsCSS.classList.remove("html-tree-builder__highlight");
-    selectedJsCSS = null;
-    var href = e.target.getAttribute("href");
-    if(isSelected) {
-        if(searchTrigger.classList.contains("opened"))
-            searchTrigger.click();
-        selectedTab = e.target;
-        doc.querySelector(href).style.display = "block";
-        overlay.style.display = "none";
-        switch(href){
-            case "#css-view":
-                cssJsView("link[rel=stylesheet],style",cssViewDOM,cssViewDOMList);
-                break;
-            case "#js-view":
-                cssJsView("script",jsViewDOM,jsViewDOMList);
-        }
+    else
+      app.core.deselectElement();
+    if(searchTrigger.classList.contains("opened"))
+        searchTrigger.click();
+    selectedTab = e.target;
+    doc.querySelector(href).style.display = "block";
+    overlay.style.display = "none";
+    switch(href){
+        case "#css-view":
+            cssJsView("link[rel=stylesheet],style",cssViewDOM,cssViewDOMList);
+            break;
+        case "#js-view":
+            cssJsView("script",jsViewDOM,jsViewDOMList);
     }
-    else{
-        selectedTab = null;
-        doc.querySelector(href).style.display = "none";
-        overlay.style.display = "block";
+  }
+  else{
+    if(app.multiselected) {
+      app.multiselections.slice(0).forEach((v, i)=>{
+        internalMultiremove = true;
+        app.removeItemSelected()
+      });
+      treeBuilder.activateMultiSelection();
     }
+    selectedTab = null;
+    doc.querySelector(href).style.display = "none";
+    overlay.style.display = "block";
+    if(!app.elementSelected || app.elementSelected!=cacheSel)
+      app.core.currentDocument.documentElement.contains(cacheSel) &&
+      app.core.selectElement(cacheSel)
+    else if(cacheSel) {
+      selected = treeBuilder.highlightElement(cacheSel);
+      toMatch();
+    }
+  }
 }));
 function handleClick(e){
     selected = e.detail.selected;
@@ -2308,31 +2290,35 @@ function copyEl(elementsToCopy){
     var clipboard = copy || cut;
     clipboard && clipboard.forEach(n=>n.listEl.classList.remove("cutted","copied"));
     copy = elementsToCopy ||
-        (treeBuilder.multiselection ? treeBuilder.multiselected : [{el:selected["__html-tree-builder-el"],listEl:selected}]);
+        (treeBuilder.multiselection ? treeBuilder.multiselected.slice(0) : [{el:selected["__html-tree-builder-el"],listEl:selected}]);
     copy.forEach(n=>n.listEl.classList.add("copied"));
     cut = null;
     // clear multiselection
-    treeBuilder.clearMultiSelection();
+    //treeBuilder.clearMultiSelection();
     // elementsToCopy means a call from css/js view. We disable multiselection in this case.
+  /*
     if(treeBuilder.multiselection) {
         multiselectButton.click();
         //app.core.deselectElement();
     }
+    */
 }
 function cutEl(elementsToCut){
     var clipboard = copy || cut;
     clipboard && clipboard.forEach(n=>n.listEl.classList.remove("cutted","copied"));
     cut = elementsToCut ||
-        (treeBuilder.multiselection ? treeBuilder.multiselected : [{el:selected["__html-tree-builder-el"],listEl:selected}]);
+        (treeBuilder.multiselection ? treeBuilder.multiselected.slice(0) : [{el:selected["__html-tree-builder-el"],listEl:selected}]);
     cut.forEach(n=>n.listEl.classList.add("cutted"));
     copy = null;
     // clear multiselection
     //treeBuilder.clearMultiSelection(); // problem with selected
     // elementsToCopy means a call from css/js view. We disable multiselection in this case.
+  /*
     if(treeBuilder.multiselection) {
         multiselectButton.click();
         //app.core.deselectElement();
     }
+    */
 }
 function dblclick(e){
     if(!selected || !selected.contains(e.target))
@@ -2456,86 +2442,116 @@ function onKeyDown(e) {
     }
 }
 function mutation(e){
-    if(isAutoInsertionFlag) {
-        isAutoInsertionFlag = false;
-        return;
+  if(isAutoInsertionFlag) {
+      isAutoInsertionFlag = false;
+      return;
+  }
+  var ml = e.detail.mutationList;
+  var attr = [];
+  var childs = [];
+  var scriptMutation,cssMutation;
+  ml.forEach(m=>{
+      if(m.type=="attributes"){
+          if(attr.indexOf(m.target)<0)
+              attr.push(m.target)
+      }
+      if(m.type=="childList"){
+          if(childs.indexOf(m.target)<0)
+              childs.push(m.target);
+          scriptMutation = scriptMutation || [...m.addedNodes].concat([...m.removedNodes]).find(v=>v.tagName == "SCRIPT");
+          cssMutation = cssMutation || [...m.addedNodes].concat([...m.removedNodes]).find(v=>
+              (v.tagName == "LINK" && v.rel.toLowerCase() == "stylesheet")||
+              v.tagName == "STYLE");
+      }
+      if(m.type=="characterData"){
+          if(childs.indexOf(m.target.parentNode)<0)
+              childs.push(m.target.parentNode)
+      }
+      var targetTagName = m.target.tagName;
+      if(
+          (targetTagName == "LINK" && m.target.rel.toLowerCase() == "stylesheet")||
+          targetTagName == "STYLE"
+      )
+          cssMutation = true;
+      if(targetTagName == "SCRIPT")
+          scriptMutation = true;
+  });
+  attr.forEach(a=>{
+      var el = treeBuilder.isInView(a);
+      if(el) {
+          var attributes = el.querySelector(".html-tree-builder-attributes");
+          attributes.outerHTML = treeBuilder.createAttributes(a.attributes);
+      }
+  });
+  childs.forEach(c=>{
+      var el = treeBuilder.isInView(c);
+      if(!el)
+          return;
+      var target = el.querySelector(".html-tree-builder__caret");
+      if(!target){
+          el.querySelector(".html-tree-builder-element")
+              .insertAdjacentHTML('beforeend','<span class="html-tree-builder__caret"></span>');
+          return;
+      }
+      var ul = el.querySelector("ul");
+      ul && ul.remove();
+      el.classList.remove("open");
+      target && treeBuilder.openTree({target});
+  });
+  /*
+  if(isPasteEvent){
+      var className = cut ? "cutted":"copied";
+      var clipboard = cut || copy;
+      clipboard = clipboard.map(n=>{
+          var newTarget = treeBuilder.highlightElement(n.el,false);
+          newTarget.classList.add(className);
+          return{listEl:newTarget,el:n.el}
+      });
+      if(cut)
+          cut = clipboard;
+      else copy = clipboard;
+      isPasteEvent = false;
+  }*/
+  if(cssMutation && cssViewDOM.style.display == "block"){
+      if(autoInsertionJsCss)
+          autoInsertionJsCss = false;
+      else
+          cssJsView("link[rel=stylesheet],style",cssViewDOM,cssViewDOMList);
+  }
+  if(scriptMutation && jsViewDOM.style.display == "block")
+      if(autoInsertionJsCss)
+          autoInsertionJsCss = false;
+      else
+          cssJsView("script",jsViewDOM,jsViewDOMList);
+  var mutateSelections =
+    treeBuilder.multiselection ? treeBuilder.multiselected :
+      selected ? [{el:selected["__html-tree-builder-el"],listEl:selected}] : [];
+  mutateSelections.forEach((v,i)=>{
+    if(!app.core.currentDocument.documentElement.contains(v.el)){
+      if(!treeBuilder.multiselection){
+        selected = null;
+        treeBuilder.deSelect();
+      }
+      else{
+        treeBuilder.removeItemSelected(i);
+        opener.dispatchEvent(
+          new CustomEvent("html-tree-remove-multiselection", {detail: {el}})
+        );
+      }
+      return;
     }
-    var ml = e.detail.mutationList;
-    var attr = [];
-    var childs = [];
-    var scriptMutation,cssMutation;
-    ml.forEach(m=>{
-        if(m.type=="attributes"){
-            if(attr.indexOf(m.target)<0)
-                attr.push(m.target)
-        }
-        if(m.type=="childList"){
-            if(childs.indexOf(m.target)<0)
-                childs.push(m.target);
-            scriptMutation = scriptMutation || [...m.addedNodes].concat([...m.removedNodes]).find(v=>v.tagName == "SCRIPT");
-            cssMutation = cssMutation || [...m.addedNodes].concat([...m.removedNodes]).find(v=>
-                (v.tagName == "LINK" && v.rel.toLowerCase() == "stylesheet")||
-                v.tagName == "STYLE");
-        }
-        if(m.type=="characterData"){
-            if(childs.indexOf(m.target.parentNode)<0)
-                childs.push(m.target.parentNode)
-        }
-        var targetTagName = m.target.tagName;
-        if(
-            (targetTagName == "LINK" && m.target.rel.toLowerCase() == "stylesheet")||
-            targetTagName == "STYLE"
-        )
-            cssMutation = true;
-        if(targetTagName == "SCRIPT")
-            scriptMutation = true;
-    });
-    attr.forEach(a=>{
-        var el = treeBuilder.isInView(a);
-        if(el) {
-            var attributes = el.querySelector(".html-tree-builder-attributes");
-            attributes.outerHTML = treeBuilder.createAttributes(a.attributes);
-        }
-    });
-    childs.forEach(c=>{
-        var el = treeBuilder.isInView(c);
-        if(!el)
-            return;
-        var target = el.querySelector(".html-tree-builder__caret");
-        if(!target){
-            el.querySelector(".html-tree-builder-element")
-                .insertAdjacentHTML('beforeend','<span class="html-tree-builder__caret"></span>');
-            return;
-        }
-        var ul = el.querySelector("ul");
-        ul && ul.remove();
-        el.classList.remove("open");
-        target && treeBuilder.openTree({target});
-    });
-    if(isPasteEvent){
-        var className = cut ? "cutted":"copied";
-        var clipboard = cut || copy;
-        clipboard = clipboard.map(n=>{
-            var newTarget = treeBuilder.highlightElement(n.el,false);
-            newTarget.classList.add(className);
-            return{listEl:newTarget,el:n.el}
-        });
-        if(cut)
-            cut = clipboard;
-        else copy = clipboard;
-        isPasteEvent = false;
+    var isInView = treeBuilder.isInView(v.el)
+    if(!isInView)
+      isInView = treeBuilder.highlightElement(v.el);
+    if(isInView != v.listEl) {
+      if(selected == v.listEl){
+        selected = isInView;
+        treeBuilder.selected = isInView;
+      }
+      v.listEl = isInView;
+      v.listEl.classList.add("html-tree-builder__highlight");
     }
-    if(cssMutation && cssViewDOM.style.display == "block"){
-        if(autoInsertionJsCss)
-            autoInsertionJsCss = false;
-        else
-            cssJsView("link[rel=stylesheet],style",cssViewDOM,cssViewDOMList);
-    }
-    if(scriptMutation && jsViewDOM.style.display == "block")
-        if(autoInsertionJsCss)
-            autoInsertionJsCss = false;
-        else
-            cssJsView("script",jsViewDOM,jsViewDOMList);
+  })
     /*
     if(app.elementSelected && selected && selected["__html-tree-builder-el"] != app.elementSelected){
         treeBuilder.highlightElement(app.elementSelected);
@@ -2679,42 +2695,6 @@ function tooltipKeyEvents(e){
         sel.click();
     }
 }
-function redo(){
-    if(!history.entries.length
-        || history.pointer == history.entries.length)
-        return;
-    var pointer = history.pointer;
-    var historyEntry = history.entries[pointer];
-    historyMethods[historyEntry.method].redo(historyEntry);
-    history.pointer++;
-    if(selected && !selected.parentNode)
-        selected = null;
-    /* dispatching */
-    window.dispatchEvent(new Event(treeChangeEv));
-};
-function setHistory(historyObject){
-    var $self = this;
-    var pointer = history.pointer;
-    var entries = history.entries;
-    if(pointer != entries.length)
-        history.entries = entries.slice(0,pointer);
-    history.pointer = history.entries.push(historyObject);
-    /* dispatching */
-    window.dispatchEvent(new Event(treeChangeEv));
-}
-function undo(){
-    if(!history.entries.length || history.pointer == 0)
-        return;
-    var pointer;
-    history.pointer--;
-    pointer = history.pointer;
-    var historyEntry = history.entries[pointer];
-    historyMethods[historyEntry.method].undo(historyEntry);
-    if(selected && !selected.parentNode)
-        selected = null;
-    /* dispatching */
-    window.dispatchEvent(new Event(treeChangeEv));
-};
 function nextNode(node) {
     if (node.hasChildNodes())
         return node.firstChild;
@@ -2736,50 +2716,69 @@ function getElementsInRange(startNode,endNode){
     return nodes;
 }
 multiselectButton.addEventListener("click",e=>{
-    if(multiselectButton.classList.toggle("selected")) {
-        if(selected && (!selectedIsMatch || selected.nodeName.match(/(HTML|HEAD|BODY)$/))){
-            //treeBuilder.deSelect();
-            app.core.deselectElement();
-            selected = null;
-        }
-        treeBuilder.activateMultiSelection();
-        app.enableMultiselection();
-        if(jsViewDOM.style.display == "block" || cssViewDOM.style.display == "block" && selectedJsCSS)
-            multiSelectionJsCss.push({listEl: selectedJsCSS, el: selectedJsCSS["__html-tree-builder-el"]})
+  if(multiselectButton.classList.toggle("selected")) {
+    if(selected && (!selectedIsMatch || selected.nodeName.match(/(HTML|HEAD|BODY)$/))){
+        //treeBuilder.deSelect();
+        app.core.deselectElement();
+        selected = null;
     }
-    else {
-        treeBuilder.removeMultiSelection();
-        app.destroyMultiselection();
-        multiSelectionJsCss.forEach(v=>v!=selectedJsCSS &&
-        v.listEl.classList.remove("html-tree-builder__highlight"));
-        multiSelectionJsCss = [];
-    }
+    treeBuilder.activateMultiSelection();
+    app.enableMultiselection();
+    if((jsViewDOM.style.display == "block" || cssViewDOM.style.display == "block")
+      && selectedJsCSS)
+        multiSelectionJsCss.push({listEl: selectedJsCSS, el: selectedJsCSS["__html-tree-builder-el"]})
+  }
+  else {
+    //treeBuilder.removeMultiSelection();
+    //internalMultiremove = true;
+    app.destroyMultiselection();
+    treeBuilder.removeMultiSelection();
+    multiSelectionJsCss.forEach(v=>v!=selectedJsCSS &&
+    v.listEl.classList.remove("html-tree-builder__highlight"));
+    multiSelectionJsCss = [];
+  }
+});
+window.addEventListener("beforeunload",e=>{
+  if(app.multiselected)
+    app.destroyMultiselection();
 });
 function multiselectionOnShiftKey(targetLI,match){
-    var multiselected = treeBuilder.multiselected;
-    var lastNode = multiselected[multiselected.length-1].listEl;
-    multiselected.forEach(v=>v.listEl.classList.remove("html-tree-builder__highlight"));
-    treeBuilder.multiselected = [];
-    app.multiselections.forEach(n=>n.highlight.remove());
-    app.multiselections = [];
-    if (targetLI == lastNode)
-        return;
-    var arr = [lastNode, targetLI].sort((a, b)=>a.offsetTop - b.offsetTop);
-    var range = getElementsInRange(arr[0], arr[1]);
-    var ms = [];
-    range.forEach(n=> {
-        var realNode = n["__html-tree-builder-el"];
-        if (n.nodeName == "LI" && !ms.find(v=>n.contains(v.listEl) || v.listEl.contains(n))
-            && app.core.htmlMatch.find(realNode)) {
-            n.classList.add("html-tree-builder__highlight");
-            ms.push({listEl: n, el: realNode});
-            treeBuilder.toggleClassListHighlight(n);
-            app.createSelectionClone(realNode);
-        }
-    });
-    treeBuilder.selected = targetLI;
-    //selectedIsMatch = match;
-    handleClick({detail:{selected:targetLI,multiselection:true}})
+  var multiselected = treeBuilder.multiselected;
+  var lastNode = multiselected[multiselected.length-1].listEl;
+  app.multiselections.slice(0).forEach((v,i)=>app.removeItemSelected());
+  /*
+  multiselected.forEach(v=>v.listEl.classList.remove("html-tree-builder__highlight"));
+  treeBuilder.multiselected = [];
+  app.multiselections.forEach(n=>n.highlight.remove());
+  app.multiselections = [];
+  app.elementSelected && app.core.deselectElement();*/
+  treeBuilder.selected = null;
+  selected = null;
+  if (targetLI == lastNode)
+      return;
+  var arr = [lastNode, targetLI].sort((a, b)=>a.offsetTop - b.offsetTop);
+  var range = getElementsInRange(arr[0], arr[1]);
+  var ms = [];
+  range.forEach(n=> {
+    if(n == targetLI)
+      return;
+    var realNode = n["__html-tree-builder-el"];
+    if (n.nodeName == "LI" && !ms.find(v=>n.contains(v.listEl) || v.listEl.contains(n))
+        && app.core.htmlMatch.find(realNode)) {
+      app.core.selectElement(realNode);
+      ms.push({listEl: n, el: realNode});
+      /*
+        n.classList.add("html-tree-builder__highlight");
+        ms.push({listEl: n, el: realNode});
+        treeBuilder.toggleClassListHighlight(n);
+        app.createSelectionClone(realNode);
+        */
+    }
+  });
+  app.core.selectElement(targetLI["__html-tree-builder-el"]);
+  //treeBuilder.selected = targetLI;
+  //selectedIsMatch = match;
+  //handleClick({detail:{selected:targetLI,multiselection:true}})
 }
 function changeSelection(index){
     searchBarEntries.children[0].textContent = index+1;

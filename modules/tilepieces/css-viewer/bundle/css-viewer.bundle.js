@@ -2187,13 +2187,11 @@ opener.addEventListener("edit-page",e=>{
         t.set("",model);
     }
 });
-opener.addEventListener("edit-mode",e=> {
-    if(!app.editMode)
-        t.set("isVisible",false)
+opener.addEventListener("deselect-element",e=> {
+  t.set("isVisible",false)
 });
-opener.addEventListener("html-rendered",e=>{
-    model.isVisible = false;
-    t.set("",model);
+opener.addEventListener("frame-unload",e=>{
+  t.set("isVisible",false)
 });
 let model = {
     cssDefaultProperties,
@@ -4438,9 +4436,11 @@ autocomplete(appView);
 if(opener.tilepieces.elementSelected)
     setTemplate({detail:opener.tilepieces.cssSelectorObj});
 opener.addEventListener("highlight-click",setTemplate);
-opener.addEventListener("edit-mode",e=> {
-    if(!opener.tilepieces.editMode)
-        t.set("isVisible",false);
+opener.addEventListener("deselect-element",e=> {
+  t.set("isVisible",false)
+});
+opener.addEventListener("frame-unload",e=>{
+  t.set("isVisible",false)
 });
 tilepieces_tabs({
     el : document.getElementById("tab-border")
@@ -5128,16 +5128,11 @@ addBackgroundButton.addEventListener("click",addBackground);
 let gradientsEls = [];
 //opener.addEventListener("WYSIWYG-el-parsed", setTemplate);
 opener.addEventListener("highlight-click",setTemplate);
-opener.addEventListener("edit-page",e=>{
-    if(!e.detail)
-        t.set("",{isVisible : false});
+opener.addEventListener("deselect-element",e=> {
+  t.set("isVisible",false)
 });
-opener.addEventListener("edit-mode",e=> {
-    if(!app.editMode)
-        t.set("",{isVisible : false});
-});
-opener.addEventListener("html-rendered",e=>{
-    t.set("",{isVisible : false});
+opener.addEventListener("frame-unload",e=>{
+  t.set("isVisible",false)
 });
 let model = {
     isVisible : false,
@@ -5381,17 +5376,19 @@ appView.addEventListener("change",e=>{
     })
 });
 window.addEventListener("dropzone-dropping",e=>{
-    if(e.detail.target.dataset.type != "url-background") return;
-    var index = e.detail.target.dataset.index;
-    var type = e.detail.type;
-    if(type == "files")
-        app.utils.processFile(e.detail.files[0]).then(res=>{
-            if(res) changeUrlBackground(res,index)
-        });
-    else{
-        var img = e.detail.placeholderHTML.querySelector("img");
-        if(img) changeUrlBackground(img.src,index)
-    }
+  if(e.detail.target.dataset.type != "url-background") return;
+  var index = e.detail.target.dataset.index;
+  var type = e.detail.type;
+  var currentStyleSheet = app.core.currentStyleSheet;
+  var relativeToWhat = currentStyleSheet?.href?.replace(location.origin + "/","");
+  if(type == "files")
+      app.utils.processFile(e.detail.files[0],null,relativeToWhat).then(res=>{
+          if(res) changeUrlBackground(res,index)
+      });
+  else{
+      var img = e.detail.placeholderHTML.querySelector("img");
+      if(img) changeUrlBackground(img.src,index)
+  }
 });
 appView.addEventListener("click",e=>{
     var target = e.target.closest("[dropzone]");
@@ -5399,13 +5396,15 @@ appView.addEventListener("click",e=>{
         return;
     var index = target.dataset.index;
     if(target && !target.classList.contains("ondrop")){
-        var imageSearch = app.projectResourceReader("");
-        imageSearch.then(imageSearchDialog=>{
-            imageSearchDialog.on("submit",res=>changeUrlBackground(res,index));
-        },e=>{
-            opener.dialog.open(e.toString());
-            console.error(e);
-        })
+      var currentStyleSheet = app.core.currentStyleSheet;
+      var relativeToWhat = currentStyleSheet?.href?.replace(location.origin + "/","");
+      var imageSearch = dialogReader("img",relativeToWhat);
+      imageSearch.then(imageSearchDialog=>{
+          imageSearchDialog.on("submit",res=>changeUrlBackground(res,index));
+      },e=>{
+          opener.dialog.open(e.toString());
+          console.error(e);
+      })
     }
 });
 function matchBackgrounds(cssBackgroundStyle){
@@ -5604,15 +5603,10 @@ var model = {
     paddingLinked : "selected"
 };
 opener.addEventListener("highlight-click",setTemplate);
-opener.addEventListener("edit-page",e=>{
-    if(!e.detail)
-        t.set("",{isVisible : false});
+opener.addEventListener("deselect-element",e=> {
+    t.set("",{isVisible : false});
 });
-opener.addEventListener("edit-mode",e=> {
-    if(!app.editMode)
-        t.set("",{isVisible : false});
-});
-opener.addEventListener("html-rendered",e=>{
+opener.addEventListener("frame-unload",e=>{
     t.set("",{isVisible : false});
 });
 autocomplete(appView);
@@ -5649,6 +5643,7 @@ function setTemplate(e){
     var fatherStyle = model.fatherStyle;
     model.display = getProp("display");
     var display = d.styles.display;
+    model.multiColumnLayout = d.styles.columns != "auto auto" && d.styles.columns != "auto";
     model.inlineStyles= display == 'inline' || display == 'inline-block' || display == 'table-cell';
     if(model.inlineStyles) {
         model.verticalAlign = getProp("vertical-align");
@@ -5829,7 +5824,7 @@ appView.addEventListener("input",e=>{
         if(prop.startsWith("padding") && target.dataset.linked)
             prop = "padding";
         if(prop.startsWith("border") && target.dataset.linked)
-            prop = "border";
+            prop = "border-width";
         setCss(prop, value);
     }
 },true);
@@ -5898,6 +5893,25 @@ appView.addEventListener("click",e=>{
         setCss("grid-template-areas",computeGridTemplateAreas());
     }
 },true);
+appView.addEventListener("focus",e=>{
+  var prop = e.target.dataset.cssProp || "";
+  if(prop.match(/^(margin|padding|border)/)){
+    if (prop.startsWith("margin")) {
+      app.editElements.margin = true;
+    }
+    if (prop.startsWith("padding")) {
+      app.editElements.padding = true;
+    }
+    if (prop.startsWith("border")) {
+      app.editElements.border = true;
+    }
+  }
+},true);
+appView.addEventListener("blur",e=>{
+  app.editElements.margin = false;
+  app.editElements.padding = false;
+  app.editElements.border = false;
+},true);
 
 })();
 (()=>{
@@ -5916,9 +5930,11 @@ autocomplete(appView);
 if(app.elementSelected)
     setTemplate({detail:app.cssSelectorObj});
 opener.addEventListener("highlight-click",setTemplate);
-opener.addEventListener("edit-mode",e=> {
-    if(!app.editMode)
-        t.set("isVisible",false);
+opener.addEventListener("deselect-element",e=> {
+  t.set("isVisible",false)
+});
+opener.addEventListener("frame-unload",e=>{
+  t.set("isVisible",false)
 });
 tilepieces_tabs({
     el : document.getElementById("transform-tabs")
@@ -6118,16 +6134,11 @@ css_rule_modification({
 if(app.elementSelected)
     setTemplate({detail:app.cssSelectorObj});
 opener.addEventListener("highlight-click",setTemplate);
-opener.addEventListener("edit-mode",e=> {
-    if(!app.editMode)
-        t.set("isVisible",false);
-    /*
-    else{
-        model.animations = app.core.styles.animations.slice(0).map(mapAnimations);
-        model.deleteRuleDisabled="animation__disabled";
-        t.set("",model);
-        inputCss(appView);
-    }*/
+opener.addEventListener("deselect-element",e=> {
+  t.set("isVisible",false)
+});
+opener.addEventListener("frame-unload",e=>{
+  t.set("isVisible",false)
 });
 window.debugModel = model;
 appView.addEventListener("blur",e=> {
@@ -6429,7 +6440,6 @@ appView.addEventListener("click",e=>{
 })
 
 })();
-(()=>{
 const opener = window.opener || window.parent;
 let app = opener.tilepieces;
 window.app = app;
@@ -6444,16 +6454,11 @@ var model = {
     textShadows : []
 };
 opener.addEventListener("highlight-click",setTemplate);
-opener.addEventListener("edit-page",e=>{
-    if(!e.detail)
-        t.set("",{isVisible : false});
+opener.addEventListener("deselect-element",e=> {
+  t.set("isVisible",false)
 });
-opener.addEventListener("edit-mode",e=> {
-    if(!app.editMode)
-        t.set("",{isVisible : false});
-});
-opener.addEventListener("html-rendered",e=>{
-    t.set("",{isVisible : false});
+opener.addEventListener("frame-unload",e=>{
+  t.set("isVisible",false)
 });
 autocomplete(appView);
 let t = new opener.TT(appView,model);
@@ -6721,7 +6726,6 @@ function splitTextShadow(textShadow){
     }
 }
 
-})();
 (()=>{
 const opener = window.opener || window.parent;
 const appView = document.getElementById("css-viewer");
@@ -6870,14 +6874,6 @@ appView.addEventListener("click",e=>{
   e.preventDefault();
   if(model.relatedSelectors.length<=1)
     return;
-  if(app.multiselected) {
-    app.destroyMultiselection();
-  }
-  app.enableMultiselection();
-  model.relatedSelectors.forEach(node=>{
-    app.createSelectionClone(node)
-  });
-  setTimeout(()=>app.destroyMultiselection(),1500);
 });
 appView.addEventListener("template-digest",e=>{
   // Input. On 'blur', event should not fired because the old value will be equal the new one ( see TT bindingEl )

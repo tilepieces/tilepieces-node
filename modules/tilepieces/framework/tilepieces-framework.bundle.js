@@ -3149,24 +3149,27 @@ highlightOver.id = "highlight-over";
 let selectionDiv = document.createElement("div");
 selectionDiv.className = "highlight-selection";
 selectionDiv.tabIndex="1";
-document.body.appendChild(highlightOver);
-document.body.appendChild(selectionDiv);
+let paddingDiv = document.createElement("div");
+paddingDiv.className = "highlight-element__padding";
+let marginDiv = document.createElement("div");
+marginDiv.className = "highlight-element__margin";
+let borderDiv = document.createElement("div");
+borderDiv.className = "highlight-element__border";
+document.body.append(highlightOver,selectionDiv,paddingDiv,marginDiv,borderDiv);
 
 let drawSelection;//requestAnimationFrame reference
 
 window.tilepieces = {
-  // setted on run time by the environment
   projects : [],
   globalComponents : [],
   localComponents : [],
   isComponent : false,
   currentProject : null,
   fileSelected : {},
-  applicationName : "tilepieces", //??,
+  applicationName : "tilepieces",
   componentPath : "components",
   componentAttribute:"data-tilepieces-component",
   currentStyleSheetAttribute:"data-tilepieces-current-stylesheet",
-  // setted on menu bar and others
   currentPage : {},
   core : null,
   panels : [],
@@ -3176,7 +3179,13 @@ window.tilepieces = {
   name : "tilepieces",
   editElements : {
     highlight : highlightOver,
-    selection : selectionDiv
+    selection : selectionDiv,
+    paddingDiv,
+    marginDiv,
+    borderDiv,
+    padding : null,
+    border : null,
+    margin : null
   },
   relativePaths:true,
   imageDir : "images",
@@ -5341,9 +5350,8 @@ window.tilepiecesCore = function(o){
     return new TilepiecesCore(o);
 }
 tilepieces.createSelectionClone = function(el){
-  /*
     if(tilepieces.multiselections.find(v=>v.el == el))
-        return;*/
+        return;
     var highlight = tilepieces.editElements.selection.cloneNode(true);
     highlight.classList.add("highlight-selection-clone");
     highlight.style.opacity = "0.3";
@@ -5353,8 +5361,7 @@ tilepieces.createSelectionClone = function(el){
 };
 tilepieces.destroyMultiselection = function(){
     tilepieces.multiselected = null;
-    tilepieces.multiselections.forEach(v=>v.highlight.remove());
-    tilepieces.multiselections = [];
+    tilepieces.multiselections.slice(0).forEach((v,i)=>tilepieces.removeItemSelected());
     window.dispatchEvent(new Event("multiselection-canceled"))
 }
 tilepieces.enableMultiselection = function(){
@@ -5513,6 +5520,57 @@ TilepiecesCore.prototype.deselectElement = function(){
     window.dispatchEvent(
         new CustomEvent("deselect-element",{detail:obj}));
 };
+function drawBox(computed,bound,x,y) {
+  var marginDiv = tilepieces.editElements.marginDiv;
+  var borderDiv = tilepieces.editElements.borderDiv;
+  var paddingDiv = tilepieces.editElements.paddingDiv;
+  if (tilepieces.editElements.margin) {
+    var marginTop = getPropertyComputed(computed, "margin-top");
+    var marginLeft = getPropertyComputed(computed, "margin-left");
+    var marginRight = getPropertyComputed(computed, "margin-right");
+    var marginBottom = getPropertyComputed(computed, "margin-bottom");
+    marginDiv.style.width = bound.width+ "px";
+    marginDiv.style.height = bound.height + "px";
+    marginDiv.style.borderTopWidth = marginTop + "px";
+    marginDiv.style.borderLeftWidth = marginLeft + "px";
+    marginDiv.style.borderRightWidth = marginRight + "px";
+    marginDiv.style.borderBottomWidth = marginBottom + "px";
+    var m = `translate(${x-marginLeft}px,${y-marginTop}px)`;
+    marginDiv.style.transform = m;
+  }
+  else marginDiv.removeAttribute("style");
+  var borderTop, borderLeft, borderRight, borderBottom;
+  if (tilepieces.editElements.border || tilepieces.editElements.padding) {
+    borderTop = getPropertyComputed(computed, "border-top-width");
+    borderLeft = getPropertyComputed(computed, "border-left-width");
+    borderRight = getPropertyComputed(computed, "border-right-width");
+    borderBottom = getPropertyComputed(computed, "border-bottom-width");
+  }
+  if (tilepieces.editElements.border) {
+    borderDiv.style.width = ( bound.width - borderRight - borderLeft) + "px";
+    borderDiv.style.height = ( bound.height  - borderBottom - borderTop) + "px";
+    borderDiv.style.borderTopWidth = borderTop + "px";
+    borderDiv.style.borderLeftWidth = borderLeft + "px";
+    borderDiv.style.borderRightWidth = borderRight + "px";
+    borderDiv.style.borderBottomWidth = borderBottom + "px";
+    borderDiv.style.transform = `translate(${x}px,${y}px)`;
+  }
+  else borderDiv.removeAttribute("style");
+  if (tilepieces.editElements.padding) {
+    var paddingTop = getPropertyComputed(computed, "padding-top");
+    var paddingLeft = getPropertyComputed(computed, "padding-left");
+    var paddingRight = getPropertyComputed(computed, "padding-right");
+    var paddingBottom = getPropertyComputed(computed, "padding-bottom");
+    paddingDiv.style.width = ( bound.width - paddingLeft - paddingRight) + "px";
+    paddingDiv.style.height = ( bound.height - paddingTop - paddingBottom ) + "px";
+    paddingDiv.style.borderTopWidth = paddingTop + "px";
+    paddingDiv.style.borderLeftWidth = paddingLeft + "px";
+    paddingDiv.style.borderRightWidth = paddingRight + "px";
+    paddingDiv.style.borderBottomWidth = paddingBottom + "px";
+    paddingDiv.style.transform = `translate(${x}px,${y}px)`;
+  }
+  else paddingDiv.removeAttribute("style");
+}
 function drawSel(t) {
     if(tilepieces.multiselected && tilepieces.editMode == "selection" && !tilepieces.contenteditable)
         tilepieces.multiselections.forEach(v=>{
@@ -5532,6 +5590,10 @@ function drawSel(t) {
     if(tilepieces.elementSelected && tilepieces.editMode == "selection" && !tilepieces.contenteditable)
         tilepieces.core.translateHighlight(tilepieces.elementSelected,tilepieces.editElements.selection);
     drawSelection = requestAnimationFrame(drawSel);
+}
+function getPropertyComputed(computed,name){
+  var prop = +(computed.getPropertyValue(name).replace("px", ""));
+  return prop<0 ? 0 : prop;
 }
 TilepiecesCore.prototype.removeSelection = function(){
     tilepieces.editElements.selection.style.transform = "translate(-9999px,-9999px)";
@@ -5577,24 +5639,29 @@ TilepiecesCore.prototype.setSelection = function(){
     drawSelection = requestAnimationFrame(drawSel);
 }
 TilepiecesCore.prototype.translateHighlight = function (target,el,contentRect){
-    if(!target.ownerDocument || !target.ownerDocument.defaultView) // during page change, this function could be fired before being canceled
-        return;
-    if([1,3].indexOf(target.nodeType) == -1)
-        return;
-    var bound;
-    if(target.nodeType != 1){ // text node
-        var range = target.getRootNode().createRange();
-        range.selectNode(target);
-        bound = range.getBoundingClientRect()
-    }
-    else // element node
-        bound = target.getBoundingClientRect();
-    el.style.width =  bound.width + "px";
-    el.style.height = bound.height + "px";
-  	var x = tilepieces.frame.offsetLeft + bound.x;
-    var y = tilepieces.frame.offsetTop + bound.y;
-    el.style.transform = "translate(" + x + "px," + y + "px)";
-    el.__target = target;
+  if(!target.ownerDocument || !target.ownerDocument.defaultView) // during page change, this function could be fired before being canceled
+      return;
+  if([1,3].indexOf(target.nodeType) == -1)
+      return;
+  var bound;
+  if(target.nodeType != 1){ // text node
+      var range = target.getRootNode().createRange();
+      range.selectNode(target);
+      bound = range.getBoundingClientRect()
+  }
+  else // element node
+      bound = target.getBoundingClientRect();
+  el.style.width =  bound.width + "px";
+  el.style.height = bound.height + "px";
+  var adjust = el.classList.contains("highlight-selection") ? 1 : 0;// 1 is the border of el (.highlight-selection)
+  var x = tilepieces.frame.offsetLeft + bound.x;
+  var y = tilepieces.frame.offsetTop + bound.y;
+  el.style.transform = `translate(${x-adjust}px,${y-adjust}px)`;
+  el.__target = target;
+  // draw box, if setted
+  if(target == tilepieces.elementSelected){
+    drawBox(tilepieces.selectorObj.styles,bound,x,y)
+  }
 }
 TilepiecesCore.prototype.appendKeyframe = function(rule,cssText){
     var $self = this;
@@ -7212,7 +7279,7 @@ Panel.prototype.onClick= function(){
         newWindow.addEventListener("unload",function(e){
             if(!$self.closingWindow) {
                 hasPopUp && resetDocInFrame(newWindow.document, $self.panelElementIframe.contentDocument);
-                $self.panelElement.style.display = "block";
+                $self.panelElement.style.display = "flex";
                 $self.panelElementIframe.focus();
                 $self.panelElementIframe.contentWindow.dispatchEvent(
                     new CustomEvent("window-popup-close", {
@@ -7348,12 +7415,12 @@ function setDrag($self,handle,constraint){
 Panel.prototype.show = function(target){
     var $self = this;
     if(!$self.windowOpen) {
-        if($self.panelElement.style.display != "block" ||
+        if($self.panelElement.style.display != "flex" ||
             $self.panelElement.classList.contains("panel-element-minimized")) {
             $self.placeholder.parentNode && $self.placeholder.parentNode.replaceChild(
                 $self.panelElementIframe,$self.placeholder
             );
-            $self.panelElement.style.display = "block";
+            $self.panelElement.style.display = "flex";
             $self.panelElementIframe.onload = function(e){
                 window.dispatchEvent(
                     new CustomEvent("panel-created-iframe",{
@@ -9059,10 +9126,14 @@ tilepieces.setFrame = function(URL,htmltext){
     menuBarTrigger.classList.remove("no-frame");
     // unload seems not work
     tilepieces.frame.contentWindow.addEventListener("beforeunload",e=>{
-        if(tilepieces.editMode=="selection")
-            selectionTrigger.click();
-        menuBarTrigger.classList.add("no-frame");
-        window.dispatchEvent(new Event("frame-unload"))
+      if(tilepieces.multiselected)
+        tilepieces.destroyMultiselection();
+      if(tilepieces.elementSelected)
+        tilepieces.core.deselectElement();
+      if(tilepieces.editMode=="selection")
+          selectionTrigger.click();
+      menuBarTrigger.classList.add("no-frame");
+      window.dispatchEvent(new Event("frame-unload"))
     });
     if(tilepieces.project && tilepieces.project.lastFileOpened != pathname) {
         tilepieces.project.lastFileOpened = pathname;
@@ -9125,7 +9196,7 @@ function constraintPanelsFunction(newX,newY,deltaX,deltaY,dockObj){
         return true;
 }
 function adjustPanelWrapper(disactivateEmpty){
-    var panelActives = frameUIEls.filter(v=>v.style.display == "block");
+    var panelActives = frameUIEls.filter(v=>v.style.display == "flex");
     if(window.innerWidth < 1024) {
         targetFrameWrapper.classList.toggle("half",panelActives.length || disactivateEmpty);
     }
@@ -9563,57 +9634,60 @@ document.addEventListener("click",e=>{
       !menuTrigger.contains(e.target)) closeMenuBar()
 });
 window.addEventListener("blur",closeMenuBar);
-function confrontDimensionIframeWithParent(w,h){
-    if(w > tilepieces.frame.parentNode.offsetWidth)
-        tilepieces.frame.parentNode.style.overflowX = "scroll";
-    else
-        tilepieces.frame.parentNode.style.overflowX = "";
-    if(h > tilepieces.frame.parentNode.offsetHeight)
-        tilepieces.frame.parentNode.style.overflowY = "scroll";
-    else
-        tilepieces.frame.parentNode.style.overflowY = "";
-    if(w==tilepieces.frame.parentNode.offsetWidth &&
-        h==tilepieces.frame.parentNode.offsetHeight)
-        fitToScreen.classList.add("fit-to-screen");
-    else
-        fitToScreen.classList.remove("fit-to-screen");
-
-    var dimensions = selectScreenDimensions.value.split("x");
-    if( dimensions[0] != w || dimensions[1] != h)
-        selectScreenDimensions.value="";
-}
-width.addEventListener("change",e=>{
-    var value=e.target.value;
-    tilepieces.frame.style.width=value+"px";
-    confrontDimensionIframeWithParent(+value,+height.value);
-});
-height.addEventListener("change",e=>{
-    var value=e.target.value;
-    tilepieces.frame.style.height=value+"px";
-    confrontDimensionIframeWithParent(+width.value,+value);
-});
-fitToScreen.addEventListener("click",e=>{
-    tilepieces.frame.style.width="";
-    tilepieces.frame.style.height="";
-    tilepieces.frame.parentNode.style.overflowY = "";
+function confrontDimensionIframeWithParent(w, h) {
+  w = Math.trunc(w);
+  h = Math.trunc(h);
+  if (w > tilepieces.frame.parentNode.offsetWidth)
+    tilepieces.frame.parentNode.style.overflowX = "scroll";
+  else
     tilepieces.frame.parentNode.style.overflowX = "";
+  if (h > tilepieces.frame.parentNode.offsetHeight)
+    tilepieces.frame.parentNode.style.overflowY = "scroll";
+  else
+    tilepieces.frame.parentNode.style.overflowY = "";
+  if (w == tilepieces.frame.parentNode.offsetWidth &&
+    h == tilepieces.frame.parentNode.offsetHeight)
+    fitToScreen.classList.add("fit-to-screen");
+  else
+    fitToScreen.classList.remove("fit-to-screen");
+
+  var dimensions = selectScreenDimensions.value.split("x");
+  if (dimensions[0] != w || dimensions[1] != h)
+    selectScreenDimensions.value = "";
+}
+
+width.addEventListener("change", e => {
+  var value = e.target.value;
+  tilepieces.frame.style.width = value + "px";
+  confrontDimensionIframeWithParent(+value, +height.value);
 });
-reverse.addEventListener("click",e=>{
-    tilepieces.frame.style.width = height.value+"px";
-    tilepieces.frame.style.height = width.value+"px";
-    confrontDimensionIframeWithParent(+width.value,+height.value);
+height.addEventListener("change", e => {
+  var value = e.target.value;
+  tilepieces.frame.style.height = value + "px";
+  confrontDimensionIframeWithParent(+width.value, +value);
 });
-selectScreenDimensions.addEventListener("change",e=>{
-    var dimensions = selectScreenDimensions.value.split("x");
-    var w = dimensions[0];
-    var h = dimensions[1];
-    tilepieces.frame.style.width = w+"px";
-    tilepieces.frame.style.height = h+"px";
-    confrontDimensionIframeWithParent(+w,+h);
+fitToScreen.addEventListener("click", e => {
+  tilepieces.frame.style.width = "";
+  tilepieces.frame.style.height = "";
+  tilepieces.frame.parentNode.style.overflowY = "";
+  tilepieces.frame.parentNode.style.overflowX = "";
+});
+reverse.addEventListener("click", e => {
+  tilepieces.frame.style.width = height.value + "px";
+  tilepieces.frame.style.height = width.value + "px";
+  confrontDimensionIframeWithParent(+width.value, +height.value);
+});
+selectScreenDimensions.addEventListener("change", e => {
+  var dimensions = selectScreenDimensions.value.split("x");
+  var w = dimensions[0];
+  var h = dimensions[1];
+  tilepieces.frame.style.width = w + "px";
+  tilepieces.frame.style.height = h + "px";
+  confrontDimensionIframeWithParent(+w, +h);
 });
 let resizeObserver = mainFrameResizeObserver();
-window.addEventListener("resize",()=>{
-    confrontDimensionIframeWithParent(+width.value,+height.value);
+window.addEventListener("resize", () => {
+  confrontDimensionIframeWithParent(+width.value, +height.value);
 });
 
 screenDimensionsTrigger.addEventListener("click",e=>{
@@ -9642,27 +9716,33 @@ selectionTrigger.addEventListener("click",e=>{
         tilepieces.core.currentWindow.addEventListener("drop", preventDropOnEdit);
     }
     else{
-        tilepieces.editMode = "";
-        if(tilepieces.elementSelected)
-            tilepieces.core.deselectElement();
-        if(tilepieces.multiselected)
-            tilepieces.destroyMultiselection();
-        if(tilepieces.lastEditable) {
-            tilepieces.lastEditable.destroy();
-            tilepieces.lastEditable = null;
-        }
-        tilepieces.contenteditable = false;
-        tilepieces.core.removeSelection();
-        tilepieces.core.currentDocument.removeEventListener("mousemove", highlight);
-        tilepieces.core.currentDocument.removeEventListener("pointerdown", clickSelection);
-        tilepieces.core.currentDocument.removeEventListener("mouseout", blurSelection);
-        tilepieces.core.currentDocument.removeEventListener("click", preventUp,true);
-        tilepieces.core.currentWindow.removeEventListener("resize", resize);
-        tilepieces.core.currentWindow.removeEventListener("scroll", resize);
-        tilepieces.core.currentWindow.removeEventListener("dragover", preventDropOnEdit);
-        tilepieces.core.currentWindow.removeEventListener("drop", preventDropOnEdit);
-        if(contenteditableTrigger.classList.contains("opened"))
-            contenteditableTrigger.click();
+      tilepieces.editMode = "";
+      if(tilepieces.multiselected){
+        tilepieces.multiselections.forEach(v=>{
+          v.highlight.style.transform = "translate(-9999px,-9999px)";
+        });
+      }
+      /*
+      if(tilepieces.multiselected)
+        tilepieces.destroyMultiselection();
+      if(tilepieces.elementSelected)
+          tilepieces.core.deselectElement();*/
+      if(tilepieces.lastEditable) {
+          tilepieces.lastEditable.destroy();
+          tilepieces.lastEditable = null;
+      }
+      tilepieces.contenteditable = false;
+      tilepieces.core.removeSelection();
+      tilepieces.core.currentDocument.removeEventListener("mousemove", highlight);
+      tilepieces.core.currentDocument.removeEventListener("pointerdown", clickSelection);
+      tilepieces.core.currentDocument.removeEventListener("mouseout", blurSelection);
+      tilepieces.core.currentDocument.removeEventListener("click", preventUp,true);
+      tilepieces.core.currentWindow.removeEventListener("resize", resize);
+      tilepieces.core.currentWindow.removeEventListener("scroll", resize);
+      tilepieces.core.currentWindow.removeEventListener("dragover", preventDropOnEdit);
+      tilepieces.core.currentWindow.removeEventListener("drop", preventDropOnEdit);
+      if(contenteditableTrigger.classList.contains("opened"))
+          contenteditableTrigger.click();
     }
     window.dispatchEvent(new Event("edit-mode"))
 });

@@ -7780,8 +7780,6 @@ TT.prototype.declare = function(el,scope,model,newScope = []) {
               catch(e) {
                 console.error("[TT foreach declare error] iterableName ->\"", iterableName + '\"');
                 console.error("[TT foreach declare error] iterable ->", iterable);
-                console.error("[TT foreach declare error] iterableName ->\"", iterableName + '\"');
-                console.error("[TT foreach declare error] iterable ->", iterable);
                 throw new Error("[TT foreach declare error] Passed a non-array to foreach");
               }
             }
@@ -8250,7 +8248,7 @@ TT.prototype.set = function(string,value){
             $self.process(m, string || "", $self.model, i)
         }
         catch(e){
-            console.error("[TT.prototype.set error on model process]");
+            console.error("[TT.prototype.set error on model process]",e);
             console.error("string,value",string,value);
             console.error("model,index,array",m,i,a);
             console.error("$self.model ->",$self.model);

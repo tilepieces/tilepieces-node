@@ -9,6 +9,7 @@ body { font-family: sans-serif; background: rgb(255, 255, 255); }
 .flex-box input:not([type="checkbox"]):not([type="radio"]), .start-flex-box { flex: 1 1 auto; position: relative; margin: 0px; width: 1%; }
 .flex-box button:not(:first-child) { border-radius: 7px; background-color: rgb(240, 240, 240); background-image: none; margin: 5px; border: none; }
 fieldset { border-width: 0px 0px 1px; border-style: solid; border-color: rgb(204, 204, 204); border-image: initial; font-size: 1em; letter-spacing: 1px; text-transform: uppercase; margin: 2em 1em 3em; padding: 0.5em 0px; color: rgb(102, 102, 102); }
+fieldset { border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; text-transform: uppercase; margin: 2em 1em 3em; padding: 0.5em 0px; color: rgb(102, 102, 102); }
 .flex-box.two-buttons button:first-child { flex: 1 1 auto; border-right: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0em; }
 legend { display: flex; place-content: center; align-items: center; }
 legend > :first-child { padding: 0.4em; font-size: 1.1em; }
@@ -18,7 +19,12 @@ div.upload-button { position: relative; }
 .flex-box .upload-button input[type="file"] { position: absolute; top: 0px; left: 0px; width: 100%; opacity: 0; cursor: pointer; height: 100%; z-index: 2; display: none; }
 .upload-button label { display: block; cursor: pointer; }
 button[disabled] { cursor: not-allowed; }
-summary { padding: 1em; }
+details summary svg { transform: rotate(90deg); margin-right: 5px; cursor: pointer; }
+details summary span{
+  vertical-align:middle;
+}
+details[open] > summary svg { transform: rotate(180deg); }
+summary { list-style-type: none; padding: 1em 1em 0em; }
 small.tilepieces-small-error { display: none; color: red; }
 small.tilepieces-small-error.show { display: block; }
 ul { list-style: none; padding: 0px; }
@@ -31,39 +37,27 @@ iframe { border-width: 1px; border-style: solid; }
 .current-project-data__remove-files { height: 2em; width: 2em; padding: 0px; }
 .flex-box input[type="number"] { height: 2em; min-width: 6% !important; width: auto !important; margin-right: 5px !important; }
 .component-properties-add { padding: 0px; height: 2em; width: 2em; }
-.component-properties-add { }
 .component-properties-remove { padding: 0px; height: 2em; width: 2em; }nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside { display: inline-flex; height: 100%; flex-direction: column; justify-content: center; }
 body { padding-left: 40px; margin: 0px; }
-.tab-vertical .tab-buttons { overflow: hidden; }
-nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap { height: 100%; }
+nav.tab-vertical:not(.tab-vertical-open) .tab-buttons { overflow: hidden; }
+nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap { height: 100%; overflow:auto}
 .tab-buttons.tab-buttons-open { height: 100%; position: absolute; width: 100%; }
 .tab-buttons.tab-buttons-open button { float: right; }
-nav.tab-vertical { position: fixed; height: 100%; width: 0px; background-color: rgb(255, 255, 255); left: 0px; }
-.tab-vertical button { position: absolute; height: 100%; background-color: rgb(255, 255, 255); outline-width: 0px; outline-offset: 0px; border-width: 0px 1px 0px 0px; border-style: solid; border-color: rgb(208, 208, 208); border-image: initial; }
+nav.tab-vertical { position: fixed; height: 100%; width: 0px; background-color: rgb(255, 255, 255); left: 0px; top: 0px; z-index:3}
+.tab-vertical button { position: fixed; height: 100%; background-color: rgb(255, 255, 255); outline-width: 0px; outline-offset: 0px; border-width: 0px 1px 0px 0px; border-style: solid; border-color: rgb(208, 208, 208); border-image: initial; padding: 0em 0.2em; border-radius: 0px; }
 nav.tab-vertical.tab-vertical-open { width: 100%; }
-nav.tab-vertical.tab-vertical-open .tab-buttons { height: 100%; }
-nav.tab-vertical.tab-vertical-open button { right: 2em; transform: rotate(180deg); }
+nav.tab-vertical.tab-vertical-open .tab-buttons { height: 100%;padding: 12px 32px; box-sizing:border-box}
+nav.tab-vertical.tab-vertical-open button { right: 0px; transform: rotate(180deg); z-index: 1; }
+nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a:hover { background-color: transparent; color: rgb(51, 51, 51); transition-duration: 1s; }
 nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a { text-transform: uppercase; font-family: Helvetica, Arial, sans-serif; letter-spacing: 2px; text-decoration: none; color: rgb(153, 153, 153); margin: 10px; padding: 2px; }
-nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a.selected { color: rgb(102, 102, 102); border-width: 0px 0px 1px; border-style: none none solid; border-color: rgb(102, 102, 102) rgb(102, 102, 102) rgb(0, 0, 0); border-image: initial; outline-width: 1px; }body { background: rgb(255, 255, 255); }
+nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a.selected { color: rgb(102, 102, 102); border-width: 0px 0px 1px; border-style: none none solid; border-color: rgb(102, 102, 102) rgb(102, 102, 102) rgb(0, 0, 0); border-image: initial; outline-width: 1px; }
+.tab-vertical button svg { transform: rotate(90deg); height: 25px; width: 25px; }body { background: rgb(255, 255, 255);padding-top: 1em; }
 #components ul { list-style: none; margin: 0px; padding: 0px 0px 0px 16px; }
-.as-detail { cursor: pointer; display: inline-block; }
-.as-detail.open { transform: rotate(90deg); }
-.as-detail.open + [hidden] { display: block; }
 #global-components .global-local .add-new-local-component { display: none; }
 .global-local input[type="checkbox"] { display: none; }
 #projects-list .flex-box > * { flex-grow: 1; }
-.tab-vertical button svg { transform: rotate(90deg); height: 25px; width: 25px; }
 #projects-list svg { height: 15px; width: 15px; }
-.tab-vertical button { padding: 0em 0.2em; position: fixed; border-radius: 0px; height: 100%; transition-duration: 0s; }
-nav.tab-vertical.tab-vertical-open button { right: 0px; z-index: 1; }
-nav.tab-vertical.tab-vertical-open { z-index: 1; transition-duration: 0s; }
-nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a:hover { background-color: transparent; color: rgb(51, 51, 51); transition-duration: 1s; }
-nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a { transition: all 0s ease 0s; animation: 0s ease 0s 0 normal none running none; }
-nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a.selected { transition: all 0s ease 0s; animation: 0s ease 0s 0 normal none running none; }
-body { padding-top: 1em; }
-nav.tab-vertical { top: 0px; }
 #projects-list .flex-box > * { background-color: rgb(240, 240, 240); border-radius: 7px; background-image: none; margin: 5px; border: none; }
-nav.tab-vertical.tab-vertical-open .tab-buttons { padding: 12px 32px; }
 #projects-list .flex-box .upload-button label { border: none; text-align: center; color: rgb(153, 153, 153); font-size: 1em; }
 #projects-list button { border-radius: 7px; padding: 0.3em 1em; margin: 0px 0.2em; text-align: center; color: rgb(153, 153, 153); font-size: 1em; letter-spacing: 1px; }
 #projects-list button:hover { color: rgb(51, 51, 51); }
@@ -73,7 +67,7 @@ nav.tab-vertical.tab-vertical-open .tab-buttons { padding: 12px 32px; }
 #projects-list .select-all-checkboc-svg svg { height: 16px; width: 16px; vertical-align: sub; }
 span.select-all-checkboc-svg { font-size: 0.7em; color: rgb(102, 102, 102); text-transform: uppercase; letter-spacing: 1px; vertical-align: top; }
 input.toggle-projects { color: red; }
-#projects-list .flex-box span { vertical-align: middle; }
+.flex-box .upload-button span { vertical-align: middle; }
 #projects fieldset { border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; text-transform: uppercase; margin: 2em 1em 3em; padding: 0.5em 0px; color: rgb(102, 102, 102); }
 button, .as-button { border-radius: 7px; padding: 0.3em 1em; margin: 0px 0.2em; text-align: center; color: rgb(153, 153, 153); font-size: 1em; letter-spacing: 1px; }
 input:not([type="checkbox"]):not([type="radio"]), select, textarea { border-radius: 7px; margin: 0.5em 0px; padding-top: 0.5em; padding-bottom: 0.5em; padding-right: 0.4em; background-color: rgb(240, 240, 240); }
@@ -83,11 +77,7 @@ input:not([type="checkbox"]):not([type="radio"]), select, textarea { border-radi
 div.legend-with-add { display: flex; align-items: center; }
 .project-with-remove { display: flex; align-items: center; }
 #projects .current-project-data__remove-files { height: 2em; width: 2em; padding: 0px; }
-fieldset { border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; text-transform: uppercase; animation: initial; margin: 2em 1em 3em; padding: 0.5em 0px; color: rgb(102, 102, 102); }
 h1 { font-size: 2em; font-weight: normal; letter-spacing: 1px; color: rgb(102, 102, 102); }
-details summary svg { transform: rotate(90deg); margin-right: 5px; cursor: pointer; }
-details[open] summary svg { transform: rotate(180deg); }
-summary { list-style-type: none; padding: 1em 1em 0em; }
 h2 { font-size: 1.5em; font-weight: normal; letter-spacing: 1px; color: rgb(102, 102, 102); }
 h3 { font-size: 1.3em; font-weight: normal; letter-spacing: 1px; color: rgb(102, 102, 102); text-transform: capitalize; }
 .select-all-checkboc-svg svg { height: 16px; width: 16px; vertical-align: sub; }
@@ -97,9 +87,6 @@ div.details-open-summery-child { padding: 0px 2em; margin-bottom: 1em; }
 .details-open-summery-child fieldset { margin: 0px 0px 1.5em; }
 .component-properties-add { padding: 0px; height: 2em; width: 2em; }
 .flex-box button.flex-box-button-border { background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); border-radius: 7px; }
-#projects-list button:hover { }
-#projects-list button:hover { }
-#projects-list button:hover { }
 #projects-list button.component-properties-remove { padding: 0px; }
 iframe { border-radius: 7px; border-color: rgb(214, 214, 214); }
 .button-bg-fill { background-color: rgb(240, 240, 240); border-radius: 7px; background-image: none; margin: 5px; border: none; padding: 0.3em 1em; text-align: center; color: rgb(153, 153, 153); font-size: 1em; letter-spacing: 1px; }
@@ -110,7 +97,7 @@ iframe { border-radius: 7px; border-color: rgb(214, 214, 214); }
 #local-components .flex-box { margin-bottom: 1.5em; }
 input { margin-top: 0px; }
 .top-button-actions svg { height: 15px; width: 15px; }
-.top-button-actions span { margin: 0px; padding: 0px; }
+.top-button-actions span { margin: 0px; padding: 0px; vertical-align:middle}
 #global-components .flex-box > * { flex-grow: 1; }
 #global-components .flex-box { margin-bottom: 1.5em; }
 #component-settings-form .flex-box > * { flex-grow: 1; }

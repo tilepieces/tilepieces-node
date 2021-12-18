@@ -14522,8 +14522,7 @@ buttonDone.addEventListener("click",e=>{
     fileValue = editor.getValue().trim();
     opener.dispatchEvent(new CustomEvent("codemirror-editor-done",{detail:fileValue}))
 });
-
-
+/*
 window.addEventListener("window-popup-open",e=>{
     if(!editor)
         return;
@@ -14537,7 +14536,7 @@ window.addEventListener("window-popup-close",e=>{
         return;
     editor.focus();
     editor.setCursor(editor.getCursor());
-});
+});*/
 /*
 window.addEventListener("window-popup-open",function(e){
     var dockableElement = e.detail.dockableElement;

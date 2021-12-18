@@ -95,7 +95,7 @@ function cssSpecificity(selector,inside){
 if(typeof module !== "undefined" &&
   typeof module.exports !== "undefined")
   module.exports = cssSpecificity;
-window.tilepieces_tabs = function(options){
+window.tilepieces_tabs = function (options) {
   var outside = options.el;
   var inside = outside.querySelector(".tab-buttons-inside");
   var tabPrev = outside.querySelector(".tab-prev");
@@ -106,88 +106,91 @@ window.tilepieces_tabs = function(options){
   var left = 0;
   var moveOnBottom;
   var throttle;
-  function callbackObserver(){
+
+  function callbackObserver() {
     clearTimeout(throttle);
-    throttle = setTimeout(()=>{
-      if(!inside.lastElementChild)
+    throttle = setTimeout(() => {
+      if (!inside.lastElementChild)
         return;
       maximumRight = (inside.lastElementChild.offsetLeft + inside.lastElementChild.offsetWidth) - inside.offsetWidth;
-      if(moveOnBottom){
-          left = -maximumRight;
-          inside.style.transform = "translateX(" + left +"px)";
-          moveOnBottom = null;
-      }
-      else{
-          left = 0;
-          inside.style.transform = "translateX(" + left +"px)";
+      if (moveOnBottom) {
+        left = -maximumRight;
+        inside.style.transform = "translateX(" + left + "px)";
+        moveOnBottom = null;
+      } else {
+        left = 0;
+        inside.style.transform = "translateX(" + left + "px)";
       }
       displayArrows();
-    },32);
+    }, 32);
   }
+
   var resizeObserver = new ResizeObserver(callbackObserver);
   resizeObserver.observe(outside);
   var observer = new MutationObserver(callbackObserver);
   observer.observe(inside, {childList: true, subtree: true});
-  tabPrev.addEventListener("click",function(e){
-    left+=inside.offsetWidth/3;
-    if(left>0)
-        left = 0;
-    inside.style.transform = "translateX(" + left +"px)";
+  tabPrev.addEventListener("click", function (e) {
+    left += inside.offsetWidth / 3;
+    if (left > 0)
+      left = 0;
+    inside.style.transform = "translateX(" + left + "px)";
     displayArrows();
   });
-  tabNext.addEventListener("click",function(e){
-    left-=inside.offsetWidth/3;
-    if(left<-maximumRight)
-        left = -maximumRight;
-    inside.style.transform = "translateX(" + left +"px)";
+  tabNext.addEventListener("click", function (e) {
+    left -= inside.offsetWidth / 3;
+    if (left < -maximumRight)
+      left = -maximumRight;
+    inside.style.transform = "translateX(" + left + "px)";
     displayArrows();
   });
-  function displayArrows(e){
-    if(inside.scrollWidth == inside.offsetWidth){
-        tabPrev.style.display = "none";
-        tabNext.style.display = "none";
-        return;
+
+  function displayArrows(e) {
+    if (inside.scrollWidth == inside.offsetWidth) {
+      tabPrev.style.display = "none";
+      tabNext.style.display = "none";
+      return;
     }
-    if(left == 0)
-        tabPrev.style.display = "none";
+    if (left == 0)
+      tabPrev.style.display = "none";
     else
-        tabPrev.style.display = "block";
-    if(left<-maximumRight) {
-        left = -maximumRight;
-        inside.style.transform = "translateX(" + left + "px)";
+      tabPrev.style.display = "block";
+    if (left < -maximumRight) {
+      left = -maximumRight;
+      inside.style.transform = "translateX(" + left + "px)";
     }
-    if(left == -maximumRight)
-        tabNext.style.display = "none";
+    if (left == -maximumRight)
+      tabNext.style.display = "none";
     else
-        tabNext.style.display = "block";
+      tabNext.style.display = "block";
   }
-  inside.addEventListener("click",e=>{
+
+  inside.addEventListener("click", e => {
     var target = e.target.closest("a");
-    if(!target)
-        return;
+    if (!target)
+      return;
     e.preventDefault();
-    if(target!=tabSelected){
-      options.onSelect && options.onSelect(e,target);
-      if(options.noAction)
+    if (target != tabSelected) {
+      options.onSelect && options.onSelect(e, target);
+      if (options.noAction)
         return;
-      if(tabSelected) {
-          tabSelected.classList.remove("selected");
-          //tabSelectedElement.style.display = "none";
-          tabSelectedElement.hidden = true;
-          if(tabSelectedElement.style.display)
-              tabSelectedElement.style.display = "";
+      if (tabSelected) {
+        tabSelected.classList.remove("selected");
+        //tabSelectedElement.style.display = "none";
+        tabSelectedElement.hidden = true;
+        if (tabSelectedElement.style.display)
+          tabSelectedElement.style.display = "";
       }
       tabSelected = target;
       tabSelectedElement = target.ownerDocument.querySelector(tabSelected.getAttribute("href"));
       tabSelectedElement.hidden = false;
-      if(tabSelectedElement.style.display)
-          tabSelectedElement.style.display = options.display || "block";
+      if (tabSelectedElement.style.display)
+        tabSelectedElement.style.display = options.display || "block";
       tabSelected.classList.add("selected");
     }
   });
   return {
-    moveOnBottom : ()=>{
-        moveOnBottom = true;
+    moveOnBottom: () => {
+      moveOnBottom = true;
     }
   }
 };
@@ -871,8 +874,11 @@ opener.addEventListener("tilepieces-mutation-event",e=>{
     flagForInternalModifications = false;
     return;
   }
-  var findAttributeMutation,removedNode;
+  var findAttributeMutation,removedNode,childrenList;
   mutationList.forEach(mutation=> {
+    if(mutation.type == "childList" &&
+      mutation.target == app.elementSelected)
+      childrenList = true;
     if(mutation.type == "attributes" &&
       mutation.target == app.elementSelected)
       findAttributeMutation = true;
@@ -883,9 +889,17 @@ opener.addEventListener("tilepieces-mutation-event",e=>{
   });
   if(removedNode) {
     wrapper.setAttribute("hidden", "");
-    return;
   }
-  if(findAttributeMutation)
+  else if(childrenList){
+    childrenElementUL.innerHTML = [...app.elementSelected.children]
+      .map((v,i,a)=>{
+        var isNodeMatch = !v.tagName.match(/^(HTML|BODY|HEAD|THEAD|TBODY|TFOOT)$/) && app.core.htmlMatch.find(v);
+        var grabber = isNodeMatch && a.length > 1 ? `<span class="children-grabber">G</span>` : "";
+        return `<li data-index=${i}>${grabber}<a href='#'>${app.utils.elementSum(v)}</a></li>`
+      })
+      .join("");
+  }
+  else if(findAttributeMutation)
     onSelected(true);
 })
 window.addEventListener("window-popup-open",e=>{

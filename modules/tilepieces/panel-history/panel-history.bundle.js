@@ -1,6 +1,9 @@
+(()=>{
 const opener = window.opener ? window.opener : window.parent;
 const app = opener.tilepieces;
 function getHistory(){
+  if(!app.core?.history)
+    return [];
   var copyObj = Object.assign({},app.core.history);
   copyObj.entries = copyObj.entries.slice(0);
   copyObj.entries.unshift({method:"new"});
@@ -40,3 +43,15 @@ section.addEventListener("click",async e=>{
     await app.core[action]();
   opener.dialog.close();
 });
+// block/unblock on events
+opener.addEventListener("content-editable-start", e => {
+  document.body.classList.add("content-editable-start")
+});
+opener.addEventListener("content-editable-end", e => {
+  document.body.classList.remove("content-editable-start")
+});
+if (app.contenteditable) {
+  document.body.classList.add("content-editable-start")
+}
+
+})();

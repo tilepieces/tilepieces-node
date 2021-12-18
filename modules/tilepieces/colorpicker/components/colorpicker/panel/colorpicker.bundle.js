@@ -15,7 +15,7 @@ function initializePicker(){
     parent: document.getElementById("colorpicker"),
     popup: false,
     alpha: true,
-    editor: true,
+    editor: false,
     editorFormat : settings.editorFormat,
     color:settings.colorPickerStartColor,
     onDone:c=>{

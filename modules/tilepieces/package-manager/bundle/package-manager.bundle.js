@@ -275,34 +275,37 @@ window.alertDialog = function(docFragment,error){
     }
 })();
 
-const tabVertical = document.querySelector(".tab-vertical");
-const inside = tabVertical.querySelector(".tab-buttons-inside");
-let tabSelected = inside.querySelector(".selected");
-let tabSelectedElement = inside.ownerDocument.querySelector(tabSelected.getAttribute("href"));
-tabVertical.addEventListener("click",e=>{
-  var isOpen = tabVertical.classList.toggle("tab-vertical-open");
-  tabVertical.ownerDocument.body.style.overflow = isOpen ? "hidden" : "";
-});
-inside.addEventListener("click",e=>{
-  var target = e.target.closest("a");
-  if(!target)
-    return;
-  e.preventDefault();
-  if(target!=tabSelected){
-    if(tabSelected) {
-      tabSelected.classList.remove("selected");
-      tabSelectedElement.hidden = true;
+(()=>{
+  const tabVertical = document.querySelector(".tab-vertical");
+  const inside = tabVertical.querySelector(".tab-buttons-inside");
+  let tabSelected = inside.querySelector(".selected");
+  let tabSelectedElement = inside.ownerDocument.querySelector(tabSelected.getAttribute("href"));
+  tabVertical.addEventListener("click",e=>{
+    var isOpen = tabVertical.classList.toggle("tab-vertical-open");
+    tabVertical.ownerDocument.body.style.overflow = isOpen ? "hidden" : "";
+  });
+  inside.addEventListener("click",e=>{
+    var target = e.target.closest("a");
+    if(!target)
+      return;
+    e.preventDefault();
+    if(target!=tabSelected){
+      if(tabSelected) {
+        tabSelected.classList.remove("selected");
+        tabSelectedElement.hidden = true;
+        if(tabSelectedElement.style.display)
+          tabSelectedElement.style.display = "";
+      }
+      tabSelected = target;
+      tabSelectedElement = target.ownerDocument.querySelector(tabSelected.getAttribute("href"));
+      tabSelectedElement.hidden = false;
       if(tabSelectedElement.style.display)
-        tabSelectedElement.style.display = "";
+        tabSelectedElement.style.display = "block";
+      tabSelected.classList.add("selected");
+      tabVertical.dispatchEvent(new CustomEvent("selection",{detail:tabSelected}))
     }
-    tabSelected = target;
-    tabSelectedElement = target.ownerDocument.querySelector(tabSelected.getAttribute("href"));
-    tabSelectedElement.hidden = false;
-    if(tabSelectedElement.style.display)
-      tabSelectedElement.style.display = "block";
-    tabSelected.classList.add("selected");
-  }
-});
+  });
+})();
 let modelProject = {
   files: [],
   "server": {
@@ -470,24 +473,27 @@ componentsDialog.addEventListener("click", async e => {
   }
 });
 function recorsiveUncheck(components, checked) {
-  components && components.forEach(v => {
-    v.checked = checked;
-    recorsiveUncheck(v.components, checked)
-  });
+  if(components){
+    for(var k in components){
+      var c = components[k];
+      c.checked = checked;
+      recorsiveUncheck(c.components, checked)
+    }
+  }
 }
 
 localComponents.addEventListener("componentsChecked", e => {
   var checked = e.detail.target.checked;
   localComponentsUIMOdel.componentsChecked = checked;
   recorsiveUncheck(localComponentsUIMOdel.localComponents, checked)
-  localComponentsUITemplate.set("", localComponentsUIMOdel);
+  //localComponentsUITemplate.set("", localComponentsUIMOdel);
 });
 globalComponents.addEventListener("componentsChecked", e => {
   var checked = e.detail.target.checked;
   globalComponentsUIMOdel.componentsChecked = checked;
   //globalComponentsUIMOdel.globalComponents.forEach(v=>v.checked = checked);
   recorsiveUncheck(globalComponentsUIMOdel.globalComponents, checked)
-  globalComponentsUITemplate.set("", globalComponentsUIMOdel);
+  //globalComponentsUITemplate.set("", globalComponentsUIMOdel);
 });
 
 function changeComponentsCheck(e) {
@@ -497,6 +503,20 @@ function changeComponentsCheck(e) {
   var component = e.target.__project;
   component.checked = checked;
   recorsiveUncheck(component.components, checked)
+  var splitted = component.name.split("/");
+  if(splitted.length > 1 && checked){
+    var isLocal = localComponents.contains(e.target);
+    splitted.pop();
+    var startComponents = isLocal ? localComponentsUIMOdel.localComponents : null;
+    var start;
+    splitted.forEach((v,i,a)=>{
+      var name = a.slice(0,i+1).join("/");
+      start = startComponents.find(c=>c.name==name);
+      start.checked = true;
+      startComponents = start.components;
+    })
+    localComponentsUITemplate.set("", localComponentsUIMOdel);
+  }
 }
 
 localComponents.addEventListener("change", e => {
@@ -573,13 +593,15 @@ async function exportComponentsAsZip(componentsToExport, isLocal) {
   var zip = new JSZip();
   var pkgsExported = [];
   var errors = [];
+  var pkgToExport = [];
   for (var i = 0; i < componentsToExport.length; i++) {
     var pkg = componentsToExport[i];
+    pkgToExport.push({name:pkg.name,path:"/" + pkg.name});
     openerDialog.open("exporting " + pkg.name + " component...", true);
     pkgsExported = await getComponentAsZip(pkg, zip, pkg.name, isLocal, pkgsExported);
   }
   console.log("pkgsExported -> ", pkgsExported);
-  zip.file("tilepieces.components.json", JSON.stringify(componentsToExport));
+  zip.file("tilepieces.components.json", JSON.stringify(pkgToExport,null,2));
   var blobZip = await zip.generateAsync({
       type: "blob",
       compression: "DEFLATE",
@@ -625,8 +647,7 @@ document.getElementById("export-local-components")
     openerDialog.open("exporting components...", true);
     var componentsToExport = [];
     var checkeds = localComponentsUIMOdel.localComponents.filter(v => v.checked);
-    checkeds.forEach(c =>
-      componentsToExport.push(app.localComponents[c.name]));
+    checkeds.forEach(c =>componentsToExport.push(app.localComponents[c.name]));
     try {
       await exportComponentsAsZip(
         JSON.parse(JSON.stringify(componentsToExport)), true);
@@ -638,11 +659,13 @@ document.getElementById("export-local-components")
 async function getComponentAsZip(pkg, zip, pkgName, isLocal, componentsCache = []) {
   if (componentsCache.find(a => a.name == pkg.name))
     return componentsCache;
-  componentsCache.push(pkg);
+
   var path = ((pkg.path || "") + "/").replace(/\/\//g, "/");
   var updatepath = (pkg.name + "/").replace(/\/\//g, "/");
   var style = pkg.bundle.stylesheet;
   var script = pkg.bundle.script;
+  zip.file(updatepath + "tilepieces.component.json",
+    await app.storageInterface.read(path + "tilepieces.component.json", isLocal ? null : pkgName));
   pkg.html && zip.file(updatepath + pkg.html,
     await app.storageInterface.read(path + pkg.html, isLocal ? null : pkgName));
   script.src && zip.file(updatepath + script.src,
@@ -661,10 +684,26 @@ async function getComponentAsZip(pkg, zip, pkgName, isLocal, componentsCache = [
   if (pkg.components) {
     for (var k in pkg.components) {
       var cmp = pkg.components[k];
+      var splitted = cmp.name.split("/");
+      if(isLocal){
+        var startComponents = localComponentsUIMOdel.localComponents;
+        var start;
+        splitted.forEach((v,i,a)=>{
+          var name = a.slice(0,i+1).join("/");
+          start = startComponents.find(c=>c.name==name);
+          startComponents = start.components;
+        })
+        if(start && !start.checked) {
+          delete pkg.components[k];
+          continue;
+        }
+      }
       openerDialog.open("exporting " + cmp.name + " component...", true);
       componentsCache = await getComponentAsZip(cmp, zip, pkgName, isLocal, componentsCache);
+      pkg.components[k] = {name:cmp.name,path:"/" + cmp.name.split("/").pop()}
     }
   }
+  /*
   if (pkg.dependencies) {
     for (var i = 0; i < pkg.dependencies.length; i++) {
       var dep = pkg.dependencies[i];
@@ -688,8 +727,12 @@ async function getComponentAsZip(pkg, zip, pkgName, isLocal, componentsCache = [
         componentsCache = await getComponentAsZip(alreadyPresent, zip, alreadyPresent.name, isLocal, componentsCache);
       }
     }
-  }
-  pkg.path = pkg.name;
+  }*/
+  //pkg.path = "/" + pkg.name.split("/").pop();
+  delete pkg.path;
+  zip.file(updatepath + "tilepieces.component.json",
+    JSON.stringify(pkg,null,2));
+  componentsCache.push(pkg);
   return componentsCache;
 }
 
@@ -814,6 +857,9 @@ async function updateResourceFromComponent(toImport,
 }
 function importComponentAsZip(blobFile, local) {
   return new Promise(async (resolve, reject) => {
+    if (!window.JSZip) {
+      await import("./../../jszip/jszip.min.js");
+    }
     var zip = new JSZip();
     try {
       var contents = await zip.loadAsync(blobFile);
@@ -825,8 +871,9 @@ function importComponentAsZip(blobFile, local) {
         var comp = components[k];
         var files = {};
         var fileArr = [];
-        zip.folder(comp.path).forEach((relativePath, file) => {
-          if (!file.dir && !file.name.endsWith("tilepieces.component.json"))
+        var path = comp.path[0] == "/" ? comp.path.substring(1) : comp.path;
+        zip.folder(path).forEach((relativePath, file) => {
+          if (!file.dir)
             files[relativePath] = file;
         });
         for (var f in files)
@@ -983,11 +1030,7 @@ function turnComponentsToArray(comps, isGlobal) {
     var isProjectPackage = c.name == app.project.name;
     if (isProjectPackage && (isGlobal || !c.components || !Object.keys(c.components).length))
       continue;
-    // something wrong here, noSet should not be setted...
-    if (isProjectPackage || isGlobal)
-      c.noSet = true;
-    else
-      c.noSet = false;
+    c.noSet = isProjectPackage || isGlobal;
     toArray.push(c);
     if (c.components && !Array.isArray(c.components) && typeof c.components === "object")
       c.components = turnComponentsToArray(c.components, isGlobal);
@@ -1085,7 +1128,7 @@ async function concatenateSources(type, noUpdate) {
       originalBundleName = originalBundleName.replace(defaultPath, "");
     var bundlePath = (originalBundleName &&
         (defaultPath + originalBundleName).replace(/\/\//g, "/")) ||
-      (defaultPath + nameSplitted[0] + ".bundle." + key3).replace(/\/\//g, "/");
+      (defaultPath + settingsModel.name.replaceAll("/",".") + ".bundle." + key3).replace(/\/\//g, "/");
     /*
     if(!bundleNameInCompSettings || !bundleNameInCompSettings.value ||
         bundleNameInCompSettings.value != bundlePath)
@@ -1103,7 +1146,7 @@ async function concatenateSources(type, noUpdate) {
     res => {
       openerDialog.close();
       if (!originalBundleName) {
-        settingsTT.set("bundle." + key2, [{name: key4, value: nameSplitted[0] + ".bundle." + key3}]);
+        settingsTT.set("bundle." + key2, [{name: key4, value: bundlePath.replace(defaultPath, "")}]);
         submitSettings();
       }
 
@@ -1243,10 +1286,6 @@ async function minifySourceScripts() {
     openerDialog.open("concatenating minifing error:\n" + e.toString());
     return;
   }
-  if (settingsModel.bundle.scriptHeader)
-    finalMinified = settingsModel.bundle.scriptHeader + "\n" + finalMinified;
-  if (settingsModel.bundle.scriptFooter)
-    finalMinified = finalMinified + "\n" + settingsModel.bundle.scriptFooter;
   try {
     if (options.sourceMap) {
       await app.storageInterface.update(options.sourceMap.filename, new Blob([final]));
@@ -1254,7 +1293,10 @@ async function minifySourceScripts() {
     }
     await app.storageInterface.update(bundlePath, new Blob([finalMinified.code]));
     if (!originalBundleName) {
-      settingsTT.set("bundle.scripts", [{name: "src", value: bundlePath}]);
+      var defaultPath = settingsModel.__local ?
+        settingsModel.path + "/" :
+        "";
+      settingsTT.set("bundle.scripts", [{name: "src", value: bundlePath.replace(defaultPath, "")}]);
     }
     openerDialog.close()
   } catch (e) {

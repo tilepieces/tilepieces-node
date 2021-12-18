@@ -3,35 +3,36 @@ const copyDir = require("./copyDir.js");
 module.exports = async ()=>{
   const path = require("path")
   const copyDir = require("./copyDir.js")
-  let basePath = path.resolve(__dirname, "..") +  + path.sep;
-  let processCwd = process.cwd() +  + path.sep;
+  var basePath = path.resolve(__dirname, "..") + path.sep;
+  var processCwd = process.cwd() + path.sep;
   const {promises: fs} = require("fs");
-  let settingsDefault = await fs.readFile(basePath + "settings","utf8");
+  var settingsDefault = await fs.readFile(basePath + "settings.json","utf8");
   try {
-    await fs.access(basePath + 'components.json', fs.F_OK);
+    await fs.access(processCwd + 'components.json', fs.F_OK);
   } catch (e) {
     await fs.writeFile(processCwd + 'components.json', "{}");
   }
   try {
-    await fs.access(basePath + 'components.json', fs.F_OK);
+    await fs.access(processCwd + 'projects.json', fs.F_OK);
   } catch (e) {
     await fs.writeFile(processCwd + 'projects.json', "[]");
   }
   var isOldSettings;
   try {
-    await fs.access(basePath + 'settings.json', fs.F_OK);
+    await fs.access(processCwd + 'settings.json', fs.F_OK);
     isOldSettings = true;
   } catch (e) {
-    await fs.writeFile(processCwd + 'settings.json', "[]");
+    await fs.writeFile(processCwd + 'settings.json', settingsDefault);
   }
-  let indexHtml = await fs.readFile(basePath + "index.html","utf8");
+  var indexHtml = await fs.readFile(basePath + "index.html","utf8");
   await fs.writeFile(processCwd + 'index.html', indexHtml);
+  await fs.rm(processCwd + "modules",{recursive:true});
   await copyDir(basePath + "modules", processCwd + "modules");
   await copyDir(basePath + "components", processCwd + "components");
   if(isOldSettings) {
-    let oldSettingsRaw = await fs.readFile(processCwd + "settings.json");
-    let oldSettings = JSON.parse(oldSettingsRaw);
-    await fs.writeFile('settings.json', JSON.stringify(Object.assign({}, settingsDefault, oldSettings)));
+    var oldSettingsRaw = await fs.readFile(processCwd + "settings.json","utf8");
+    var oldSettings = JSON.parse(oldSettingsRaw);
+    await fs.writeFile('settings.json', JSON.stringify(Object.assign({}, JSON.parse(settingsDefault), oldSettings)));
   }
   return true;
 }

@@ -37,156 +37,343 @@ body.__drag-cursor-grabbing *{
 .targetClone li{list-style:none}
 .cloneToAppend{
     background-color:cyan;
-}.project-tree{
-    font-family:sans-serif;
-    --background-color:white;
-    --selection-color:lightcyan;
-    --selection-text-color:grey;
+}.project-tree {
+  font-family: sans-serif;
+  --background-color: white;
+  --selection-color: lightcyan;
+  --selection-text-color: grey;
 }
-.project-tree-root{
-    position:relative;
-    text-indent:1.1em;
+
+.project-tree-root {
+  position: relative;
+  text-indent: 1.1em;
 }
-.project-tree ul{
-    padding: 0 0.70rem 0;
-    margin:0;
-    background:var(--background-color);
+
+.project-tree ul {
+  padding: 0 0.70rem 0;
+  margin: 0;
+  background: var(--background-color);
 }
-.project-tree li{
-    padding:0.35rem 0 0;
-    list-style:none;
-    position:relative;
-    text-indent:1.2rem;
+
+.project-tree li {
+  padding: 0.35rem 0 0;
+  list-style: none;
+  position: relative;
+  text-indent: 1.2rem;
 }
-.project-tree *:not([contenteditable=true]){
-    user-select: none;
+
+.project-tree *:not([contenteditable=true]) {
+  user-select: none;
 }
-.project-tree-grabber{
-    width:1rem;
-    height:1rem;
-    text-indent:0
+
+.project-tree-grabber {
+  width: 1rem;
+  height: 1rem;
+  text-indent: 0
 }
- .project-tree-caret{
-    display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: 0.2rem;
-    vertical-align: middle;
-    border-top: 0.5rem dashed;
-    border-right: 0.3rem solid transparent;
-    border-left: 0.3rem solid transparent;
-    transform: rotate(-90deg);
+
+.project-tree-caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 0.2rem;
+  vertical-align: middle;
+  border-top: 0.5rem dashed;
+  border-right: 0.3rem solid transparent;
+  border-left: 0.3rem solid transparent;
+  transform: rotate(-90deg);
 }
- .project-tree ul{
-    display:none;
+
+.project-tree ul {
+  display: none;
 }
-.project-tree-caret__open .project-tree-caret{
-    transform: rotate(0deg);
+
+.project-tree-caret__open .project-tree-caret {
+  transform: rotate(0deg);
 }
-.project-tree-caret__open ~ ul{
-    display:block;
+
+.project-tree-caret__open ~ ul {
+  display: block;
 }
+
 .project-tree-file,
-.project-tree-directory{
-    background:var(--background-color);
+.project-tree-directory {
+  background: var(--background-color);
 }
-.project-tree .selector{
-    position:relative;
-    left:var(--left,0);
-    padding-left:var(--left-positive,0);
-    width:100%;
+
+.project-tree .selector {
+  position: relative;
+  left: var(--left, 0);
+  padding-left: var(--left-positive, 0);
+  width: 100%;
 }
-.project-tree .selector > *{
-    position:relative;z-index:2;
+
+.project-tree .selector > * {
+  position: relative;
+  z-index: 2;
 }
+
 .project-tree li.project-tree-selected > .selector,
-.project-tree.project-tree-selected > .selector{
-    background-color:var(--selection-color);
-    color:var(--selection-text-color);
+.project-tree.project-tree-selected > .selector {
+  background-color: var(--selection-color);
+  color: var(--selection-text-color);
 }
-.project-tree-selected > div > .tooltip-toggler{display:inline}
-.project-tree li.project-tree-cut{
-    color:#ccc;
+
+.project-tree-selected > div > .tooltip-toggler {
+  display: inline
 }
-.project-tree .tooltip-toggler{
-    position:absolute;
-    left:0;
-    text-decoration:none;
-    text-indent:0;
-    color:var(--selection-text-color);
-    display:none;
-}body,html {
-    height:100%;
-    margin:0;
-    background:#fff;
+
+.project-tree li.project-tree-cut {
+  color: #ccc;
 }
-#project-tree-file-list.display{
-    display:block;
+
+.project-tree .tooltip-toggler {
+  position: absolute;
+  left: 0;
+  text-decoration: none;
+  text-indent: 0;
+  color: var(--selection-text-color);
+  display: none;
+}.__drag__drop-overlay {
+  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.35);
 }
-#project-tree-element{
-    display:none;
+
+dummy-drag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.7;
+  transform: translate(-9999px, -9999px);
+  pointer-events: none;
+  touch-action: none;
+  cursor: grabbing;
+  z-index: 1
 }
+
+.__drag-prevent-mouse-out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  display: none;
+}
+
+.__drag-cursor-grab {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+body.__drag-cursor-grabbing,
+body.__drag-cursor-grabbing * {
+  cursor: grabbing !important;
+  cursor: -webkit-grabbing !important;
+}
+
+.targetClone {
+  position: absolute;
+  opacity: 0.4;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+}
+
+.targetClone li {
+  list-style: none
+}
+
+.cloneToAppend {
+  background-color: cyan;
+}
+
+.project-tree {
+  font-family: sans-serif;
+  --background-color: white;
+  --selection-color: lightcyan;
+  --selection-text-color: grey;
+}
+
+.project-tree-root {
+  position: relative;
+  text-indent: 1.1em;
+}
+
+.project-tree ul {
+  padding: 0 0.70rem 0;
+  margin: 0;
+  background: var(--background-color);
+}
+
+.project-tree li {
+  padding: 0.35rem 0 0;
+  list-style: none;
+  position: relative;
+  text-indent: 1.2rem;
+}
+
+.project-tree *:not([contenteditable=true]) {
+  user-select: none;
+}
+
+.project-tree-grabber {
+  width: 1rem;
+  height: 1rem;
+  text-indent: 0
+}
+
+.project-tree-caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 0.2rem;
+  vertical-align: middle;
+  border-top: 0.5rem dashed;
+  border-right: 0.3rem solid transparent;
+  border-left: 0.3rem solid transparent;
+  transform: rotate(-90deg);
+}
+
+.project-tree ul {
+  display: none;
+}
+
+.project-tree-caret__open .project-tree-caret {
+  transform: rotate(0deg);
+}
+
+.project-tree-caret__open ~ ul {
+  display: block;
+}
+
+.project-tree-file,
+.project-tree-directory {
+  background: var(--background-color);
+}
+
+.project-tree .selector {
+  position: relative;
+  left: var(--left, 0);
+  padding-left: var(--left-positive, 0);
+  width: 100%;
+}
+
+.project-tree .selector > * {
+  position: relative;
+  z-index: 2;
+}
+
+.project-tree li.project-tree-selected > .selector,
+.project-tree.project-tree-selected > .selector {
+  background-color: var(--selection-color);
+  color: var(--selection-text-color);
+}
+
+.project-tree-selected > div > .tooltip-toggler {
+  display: inline
+}
+
+.project-tree li.project-tree-cut {
+  color: #ccc;
+}
+
+.project-tree .tooltip-toggler {
+  position: absolute;
+  left: 0;
+  text-decoration: none;
+  text-indent: 0;
+  color: var(--selection-text-color);
+  display: none;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+  background: #fff;
+}
+
+#project-tree-file-list.display {
+  display: block;
+}
+
+#project-tree-element {
+  display: none;
+}
+
 .project-tree-caret.project-tree-caret__open ~ #project-tree-element {
-    display: block;
+  display: block;
 }
+
 #project-tree-add-file {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
 }
-#project-wrapper{
-    margin:8px;
-}.project-menu-tooltip{
-    font: 12px sans-serif;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 1px 1px #00000012;
-    position: absolute;
-    display: none;
-    user-select:none;
-    top:0;
-    left:0;
-    background:#fff;
-    z-index:10;
-    outline:0
+
+#project-wrapper {
+  margin: 8px;
 }
+
+.project-menu-tooltip {
+  font: 12px sans-serif;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 1px 1px #00000012;
+  position: absolute;
+  display: none;
+  user-select: none;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 10;
+  outline: 0
+}
+
 .project-menu-tooltip div,
-.project-menu-tooltip li{
-    text-indent:5px;
-    position:relative;
-    padding:5px 5px 5px 0;
+.project-menu-tooltip li {
+  text-indent: 5px;
+  position: relative;
+  padding: 5px 5px 5px 0;
 }
-.project-menu-tooltip div[hidden]{
-    display:none
+
+.project-menu-tooltip div[hidden] {
+  display: none
 }
-.project-menu-tooltip  li:hover,
+
+.project-menu-tooltip li:hover,
 .project-menu-tooltip li.selected,
-.project-menu-tooltip  div:hover,
-.project-menu-tooltip div.selected{
-    background: #e0e0e0;
+.project-menu-tooltip div:hover,
+.project-menu-tooltip div.selected {
+  background: #e0e0e0;
 }
-.project-menu-tooltip [disabled]{
-    display:none;
+
+.project-menu-tooltip [disabled] {
+  display: none;
 }
-.project-menu-tooltip div > ul{
-    display:none;
-    padding:0;
-    margin:0;
-    background:white;
-    list-style:none;
+
+.project-menu-tooltip div > ul {
+  display: none;
+  padding: 0;
+  margin: 0;
+  background: white;
+  list-style: none;
 }
-#project-tree-create-file.selected{
-    padding-bottom:1px;
+
+#project-tree-create-file.selected {
+  padding-bottom: 1px;
 }
-.project-menu-tooltip div.selected > ul{
-    display:block;
-    margin-top:5px;
+
+.project-menu-tooltip div.selected > ul {
+  display: block;
+  margin-top: 5px;
 }
-.project-menu-tooltip .arrow{
-    display: inline-block;
-    float:right;
+
+.project-menu-tooltip .arrow {
+  display: inline-block;
+  float: right;
 }
-.project-menu-tooltip div.selected > .arrow{
-    transform: rotate(90deg);
+
+.project-menu-tooltip div.selected > .arrow {
+  transform: rotate(90deg);
 }

@@ -26,13 +26,15 @@ module.exports = async ()=>{
   }
   var indexHtml = await fs.readFile(basePath + "index.html","utf8");
   await fs.writeFile(processCwd + 'index.html', indexHtml);
+  await fs.writeFile(processCwd + 'tp-favi.png', await fs.readFile(basePath + "tp-favi.png"));
+  await fs.writeFile(processCwd + 'tp-favi-180.png', await fs.readFile(basePath + "tp-favi-180.png"));
   await fs.rm(processCwd + "modules",{recursive:true});
   await copyDir(basePath + "modules", processCwd + "modules");
   await copyDir(basePath + "components", processCwd + "components");
   if(isOldSettings) {
-    var oldSettingsRaw = await fs.readFile(processCwd + "settings.json","utf8");
+    var oldSettings = await fs.readFile(processCwd + "settings.json","utf8");
     var oldSettings = JSON.parse(oldSettingsRaw);
-    await fs.writeFile('settings.json', JSON.stringify(Object.assign({}, JSON.parse(settingsDefault), oldSettings)));
+    await fs.writeFile('settings.json', JSON.stringify(Object.assign({}, JSON.parse(settingsDefault), oldSettings),null,2));
   }
   return true;
 }

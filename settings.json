@@ -5,7 +5,7 @@
   },
   "workspace": "www",
   "applicationName": "tilepieces",
-  "panelPosition": "right",
+  "panelPosition": "free",
   "sandboxFrame": true,
   "componentPath": "components"
 }

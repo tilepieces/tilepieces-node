@@ -435,8 +435,7 @@ body.content-editable-start::before {
 #search-trigger {
   width: 24px;
   height: 24px;
-  background: url(../../misc/search.png)
 }
-#css-view li {
+#css-view li, #js-view li {
   padding-left: 2em;
 }

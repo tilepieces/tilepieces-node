@@ -1,18 +1,15 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html><head>
   <title>Package Manager</title>
 
-  <link href="bundle/package-manager.bundle.css" rel="stylesheet"
-        data-tilepieces-component="tilepieces/package-manager/bundle">
+  <link href="bundle/package-manager.bundle.css" rel="stylesheet" data-tilepieces-component="tilepieces/package-manager/bundle">
 </head>
 <body>
 <nav class="tab-vertical" data-tilepieces-component="tilepieces/package-manager/tab-vertical">
   <button>
     <svg xmlns="http://www.w3.org/2000/svg" y="0px" width="17" height="17" viewBox="0 0 23 23">
       <g>
-        <ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:0.35;fill:#FFFFFF;"
-                 cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
+        <ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:0.35;fill:#FFFFFF;" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
         <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 		C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
         <path style="fill: rgb(153, 153, 153);" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
@@ -22,10 +19,7 @@
   </button>
   <div class="tab-buttons">
     <div class="tab-buttons-wrap">
-      <div class="tab-buttons-inside"><a href="#projects-list" class="selected">Projects</a><a
-        href="#current-project-data">Project Settings</a><a href="#general-settings">General Settings</a><a
-        href="#component-settings">Component properties</a><a href="#local-components">Local Components</a><a
-        href="#global-components">Global Components</a>
+      <div class="tab-buttons-inside"><a href="#projects-list" class="selected">Projects</a><a href="#current-project-data">Project Settings</a><a href="#general-settings">General Settings</a><a href="#component-settings">Component properties</a><a href="#local-components">Local Components</a><a href="#global-components">Global Components</a>
 
 
       </div>
@@ -39,13 +33,11 @@
       <div class="upload-button"><label class="as-button"><span>
 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 19.6 19.6">
 <g>
-<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
-      d="M2.8,17.3h14"></path>
+<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M2.8,17.3h14"></path>
 <polyline style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" points="13.8,6.3 9.8,2.3
 5.8,6.3 	"></polyline>
 
-<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="2.3"
-      x2="9.8" y2="13.2"></line>
+<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="2.3" x2="9.8" y2="13.2"></line>
 </g>
 </svg>
 </span>
@@ -53,20 +45,17 @@
       <button id="export-projects"><span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.6 19.6">
 <g>
-<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
-      d="M16.8,2.3h-14"></path>
+<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M16.8,2.3h-14"></path>
 <polyline style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" points="5.8,13.3
 9.8,17.3 13.8,13.3 	"></polyline>
 
-<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="6.4"
-      x2="9.8" y2="17.3"></line>
+<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="6.4" x2="9.8" y2="17.3"></line>
 </g>
 </svg></span>Export
       </button>
     </div>
     <div>
-      <input type="checkbox" data-if="projects.length" class="toggle-projects" data-bind="projectsChecked"
-             data-bind-dom-prop="__project,project">
+      <input type="checkbox" data-if="projects.length" class="toggle-projects" data-bind="projectsChecked" data-bind-dom-prop="__project,project">
       <span class="select-all-checkboc-svg">
       <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 33 33">
 <g>
@@ -99,96 +88,107 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
       Select all</span>
       <ul>
         <li data-foreach="projects" data-foreach-key-name="project" class="project-list">
-          <input type="checkbox" class="toggle-projects" data-bind="project.checked"
-                 data-bind-dom-prop="__project,project">
+          <input type="checkbox" class="toggle-projects" data-bind="project.checked" data-bind-dom-prop="__project,project">
           <span data-bind-dom-prop="__project,project">${project.name}</span>
           <button data-remove-project="" data-bind-dom-prop="__project,project" class="component-properties-remove">-
           </button>
-          <button data-if="project.name != projectName" class="project-name-open"
-                  data-bind-dom-prop="__project,project">Open
+          <button data-if="project.name != projectName" class="project-name-open" data-bind-dom-prop="__project,project">Open
           </button>
         </li>
       </ul>
     </div>
   </div>
-  <div id="current-project-data" style="display:none"
-       data-tilepieces-component="tilepieces/package-manager/current-project-data">
-    <div ${hiddenattr}="">
-      <fieldset>
-        <legend><label>Files</label>
-          <button class="current-project-data__add-files">+</button>
-        </legend>
-        <div data-foreach="project.files" class="project-with-remove">
-          <input class="current-project-data__file-value" data-bind="key.value">
-          <button class="current-project-data__remove-files" data-index="${key.index}">-</button>
-        </div>
-      </fieldset>
-      <fieldset>
-        <legend><label for="component-path">components path</label></legend>
-        <input data-bind="project.componentPath" id="component-path">
-      </fieldset>
-      <fieldset>
-        <legend><label for="currentStyleSheetAttribute">current StyleSheet Attribute</label></legend>
-        <input data-bind="project.currentStyleSheetAttribute" id="currentStyleSheetAttribute">
-      </fieldset>
-      <fieldset>
-        <legend><label for="imageDir">imageDir</label></legend>
-        <input data-bind="project.imageDir" id="imageDir">
-      </fieldset>
-      <fieldset>
-        <legend><label for="miscDir">miscDir</label></legend>
-        <input data-bind="project.miscDir" id="miscDir">
-      </fieldset>
-      <fieldset>
-        <legend><label for="delayUpdateFileMs">delayUpdateFileMs</label></legend>
-        <input data-bind="project.delayUpdateFileMs" id="delayUpdateFileMs">
-      </fieldset>
-      <fieldset>
-        <legend>
-          <label for="imageTypeProcess">imageTypeProcess</label>
-        </legend>
-        <select data-bind="project.imageTypeProcess" id="imageTypeProcess">
-          <option value="0">file system</option>
-          <option value="64">base64</option>
-        </select>
-      </fieldset>
-      <fieldset>
-        <legend><input type="checkbox" data-bind="project.sandboxFrame">sandbox page(scripts will not be executed)
-        </legend>
-
-      </fieldset>
-    </div>
-  </div>
-  <div id="general-settings" style="display:none"
-       data-tilepieces-component="tilepieces/package-manager/general-settings">
+  <div id="current-project-data" style="display:none" data-tilepieces-component="tilepieces/package-manager/current-project-data">
+  <div ${hiddenattr}="">
     <fieldset>
-      <legend>Panels dock positions</legend>
-      <div>
-        <input type="radio" id="panel-free-position" name="panel-position" data-bind="globalSettings.panelPosition"
-               value="free">
-        <label for="panel-free-position">Free</label>
-      </div>
-      <div>
-        <input type="radio" id="panel-dock-to-right" name="panel-position" data-bind="globalSettings.panelPosition"
-               value="right">
-        <label for="panel-dock-to-right">dock to right</label>
-      </div>
-      <div>
-        <input type="radio" id="panel-dock-to-bottom" data-bind="globalSettings.panelPosition" name="panel-position"
-               value="bottom">
-        <label for="panel-dock-to-bottom">dock to bottom</label>
-      </div>
-      <div>
-        <input type="radio" id="panel-dock-to-left" name="panel-position" value="left"
-               data-bind="globalSettings.panelPosition">
-        <label for="panel-dock-to-left">dock to left</label>
-      </div>
-    </fieldset>
-    <fieldset>
-      <legend><input type="checkbox" data-bind="globalSettings.sandboxFrame">sandbox page(scripts will not be executed)
+      <legend><input type="checkbox" data-bind="project.sandboxFrame">sandbox page<a href="#" class="info-round-icon" target="_blank"></a>
       </legend>
     </fieldset>
+    <fieldset>
+      <legend><label for="component-path">component path<a href="#" class="info-round-icon" target="_blank"></a></label></legend>
+      <input data-bind="project.componentPath" id="component-path">
+    </fieldset>
+    <fieldset>
+      <legend><label for="currentStyleSheetAttribute">current styleSheet Attribute<a href="#" class="info-round-icon" target="_blank"></a></label></legend>
+      <input data-bind="project.currentStyleSheetAttribute" id="currentStyleSheetAttribute">
+    </fieldset>
+    <fieldset>
+      <legend><label for="miscDir">miscellaneous dir<a href="#" class="info-round-icon" target="_blank"></a></label></legend>
+      <input data-bind="project.miscDir" id="miscDir">
+    </fieldset>
+    <fieldset>
+      <legend><label for="delayUpdateFileMs">delay when update file<a href="#" class="info-round-icon" target="_blank"></a></label></legend>
+      <input data-bind="project.delayUpdateFileMs" id="delayUpdateFileMs">
+    </fieldset>
+    <fieldset>
+      <legend>
+        <label for="imageTypeProcess">image type Process<a href="#" class="info-round-icon" target="_blank"></a></label>
+      </legend>
+      <select data-bind="project.imageTypeProcess" id="imageTypeProcess">
+        <option value="0">file system</option>
+        <option value="64">base64</option>
+      </select>
+    </fieldset>
+    <fieldset>
+      <legend><span>Files<a href="#" class="info-round-icon" target="_blank"></a></span>
+        <button class="current-project-data__add-files">+</button>
+      </legend>
+      <div data-foreach="project.files" class="project-with-remove">
+        <input class="current-project-data__file-value" data-bind="key.value">
+        <button class="current-project-data__remove-files" data-index="${key.index}">-</button>
+      </div>
+    </fieldset>
   </div>
+</div>
+  <div id="general-settings" style="display:none" data-tilepieces-component="tilepieces/package-manager/general-settings">
+  <fieldset>
+    <legend>Panels dock positions</legend>
+    <div>
+      <input type="radio" id="panel-free-position" name="panel-position" data-bind="globalSettings.panelPosition" value="free">
+      <label for="panel-free-position">Free</label>
+    </div>
+    <div>
+      <input type="radio" id="panel-dock-to-right" name="panel-position" data-bind="globalSettings.panelPosition" value="right">
+      <label for="panel-dock-to-right">dock to right</label>
+    </div>
+    <div>
+      <input type="radio" id="panel-dock-to-bottom" data-bind="globalSettings.panelPosition" name="panel-position" value="bottom">
+      <label for="panel-dock-to-bottom">dock to bottom</label>
+    </div>
+    <div>
+      <input type="radio" id="panel-dock-to-left" name="panel-position" value="left" data-bind="globalSettings.panelPosition">
+      <label for="panel-dock-to-left">dock to left</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend><input type="checkbox" data-bind="globalSettings.sandboxFrame">sandbox page(scripts will not be executed)</legend>
+  </fieldset>
+  <fieldset>
+    <legend><label for="global-component-path">component path<a href="#" class="info-round-icon" target="_blank"></a></label></legend>
+    <input data-bind="globalSettings.componentPath" id="global-component-path">
+  </fieldset>
+  <fieldset>
+    <legend><label for="global-currentStyleSheetAttribute">current styleSheet Attribute<a href="#" class="info-round-icon" target="_blank"></a></label></legend>
+    <input data-bind="globalSettings.currentStyleSheetAttribute" id="global-currentStyleSheetAttribute">
+  </fieldset>
+  <fieldset>
+    <legend><label for="global-miscDir">miscellaneous dir<a href="#" class="info-round-icon" target="_blank"></a></label></legend>
+    <input data-bind="globalSettings.miscDir" id="global-miscDir">
+  </fieldset>
+  <fieldset>
+    <legend><label for="global-delayUpdateFileMs">delay when update file<a href="#" class="info-round-icon" target="_blank"></a></label></legend>
+    <input data-bind="globalSettings.delayUpdateFileMs" id="global-delayUpdateFileMs">
+  </fieldset>
+  <fieldset>
+    <legend>
+      <label for="global-imageTypeProcess">image type Process<a href="#" class="info-round-icon" target="_blank"></a></label>
+    </legend>
+    <select data-bind="globalSettings.imageTypeProcess" id="global-imageTypeProcess">
+      <option value="0">file system</option>
+      <option value="64">base64</option>
+    </select>
+  </fieldset>
+</div>
 </div>
 <div id="components">
 
@@ -206,9 +206,7 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
               <h2 style="display: inline;"><span>
               <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
 <g>
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)"
-         style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11"
-         ry="11"></ellipse>
+<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
 <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
 <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
@@ -237,8 +235,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
               <legend>
                 <label for="component-properties-description">DESCRIPTION:</label>
               </legend>
-              <input id="component-properties-description" name="component-properties-description"
-                     data-bind="description">
+              <input id="component-properties-description" name="component-properties-description" data-bind="description">
             </fieldset>
             <fieldset>
               <legend>
@@ -260,9 +257,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
               <h2 style="display: inline;"><span>
               <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 23 23">
 <g>
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)"
-         style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11"
-         ry="11"></ellipse>
+<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
 <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
 <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
@@ -285,13 +280,9 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
             </fieldset>
             <details>
               <summary>
-                <h3><span> <svg xmlns="http://www.w3.org/2000/svg"
-                                width="17" height="17"
-                                viewBox="0 0 23 23">
+                <h3><span> <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 23 23">
 <g>
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)"
-         style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11"
-         ry="11"></ellipse>
+<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
 <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
 <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
@@ -308,8 +299,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
                 <button data-add-component-property="dependencies" class="component-properties-add">+</button>
                 <div data-foreach="dependencies" class="flex-box">
                   <input data-bind="key.name">
-                  <button class="component-properties-remove-template component-properties-remove"
-                          data-index="${key.index}" data-remove-component-property="dependencies">-
+                  <button class="component-properties-remove-template component-properties-remove" data-index="${key.index}" data-remove-component-property="dependencies">-
                   </button>
                 </div>
               </div>
@@ -319,9 +309,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
                 <h3>
 <span> <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 23 23">
 <g>
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)"
-         style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11"
-         ry="11"></ellipse>
+<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
 <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
 <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
@@ -340,8 +328,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
                   <div data-foreach="bundle.stylesheet" class="flex-box">
                     <input data-index="${key.index}" data-bind="key.name">:
                     <input data-index="${key.index}" data-bind="key.value">
-                    <button class="component-properties-remove-bundle-stylesheet-attr component-properties-remove"
-                            data-index="${key.index}" data-remove-component-property="bundle.stylesheet">-
+                    <button class="component-properties-remove-bundle-stylesheet-attr component-properties-remove" data-index="${key.index}" data-remove-component-property="bundle.stylesheet">-
                     </button>
                   </div>
                   <div>
@@ -361,8 +348,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
                   <div data-foreach="bundle.script" class="flex-box">
                     <input data-index="${key.index}" data-bind="key.name">:
                     <input data-index="${key.index}" data-bind="key.value">
-                    <button data-index="${key.index}" data-remove-component-property="bundle.script"
-                            class="component-properties-remove">-
+                    <button data-index="${key.index}" data-remove-component-property="bundle.script" class="component-properties-remove">-
                     </button>
                   </div>
                   <div>
@@ -379,13 +365,10 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
             <details>
               <summary>
                 <h3>
-<span> <svg xmlns="http://www.w3.org/2000/svg"
-            x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
+<span> <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
 <g>
 
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)"
-         style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11"
-         ry="11"></ellipse>
+<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
 <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
 <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
@@ -405,8 +388,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
                   <!--<button class="minify-source-stylesheets">Minify</button>-->
                   <div data-foreach="sources.stylesheets" data-foreach-key-name="style" class="flex-box">
                     <input data-index="style.index" data-bind="style.value">
-                    <button class="component-properties-remove-stylesheet component-properties-remove"
-                            data-index="${style.index}" data-remove-component-property="sources.stylesheet">-
+                    <button class="component-properties-remove-stylesheet component-properties-remove" data-index="${style.index}" data-remove-component-property="sources.stylesheet">-
                     </button>
                   </div>
                 </fieldset>
@@ -419,8 +401,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
                   <button class="minify-source-scripts">Minify</button>
                   <div data-foreach="sources.scripts" data-foreach-key-name="script" class="flex-box">
                     <input data-index="script.index" data-bind="script.value">
-                    <button class="component-properties-remove-script component-properties-remove"
-                            data-index="${script.index}" data-remove-component-property="sources.script">-
+                    <button class="component-properties-remove-script component-properties-remove" data-index="${script.index}" data-remove-component-property="sources.script">-
                     </button>
                   </div>
                 </fieldset>
@@ -428,13 +409,9 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
             </details>
             <details>
               <summary>
-                <h3><span> <svg xmlns="http://www.w3.org/2000/svg"
-                                x="0px" y="0px" width="17" height="17"
-                                viewBox="0 0 23 23">
+                <h3><span> <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
 <g>
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)"
-         style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11"
-         ry="11"></ellipse>
+<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
 <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
 <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
@@ -449,17 +426,14 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
                 <button data-add-component-property="miscellaneous" class="component-properties-add">+</button>
                 <div data-foreach="miscellaneous" class="flex-box">
                   <input data-index="${key.index}" data-bind="key.src">
-                  <button data-index="${key.index}"
-                          class="component-properties-remove-miscellaneous component-properties-remove"
-                          data-remove-component-property="miscellaneous">-
+                  <button data-index="${key.index}" class="component-properties-remove-miscellaneous component-properties-remove" data-remove-component-property="miscellaneous">-
                   </button>
                 </div>
               </div>
             </details>
             <fieldset>
               <legend>
-                <input id="mergeMiscellaneous" type="checkbox" data-bind="mergeMiscellaneous"><label
-                for="mergeMiscellaneous">MERGE MISCELLANEOUS:</label>
+                <input id="mergeMiscellaneous" type="checkbox" data-bind="mergeMiscellaneous"><label for="mergeMiscellaneous">MERGE MISCELLANEOUS:</label>
               </legend>
 
             </fieldset>
@@ -493,39 +467,31 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
       </button>
 
 
-      <div class="upload-button"><label class="as-button button-bg-fill"><input type="file" id="import-local-components"
-                                                                                class="no-background"><span>
+      <div class="upload-button"><label class="as-button button-bg-fill"><input type="file" id="import-local-components" class="no-background"><span>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.6 19.6">
 <g>
-<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
-      d="M2.8,17.3h14"></path>
+<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M2.8,17.3h14"></path>
 <polyline style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" points="13.8,6.3 9.8,2.3
 5.8,6.3 	"></polyline>
 
-<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="2.3"
-      x2="9.8" y2="13.2"></line>
+<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="2.3" x2="9.8" y2="13.2"></line>
 </g></svg>
 </span>Upload</label></div>
       <button id="export-local-components" class="button-bg-fill"><span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.6 19.6">
 <g>
-<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
-      d="M16.8,2.3h-14"></path>
+<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M16.8,2.3h-14"></path>
 <polyline style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" points="5.8,13.3
 9.8,17.3 13.8,13.3 	"></polyline>
 
-<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="6.4"
-      x2="9.8" y2="17.3"></line>
+<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="6.4" x2="9.8" y2="17.3"></line>
 </g>
 </svg></span>Export
       </button>
     </div>
     <div>
-      <input data-if="localComponents.length" type="checkbox" data-bind="componentsChecked"
-             data-bind-dom-prop="__project,project"> <span class="select-all-checkboc-svg">
-      <svg
-         xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 33 33">
+      <input data-if="localComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project"> <span class="select-all-checkboc-svg">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33">
 <g>
 <g>
 <path style="fill:#999999;" d="M13.5,2.6H4.4c-0.9,0-1.7,0.8-1.7,1.7v9.1c0,0.9,0.8,1.7,1.7,1.7h9.1c0.9,0,1.7-0.8,1.7-1.7V4.4
@@ -565,40 +531,33 @@ Select all</span>
   </div>
   <div id="global-components" hidden="" data-tilepieces-component="tilepieces/package-manager/global-components">
     <div class="flex-box top-button-actions">
-      <div class="upload-button"><label class="as-button button-bg-fill"><input type="file"
-                                                                                id="import-global-components">
+      <div class="upload-button"><label class="as-button button-bg-fill"><input type="file" id="import-global-components">
         <span>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.6 19.6">
 <g>
-<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
-      d="M2.8,17.3h14"></path>
+<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M2.8,17.3h14"></path>
 <polyline style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" points="13.8,6.3 9.8,2.3
 5.8,6.3 	"></polyline>
 
-<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="2.3"
-      x2="9.8" y2="13.2"></line>
+<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="2.3" x2="9.8" y2="13.2"></line>
 </g> Upload</svg>
 </span>Upload</label></div>
       <button id="export-global-components" class="button-bg-fill">
       <span>
-        <svg xmlns="http://www.w3.org/2000/svg"
-             x="0px" y="0px" viewBox="0 0 19.6 19.6">
+        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 19.6 19.6">
 <g>
-<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"
-      d="M16.8,2.3h-14"></path>
+<path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M16.8,2.3h-14"></path>
 <polyline style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" points="5.8,13.3
 9.8,17.3 13.8,13.3 	"></polyline>
 
-<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="6.4"
-      x2="9.8" y2="17.3"></line>
+<line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="6.4" x2="9.8" y2="17.3"></line>
 </g>
 </svg>
       </span>Export
       </button>
     </div>
     <div>
-      <input data-if="globalComponents.length" type="checkbox" data-bind="componentsChecked"
-             data-bind-dom-prop="__project,project">
+      <input data-if="globalComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project">
       <span data-if="globalComponents.length" class="select-all-checkboc-svg">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33">
 <g>
@@ -633,8 +592,7 @@ Select all</span>
         <li data-foreach="globalComponents" data-foreach-key-name="component" class="component-list">
           <div data-use="project-component-UI" data-params="project,component">
           </div>
-          <button data-if="globalComponents.find(lp=>lp.name == project.name)" data-bind-dom-prop="__project,project"
-                  class="project-list-add-to-local">+
+          <button data-if="globalComponents.find(lp=>lp.name == project.name)" data-bind-dom-prop="__project,project" class="project-list-add-to-local">+
           </button>
         </li>
       </ul>
@@ -645,12 +603,9 @@ Select all</span>
   <details data-if="project.components.length">
     <summary>
       <span>
-        <svg xmlns="http://www.w3.org/2000/svg"
-             x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
+        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
 <g>
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)"
-         style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11"
-         ry="11"></ellipse>
+<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
   <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
   <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
@@ -688,9 +643,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
           <g transform="translate(-2.1798954,-3.5)">
             <path d="m 11,16 h 2 v 2 h -2 z" style="fill: rgb(0, 0, 0); fill-opacity: 1;"></path>
             <path d="m 13.516,10 h -3 L 11,15 h 2 z" style="fill: rgb(0, 0, 0);"></path>
-            <path
-              d="M 12.017,5.974 19.536,19 H 4.496 L 12.017,5.974 m 0,-2.474 c -0.544,0 -1.088,0.357 -1.5,1.071 L 2.532,18.402 C 1.707,19.831 2.382,21 4.032,21 H 20 c 1.65,0 2.325,-1.169 1.5,-2.599 L 13.517,4.572 C 13.104,3.857 12.561,3.5 12.017,3.5 Z"
-              style="fill: rgb(255, 93, 0); fill-opacity: 1;"></path>
+            <path d="M 12.017,5.974 19.536,19 H 4.496 L 12.017,5.974 m 0,-2.474 c -0.544,0 -1.088,0.357 -1.5,1.071 L 2.532,18.402 C 1.707,19.831 2.382,21 4.032,21 H 20 c 1.65,0 2.325,-1.169 1.5,-2.599 L 13.517,4.572 C 13.104,3.857 12.561,3.5 12.017,3.5 Z" style="fill: rgb(255, 93, 0); fill-opacity: 1;"></path>
           </g>
         </svg>
         <div id="tilepieces-alert-dialog-label"></div>
@@ -708,8 +661,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
   </div>
   <div class="tilepieces-dialog-close" aria-label="close"></div>
 </div>
-<div class="tilepieces-dialog" id="tilepieces-confirm-dialog" tabindex="-1"
-     data-tilepieces-component="tilepieces/dialog">
+<div class="tilepieces-dialog" id="tilepieces-confirm-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
   <div class="tilepieces-dialog-content">
     <span id="tilepieces-confirm-dialog-label"></span>
     <div>
@@ -719,8 +671,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
   </div>
   <div class="tilepieces-dialog-close" aria-label="close"></div>
 </div>
-<div class="tilepieces-dialog" id="tilepieces-prompt-dialog" tabindex="-1"
-     data-tilepieces-component="tilepieces/dialog">
+<div class="tilepieces-dialog" id="tilepieces-prompt-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
   <div class="tilepieces-dialog-content">
     <form id="tilepieces-dialog-prompt-form">
       <label for="tilepieces-dialog-prompt">
@@ -737,5 +688,5 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
 </div>
 
 <script src="bundle/package-manager.bundle.js" data-tilepieces-component="tilepieces/package-manager/bundle"></script>
-</body>
-</html>
+
+</body></html>

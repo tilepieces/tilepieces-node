@@ -63,6 +63,7 @@ body.__drag-cursor-grabbing *{
 }
 
 .project-tree *:not([contenteditable=true]) {
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -213,6 +214,7 @@ body.__drag-cursor-grabbing * {
 }
 
 .project-tree *:not([contenteditable=true]) {
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -322,6 +324,7 @@ body, html {
   box-shadow: 0 0 1px 1px #00000012;
   position: absolute;
   display: none;
+  -webkit-user-select: none;
   user-select: none;
   top: 0;
   left: 0;

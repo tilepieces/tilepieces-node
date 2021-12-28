@@ -1,6 +1,7 @@
 #overlay {
   margin: 20px 0;
   background: #fff;
+  -webkit-user-select: none;
   user-select: none;
   outline: 0;
 }
@@ -248,6 +249,7 @@ body.content-editable-start::before {
   box-shadow: 0 0 1px 1px #00000012;
   position: absolute;
   display: none;
+  -webkit-user-select: none;
   user-select: none;
   top: 0;
   left: 0;
@@ -348,6 +350,7 @@ body.content-editable-start::before {
 
 #css-view,
 #js-view {
+  -webkit-user-select: none;
   user-select: none;
 }
 

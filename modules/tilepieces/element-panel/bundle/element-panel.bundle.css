@@ -93,7 +93,7 @@ legend > a:first-child {
 .tab-horizontal.tab-buttons > .tab-prev { left: 0px; transform: rotate(180deg); }
 .tab-horizontal.tab-buttons > .tab-next { right: 0px; }
 .tab-horizontal .tab-buttons-wrap { position: relative; overflow: hidden; }
-.tab-horizontal .tab-buttons-inside { transform: translateX(0px); transition: transform 0.2s ease 0s; user-select: none; white-space: nowrap; padding: 0.625em 0px; }
+.tab-horizontal .tab-buttons-inside { transform: translateX(0px); transition: transform 0.2s ease 0s;   -webkit-user-select: none;user-select: none; white-space: nowrap; padding: 0.625em 0px; }
 .tab-horizontal .tab-buttons-inside a { text-decoration: none; border-bottom: 1px solid rgb(102, 102, 102); color: rgb(102, 102, 102); }
 .tab-horizontal .tab-buttons-inside a { cursor: pointer; border-radius: 0px; position: relative; text-transform: uppercase; letter-spacing: 2px; font-size: 1.2em; padding-bottom: 0.3em; color: rgb(153, 153, 153); border-bottom: 1px solid rgb(255, 255, 255); }
 .tab-horizontal .tab-buttons-inside a:hover, .tab-buttons-inside a.selected { border-bottom: 1px solid rgb(102, 102, 102); color: rgb(102, 102, 102); }

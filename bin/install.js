@@ -32,7 +32,7 @@ module.exports = async ()=>{
   await copyDir(basePath + "modules", processCwd + "modules");
   await copyDir(basePath + "components", processCwd + "components");
   if(isOldSettings) {
-    var oldSettings = await fs.readFile(processCwd + "settings.json","utf8");
+    var oldSettingsRaw = await fs.readFile(processCwd + "settings.json","utf8");
     var oldSettings = JSON.parse(oldSettingsRaw);
     await fs.writeFile('settings.json', JSON.stringify(Object.assign({}, JSON.parse(settingsDefault), oldSettings),null,2));
   }

@@ -112,15 +112,9 @@ window.tilepieces_tabs = function (options) {
     throttle = setTimeout(() => {
       if (!inside.lastElementChild)
         return;
-      maximumRight = (inside.lastElementChild.offsetLeft + inside.lastElementChild.offsetWidth) - inside.offsetWidth;
-      if (moveOnBottom) {
-        left = -maximumRight;
-        inside.style.transform = "translateX(" + left + "px)";
-        moveOnBottom = null;
-      } else {
-        left = 0;
-        inside.style.transform = "translateX(" + left + "px)";
-      }
+      maximumRight = -Math.abs((inside.lastElementChild.offsetLeft + inside.lastElementChild.offsetWidth) - inside.offsetWidth);
+      left = 0;
+      inside.style.transform = "translateX(" + left + "px)";
       displayArrows();
     }, 32);
   }
@@ -138,14 +132,14 @@ window.tilepieces_tabs = function (options) {
   });
   tabNext.addEventListener("click", function (e) {
     left -= inside.offsetWidth / 3;
-    if (left < -maximumRight)
-      left = -maximumRight;
+    if (left < maximumRight)
+      left = maximumRight;
     inside.style.transform = "translateX(" + left + "px)";
     displayArrows();
   });
 
   function displayArrows(e) {
-    if (inside.scrollWidth == inside.offsetWidth) {
+    if (inside.scrollWidth <= inside.offsetWidth) {
       tabPrev.style.display = "none";
       tabNext.style.display = "none";
       return;
@@ -154,14 +148,16 @@ window.tilepieces_tabs = function (options) {
       tabPrev.style.display = "none";
     else
       tabPrev.style.display = "block";
-    if (left < -maximumRight) {
-      left = -maximumRight;
+    if (left < maximumRight) {
+      console.log("left is lesser than maximumRight", left, maximumRight, inside)
+      left = maximumRight;
       inside.style.transform = "translateX(" + left + "px)";
     }
-    if (left == -maximumRight)
+    if (left == maximumRight)
       tabNext.style.display = "none";
     else
       tabNext.style.display = "block";
+    console.log("left after display arrow", left, inside)
   }
 
   inside.addEventListener("click", e => {
@@ -188,11 +184,6 @@ window.tilepieces_tabs = function (options) {
       tabSelected.classList.add("selected");
     }
   });
-  return {
-    moveOnBottom: () => {
-      moveOnBottom = true;
-    }
-  }
 };
 function events(){
     var events = {};
@@ -741,6 +732,10 @@ let newClassForm = document.getElementById("new-class");
 
 const childrenElementUL = document.querySelector("#children ul");
 
+const childrenGrabberSVG =
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><g><g><g><path style="fill:#727272;" d="M17.5,8.4c-0.4,0-0.7-0.1-1-0.4L12,3.4L7.5,7.8C7,8.4,6.1,8.4,5.6,7.8C5,7.3,5,6.4,5.6,5.9L11,0.5c0.5-0.5,1.4-0.5,1.9,0L18.4,6C19,6.6,19,7.4,18.4,8C18.2,8.2,17.8,8.4,17.5,8.4z"/></g><g><path style="fill:#727272;" d="M12,11c-0.8,0-1.4-0.6-1.4-1.4l0-8.2c0-0.8,0.6-1.4,1.4-1.4c0.8,0,1.4,0.6,1.4,1.4l0,8.2C13.4,10.4,12.8,11,12,11z"/></g></g><g><g><path style="fill:#727272;" d="M6.5,15.6c0.4,0,0.7,0.1,1,0.4l4.5,4.6l4.5-4.5c0.5-0.5,1.4-0.5,1.9,0c0.5,0.5,0.5,1.4,0,1.9L13,23.5c-0.5,0.5-1.4,0.5-1.9,0L5.6,18C5,17.4,5,16.6,5.6,16C5.8,15.8,6.2,15.6,6.5,15.6z"/></g><g><path style="fill:#727272;" d="M12,13c0.8,0,1.4,0.6,1.4,1.4l0,8.2c0,0.8-0.6,1.4-1.4,1.4c-0.8,0-1.4-0.6-1.4-1.4l0-8.2C10.6,13.6,11.2,13,12,13z"/></g></g></g></svg>`
+
+
 const tagComponents = [{
     path : "tag-components/TABLE",
     name : "TABLE",
@@ -891,13 +886,7 @@ opener.addEventListener("tilepieces-mutation-event",e=>{
     wrapper.setAttribute("hidden", "");
   }
   else if(childrenList){
-    childrenElementUL.innerHTML = [...app.elementSelected.children]
-      .map((v,i,a)=>{
-        var isNodeMatch = !v.tagName.match(/^(HTML|BODY|HEAD|THEAD|TBODY|TFOOT)$/) && app.core.htmlMatch.find(v);
-        var grabber = isNodeMatch && a.length > 1 ? `<span class="children-grabber">G</span>` : "";
-        return `<li data-index=${i}>${grabber}<a href='#'>${app.utils.elementSum(v)}</a></li>`
-      })
-      .join("");
+    setChildrenElements();
   }
   else if(findAttributeMutation)
     onSelected(true);
@@ -949,12 +938,14 @@ function setAttrsTemplate(target,match){
        filtered.push(`<a href='#' data-index='${i}'>${app.utils.elementSum(v)}</a>`);
       return filtered
     },[]).reverse().join("");
-  pathTab.moveOnBottom();
   elementSumSection.style.display="block";
+  setChildrenElements();
+}
+function setChildrenElements(){
   childrenElementUL.innerHTML = [...app.elementSelected.children]
     .map((v,i,a)=>{
       var isNodeMatch = !v.tagName.match(/^(HTML|BODY|HEAD|THEAD|TBODY|TFOOT)$/) && app.core.htmlMatch.find(v);
-      var grabber = isNodeMatch && a.length > 1 ? `<span class="children-grabber">G</span>` : "";
+      var grabber = isNodeMatch && a.length > 1 ? `<span class="children-grabber">${childrenGrabberSVG}</span>` : "";
       return `<li data-index=${i}>${grabber}<a href='#'>${app.utils.elementSum(v)}</a></li>`
     })
     .join("");
@@ -1064,10 +1055,20 @@ attributesView.addEventListener("change",e=>{
     var match = app.core.htmlMatch.find(app.elementSelected);
     if(isAttributeName){
         target.dataset.prev && app.core.htmlMatch.removeAttribute(currentElement,target.dataset.prev);
-        app.core.htmlMatch.setAttribute(currentElement,target.value,target.dataset.value);
+        try {
+          app.core.htmlMatch.setAttribute(currentElement, target.value, target.dataset.value);
+        }
+        catch(e){
+          alertDialog(e,true);
+        }
     }
     else if(isAttributeValue){
-        app.core.htmlMatch.setAttribute(currentElement,target.dataset.key,target.value);
+      try {
+        app.core.htmlMatch.setAttribute(currentElement, target.dataset.key, target.value);
+      }
+      catch(e){
+        alertDialog(e,true);
+      }
     }
 },true);
 
@@ -1193,7 +1194,7 @@ function onDropFiles(e){
   }
 }
 attributesView.addEventListener("click",e=>{
-  if(!e.target.classList.contains("search-button"))
+  if(!e.target.closest(".search-button"))
     return;
   var tagName = modelAttributes.nodeName;
   var tagParentName = app.elementSelected.parentNode.tagName;

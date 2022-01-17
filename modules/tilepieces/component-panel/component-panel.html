@@ -1,23 +1,34 @@
 <!DOCTYPE html>
 <html><head>
   <meta charset="UTF-8">
-  <title></title>
-  <meta description="">
+  <title>Tilepieces - component panel</title>
+  <meta description="Component panel handle standard tags, tilepieces components an utf8 characters insertion on a tilepieces document">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link href="bundle/component-panel.bundle.css" rel="stylesheet" data-tilepieces-component="tilepieces/component-panel/bundle">
 </head>
 <body>
-<div class="tab-buttons tab-horizontal" id="tabs" data-tilepieces-component="tilepieces/component-panel">
-  <a class="tab-prev" href="javascript:void(0)">...</a>
-  <a class="tab-next" href="javascript:void(0)">...</a>
-  <div class="tab-buttons-wrap">
-    <div class="tab-buttons-inside">
-      <a href="#standard-tags" class="selected">Standard tags</a>
-      <a href="#components">Components</a>
-      <a href="#utf-8-characters">Utf8 characters</a>
+<nav class="tab-vertical">
+  <button>
+    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 23 23">
+      <g>
+        <ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:0.35;fill:#FFFFFF;" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
+        <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
+		C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
+        <path style="fill: rgb(153, 153, 153);" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
+		C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
+      </g>
+    </svg></button>
+  <div class="tab-buttons">
+    <div class="tab-buttons-wrap">
+      <div class="tab-buttons-inside">
+        <a href="#standard-tags" class="selected">Standard tags</a>
+        <a href="#components">Components</a>
+        <a href="#utf-8-characters">Utf8 characters</a>
+      </div>
     </div>
   </div>
-</div><div id="insertion-mode-block" data-tilepieces-component="tilepieces/component-panel"><label for="insertion-mode">
+</nav>
+<div id="insertion-mode-block" data-tilepieces-component="tilepieces/component-panel"><label for="insertion-mode">
   Insertion Mode:
   <select id="insertion-mode" name="insertion-mode">
     <option value="before">before</option>
@@ -25,7 +36,8 @@
     <option value="append" selected="">append</option>
     <option value="after">after</option>
   </select>
-</label></div><form id="add-new-tag-form" data-tilepieces-component="tilepieces/component-panel">
+</label></div>
+<form id="add-new-tag-form" data-tilepieces-component="tilepieces/component-panel">
   <div class="flex-box"><input placeholder="Insert new tag name here" disabled="" id="new-tag-name">
     <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
       <path style="fill:#727272;" d="M0.1,12c0-0.8,0.7-1.5,1.5-1.5l20.9,0c0.8,0,1.5,0.7,1.5,1.5s-0.7,1.5-1.5,1.5l-20.9,0
@@ -34,7 +46,9 @@
 	c0.6,0.6,0.6,1.5,0,2.1l-6,6c-0.6,0.6-1.5,0.6-2.1,0C15,18.7,14.9,18.3,14.9,18z"></path>
     </svg></button>
   </div>
-  <small class="tilepieces-small-error">This tag is not allowed here</small></form><section id="standard-tags" data-tilepieces-component="tilepieces/component-panel">
+  <small class="tilepieces-small-error">This tag is not allowed here</small></form>
+<section id="standard-tags" data-tilepieces-component="tilepieces/component-panel">
+  <h2>Standard Tags</h2>
   <details class="block-tags">
     <summary>
       <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
@@ -202,7 +216,9 @@
       <output>OUTPUT</output>
     </button>
   </details>
-</section><section id="components" style="display:none" data-tilepieces-component="tilepieces/component-panel">
+</section>
+<section id="components" style="display:none" data-tilepieces-component="tilepieces/component-panel">
+  <h2>Components</h2>
   <ul class="component-root">
     <li data-foreach="components" data-foreach-key-name="component">
       <span data-if="component.components &amp;&amp; Object.keys(component.components).length" class="as-detail components-children" data-bind-dom-prop="__component,component">
@@ -215,9 +231,10 @@
           C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
           </g>
         </svg>
-        <span>${component.name}</span>
+        <a href="#" class=component-highlight data-bind-dom-prop="__component,component">${component.name}</a>
       </span>
-      <span data-if="!component.components || !Object.keys(component.components).length">${component.name}</span>
+      <a data-if="!component.components || !Object.keys(component.components).length"
+         href="#" class=component-highlight data-bind-dom-prop="__component,component">${component.name}</a>
       <button class="add-component-html" data-if="component.html" data-name="${component.name}">HTML</button>
       <button class="add-component-css" data-if="component.bundle.stylesheet.href" data-name="${component.name}">CSS
       </button>
@@ -239,9 +256,10 @@
         C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
         </g>
       </svg>
-      <span class="component-name">${component.name}</span>
+      <a href="#" class=component-highlight data-bind-dom-prop="__component,component">${component.name}</a>
     </span>
-    <span data-if="!component.components || !Object.keys(component.components).length">${component.name}</span>
+    <a data-if="!component.components || !Object.keys(component.components).length"
+       href="#" class=component-highlight data-bind-dom-prop="__component,component">${component.name}</a>
     <button class="add-component-html" data-if="component.html" data-name="${component.name}">HTML</button>
     <button class="add-component-css" data-if="component.bundle.stylesheet.href" data-name="${component.name}">CSS</button>
     <button class="add-component-js" data-if="component.bundle.script.src" data-name="${component.name}">JS
@@ -249,7 +267,9 @@
     <button class="add-component-bundle" data-if="component.html || component.bundle?.script?.src || component.bundle?.stylesheet?.href" data-name="${component.name}">BUNDLE
     </button>
   </li>
-</template><section id="utf-8-characters" style="display:none" data-tilepieces-component="tilepieces/component-panel">
+</template>
+<section id="utf-8-characters" style="display:none" data-tilepieces-component="tilepieces/component-panel">
+  <h2>UTF8 characters</h2>
   <details class="disabled">
     <summary>Basic Latin</summary>
     <button>!</button>

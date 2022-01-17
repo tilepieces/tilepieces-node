@@ -28,9 +28,7 @@ module.exports = async ()=>{
   await fs.writeFile(processCwd + 'index.html', indexHtml);
   await fs.writeFile(processCwd + 'tp-favi.png', await fs.readFile(basePath + "tp-favi.png"));
   await fs.writeFile(processCwd + 'tp-favi-180.png', await fs.readFile(basePath + "tp-favi-180.png"));
-  console.log("rm done");
   await copyDir(basePath + "modules", processCwd + "modules");
-  console.log("copyDir done");
   await copyDir(basePath + "components", processCwd + "components");
   if(isOldSettings) {
     var oldSettingsRaw = await fs.readFile(processCwd + "settings.json","utf8");

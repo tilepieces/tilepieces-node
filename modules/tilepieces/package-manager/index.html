@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html><head>
   <title>Package Manager</title>
-
   <link href="bundle/package-manager.bundle.css" rel="stylesheet" data-tilepieces-component="tilepieces/package-manager/bundle">
 </head>
 <body>
@@ -28,9 +27,10 @@
 </nav>
 <div id="projects">
   <div id="projects-list" data-tilepieces-component="tilepieces/package-manager/project-list">
-    <div class="flex-box top-button-actions">
-      <button id="new-project" class="button-bg-fill">+ Create</button>
-      <div class="upload-button"><label class="as-button"><span>
+  <h2 class="main-h2">Projects</h2>
+  <div class="flex-box top-button-actions">
+    <button id="new-project" class="button-bg-fill">+ Create</button>
+    <div class="upload-button"><label class="as-button"><span>
 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 19.6 19.6">
 <g>
 <path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M2.8,17.3h14"></path>
@@ -41,8 +41,8 @@
 </g>
 </svg>
 </span>
-        Upload<input type="file" id="import-projects" accept=".zip"></label></div>
-      <button id="export-projects"><span>
+      Upload<input type="file" id="import-projects" accept=".zip"></label></div>
+    <button id="export-projects"><span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.6 19.6">
 <g>
 <path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M16.8,2.3h-14"></path>
@@ -52,11 +52,11 @@
 <line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="6.4" x2="9.8" y2="17.3"></line>
 </g>
 </svg></span>Export
-      </button>
-    </div>
-    <div>
-      <input type="checkbox" data-if="projects.length" class="toggle-projects" data-bind="projectsChecked" data-bind-dom-prop="__project,project">
-      <span class="select-all-checkboc-svg">
+    </button>
+  </div>
+  <div>
+    <input type="checkbox" data-if="projects.length" class="toggle-projects" data-bind="projectsChecked" data-bind-dom-prop="__project,project">
+    <span class="select-all-checkboc-svg">
       <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 33 33">
 <g>
 <g>
@@ -86,19 +86,20 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
 </g>
 </svg>
       Select all</span>
-      <ul>
-        <li data-foreach="projects" data-foreach-key-name="project" class="project-list">
-          <input type="checkbox" class="toggle-projects" data-bind="project.checked" data-bind-dom-prop="__project,project">
-          <span data-bind-dom-prop="__project,project">${project.name}</span>
-          <button data-remove-project="" data-bind-dom-prop="__project,project" class="component-properties-remove">-
-          </button>
-          <button data-if="project.name != projectName" class="project-name-open" data-bind-dom-prop="__project,project">Open
-          </button>
-        </li>
-      </ul>
-    </div>
+    <ul>
+      <li data-foreach="projects" data-foreach-key-name="project" class="project-list">
+        <input type="checkbox" class="toggle-projects" data-bind="project.checked" data-bind-dom-prop="__project,project">
+        <span data-bind-dom-prop="__project,project">${project.name}</span>
+        <button data-remove-project="" data-bind-dom-prop="__project,project" class="component-properties-remove">-
+        </button>
+        <button data-if="project.name != projectName" class="project-name-open" data-bind-dom-prop="__project,project">Open
+        </button>
+      </li>
+    </ul>
   </div>
+</div>
   <div id="current-project-data" style="display:none" data-tilepieces-component="tilepieces/package-manager/current-project-data">
+  <h2 class="main-h2">Project Settings</h2>
   <div ${hiddenattr}="">
     <fieldset>
       <legend><input type="checkbox" data-bind="project.sandboxFrame">sandbox page<a href="#" class="info-round-icon" target="_blank"></a>
@@ -141,6 +142,7 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
   </div>
 </div>
   <div id="general-settings" style="display:none" data-tilepieces-component="tilepieces/package-manager/general-settings">
+  <h2 class="main-h2">General Settings</h2>
   <fieldset>
     <legend>Panels dock positions</legend>
     <div>
@@ -193,7 +195,7 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
 <div id="components">
 
 
-  <div id="component-settings" hidden="" data-tilepieces-component="tilepieces/package-manager/component-settings">
+  <div id="component-settings" hidden="" data-tilepieces-component="tilepieces/package-manager/component-settings"><h2 class="main-h2">Component settings</h2>
   <form id="component-settings-form">
     <div class="flex-box top-button-actions"><button data-if="iscomponent == 'hidden'" class="component-settings-save button-bg-fill">+ Create</button></div>
     <div ${iscomponent}="">
@@ -409,7 +411,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
 
 
               <input id="component-properties-interface" name="component-properties-interface" data-bind="interface">
-               </div>
+            </div>
           </fieldset><fieldset>
           <legend>PARSEHTML FUNCTION FILE PATH:</legend>
           <input id="component-properties-parseHTML" name="component-properties-parseHTML" data-bind="parseHTML">
@@ -431,13 +433,14 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
   </form>
 </div>
   <div id="local-components" hidden="" data-tilepieces-component="tilepieces/package-manager/local-components">
-    <div class="flex-box top-button-actions">
-      <button data-if="isComponent" class="add-new-local-component button-bg-fill" data-parent="${projectName}">+
-        Create
-      </button>
+  <h2 class="main-h2">Local Components</h2>
+  <div class="flex-box top-button-actions">
+    <button data-if="isComponent" class="add-new-local-component button-bg-fill" data-parent="${projectName}">+
+      Create
+    </button>
 
 
-      <div class="upload-button"><label class="as-button button-bg-fill"><input type="file" id="import-local-components" class="no-background"><span>
+    <div class="upload-button"><label class="as-button button-bg-fill"><input type="file" id="import-local-components" class="no-background"><span>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.6 19.6">
 <g>
 <path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M2.8,17.3h14"></path>
@@ -447,7 +450,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
 <line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="2.3" x2="9.8" y2="13.2"></line>
 </g></svg>
 </span>Upload</label></div>
-      <button id="export-local-components" class="button-bg-fill"><span>
+    <button id="export-local-components" class="button-bg-fill"><span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.6 19.6">
 <g>
 <path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M16.8,2.3h-14"></path>
@@ -457,10 +460,10 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
 <line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="6.4" x2="9.8" y2="17.3"></line>
 </g>
 </svg></span>Export
-      </button>
-    </div>
-    <div>
-      <input data-if="localComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project"> <span class="select-all-checkboc-svg">
+    </button>
+  </div>
+  <div>
+    <input data-if="localComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project"> <span class="select-all-checkboc-svg">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33">
 <g>
 <g>
@@ -491,18 +494,19 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
 </svg>
 Select all</span>
 
-      <ul class="list-components-root">
-        <li data-foreach="localComponents" data-foreach-key-name="component" class="component-list">
-          <div data-use="project-component-UI" data-params="project,component">
-          </div>
-        </li>
-      </ul>
-    </div>
+    <ul class="list-components-root">
+      <li data-foreach="localComponents" data-foreach-key-name="component" class="component-list">
+        <div data-use="project-component-UI" data-params="project,component">
+        </div>
+      </li>
+    </ul>
   </div>
+</div>
   <div id="global-components" hidden="" data-tilepieces-component="tilepieces/package-manager/global-components">
-    <div class="flex-box top-button-actions">
-      <div class="upload-button"><label class="as-button button-bg-fill"><input type="file" id="import-global-components">
-        <span>
+  <h2 class="main-h2">Global Components</h2>
+  <div class="flex-box top-button-actions">
+    <div class="upload-button"><label class="as-button button-bg-fill"><input type="file" id="import-global-components">
+      <span>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.6 19.6">
 <g>
 <path style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" d="M2.8,17.3h14"></path>
@@ -512,7 +516,7 @@ Select all</span>
 <line style="fill:none;stroke:#999999;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;" x1="9.8" y1="2.3" x2="9.8" y2="13.2"></line>
 </g> Upload</svg>
 </span>Upload</label></div>
-      <button id="export-global-components" class="button-bg-fill">
+    <button id="export-global-components" class="button-bg-fill">
       <span>
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 19.6 19.6">
 <g>
@@ -524,11 +528,11 @@ Select all</span>
 </g>
 </svg>
       </span>Export
-      </button>
-    </div>
-    <div>
-      <input data-if="globalComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project">
-      <span data-if="globalComponents.length" class="select-all-checkboc-svg">
+    </button>
+  </div>
+  <div>
+    <input data-if="globalComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project">
+    <span data-if="globalComponents.length" class="select-all-checkboc-svg">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33">
 <g>
 <g>
@@ -558,16 +562,16 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
 </g>
 </svg>
 Select all</span>
-      <ul class="list-components-root">
-        <li data-foreach="globalComponents" data-foreach-key-name="component" class="component-list">
-          <div data-use="project-component-UI" data-params="project,component">
-          </div>
-          <button data-if="globalComponents.find(lp=>lp.name == project.name)" data-bind-dom-prop="__project,project" class="project-list-add-to-local">+
-          </button>
-        </li>
-      </ul>
-    </div>
+    <ul class="list-components-root">
+      <li data-foreach="globalComponents" data-foreach-key-name="component" class="component-list">
+        <div data-use="project-component-UI" data-params="project,component">
+        </div>
+        <button data-if="globalComponents.find(lp=>lp.name == project.name)" data-bind-dom-prop="__project,project" class="project-list-add-to-local">+
+        </button>
+      </li>
+    </ul>
   </div>
+</div>
 </div>
 <template id="project-component-UI" data-tilepieces-component="tilepieces/package-manager/components-template">
   <details data-if="project.components.length">

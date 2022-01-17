@@ -8,9 +8,9 @@ body { font-family: sans-serif; background: rgb(255, 255, 255); }
 .flex-box { align-items: center; display: flex; }
 .flex-box input:not([type="checkbox"]):not([type="radio"]), .start-flex-box { flex: 1 1 auto; position: relative; margin: 0px; width: 1%; }
 .flex-box button:not(:first-child) { border-radius: 7px; background-color: rgb(240, 240, 240); background-image: none; margin: 5px; border: none; }
-fieldset { border-style: solid; border-color: rgb(204, 204, 204); border-image: initial; border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; margin: 0em 0.5em 2em; padding: 0.5em 0px; color: rgb(102, 102, 102); text-transform: inherit; }
+fieldset { border-style: solid; border-color: rgb(204, 204, 204); border-image: initial; border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; margin: 0em 0em 2em; padding: 0.5em 0px; color: rgb(102, 102, 102); text-transform: inherit; }
 .flex-box.two-buttons button:first-child, .flex-box-stroke.two-buttons button:first-child { border-right: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0em; margin-right: 0px; flex: 1 1 auto; }
-legend { display: flex; place-content: center; align-items: center; }
+legend { display: flex; place-content: center; align-items: center; padding: 0px; }
 legend > :first-child { padding: 0.4em; font-size: 1.1em; }
 fieldset.no-border { border: 0px; }
 legend input:not([type="checkbox"]):not([type="radio"]) { margin: 0px; }
@@ -88,8 +88,8 @@ nav.tab-vertical.tab-vertical-open button { right: 0px; transform: rotate(180deg
 nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a:hover { background-color: transparent; color: rgb(51, 51, 51); transition-duration: 1s; }
 nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a { text-transform: uppercase; font-family: Helvetica, Arial, sans-serif; letter-spacing: 2px; text-decoration: none; color: rgb(153, 153, 153); margin: 10px; padding: 2px; }
 nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside a.selected { color: rgb(102, 102, 102); border-width: 0px 0px 1px; border-style: none none solid; border-color: rgb(102, 102, 102) rgb(102, 102, 102) rgb(0, 0, 0); border-image: initial; outline-width: 1px; }
-nav.tab-vertical button svg { transform: rotate(90deg); height: 25px; width: 25px; }body { background: rgb(255, 255, 255); padding-top: 1em; }
-#components ul { list-style: none; margin: 0;}
+nav.tab-vertical button svg { transform: rotate(90deg); height: 25px; width: 25px; }body { background: rgb(255, 255, 255); }
+#components ul { list-style: none; margin: 0px; }
 #global-components .global-local .add-new-local-component { display: none; }
 .global-local input[type="checkbox"] { display: none; }
 #projects-list .flex-box > * { flex-grow: 1; }
@@ -105,7 +105,7 @@ nav.tab-vertical button svg { transform: rotate(90deg); height: 25px; width: 25p
 span.select-all-checkboc-svg { font-size: 0.7em; color: rgb(102, 102, 102); text-transform: uppercase; letter-spacing: 1px; vertical-align: top; }
 input.toggle-projects { color: red; }
 .flex-box .upload-button span { vertical-align: middle; }
-#projects fieldset { border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; text-transform: uppercase; margin: 2em 1em 3em; padding: 0.5em 0px; color: rgb(102, 102, 102); }
+#projects fieldset { border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; text-transform: uppercase; margin: 2em 0.5em 3em; padding: 0.5em 0px; color: rgb(102, 102, 102); }
 button, .as-button { border-radius: 7px; padding: 0.3em 1em; margin: 0px 0.2em; text-align: center; color: rgb(153, 153, 153); font-size: 1em; letter-spacing: 1px; }
 input:not([type="checkbox"]):not([type="radio"]), select, textarea { border-radius: 7px; margin: 0.5em 0px; padding-top: 0.5em; padding-bottom: 0.5em; padding-right: 0.4em; background-color: rgb(240, 240, 240); }
 #projects fieldset legend label { padding: 0px; }
@@ -120,8 +120,8 @@ h3 { font-size: 1.3em; font-weight: normal; letter-spacing: 1px; color: rgb(102,
 .select-all-checkboc-svg svg { height: 16px; width: 16px; vertical-align: sub; }
 .component-properties-remove-template { height: 2em; width: 2em; padding: 0px; }
 .flex-box button.component-properties-remove { background-color: transparent; border: 1px solid rgb(204, 204, 204); height: 2em; width: 2em; padding: 0px; }
-.details-open-summery-child{border:0}
-.details-open-summery-child fieldset { margin: 0px 0px 1.5em;}
+.details-open-summery-child { border: 0px; }
+.details-open-summery-child fieldset { margin: 0px 0px 1.5em; }
 .component-properties-add { padding: 0px; height: 2em; width: 2em; }
 .flex-box button.flex-box-button-border { background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); border-radius: 7px; }
 #projects-list button.component-properties-remove { padding: 0px; }
@@ -137,7 +137,9 @@ input { margin-top: 0px; }
 .top-button-actions span { margin: 0px; padding: 0px; vertical-align: middle; }
 #global-components .flex-box > * { flex-grow: 1; }
 #global-components .flex-box { margin-bottom: 1.5em; }
-#component-settings-form .flex-box > *:not(button) { flex-grow: 1; }
+#component-settings-form .flex-box > :not(button) { flex-grow: 1; }
 label { margin: 0px; padding-top: 0px; }
-legend input[type="checkbox"]{margin-bottom:0}
-.block-tags summary svg{vertical-align:top}
+legend input[type="checkbox"] { margin-bottom: 0px; }
+.block-tags summary svg { vertical-align: top; }
+h2.main-h2 { margin: 1em 0.4em; display: inline-block; border-bottom: 1px solid; padding-bottom: 2px; }
+fieldset { margin: 0px 0.5em 2em; }

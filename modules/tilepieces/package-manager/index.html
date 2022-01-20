@@ -4,30 +4,17 @@
   <link href="bundle/package-manager.bundle.css" rel="stylesheet" data-tilepieces-component="tilepieces/package-manager/bundle">
 </head>
 <body>
-<nav class="tab-vertical" data-tilepieces-component="tilepieces/package-manager/tab-vertical">
-  <button>
-    <svg xmlns="http://www.w3.org/2000/svg" y="0px" width="17" height="17" viewBox="0 0 23 23">
-      <g>
-        <ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:0.35;fill:#FFFFFF;" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
-        <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
-		C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
-        <path style="fill: rgb(153, 153, 153);" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
-		C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
-      </g>
-    </svg>
-  </button>
-  <div class="tab-buttons">
-    <div class="tab-buttons-wrap">
-      <div class="tab-buttons-inside"><a href="#projects-list" class="selected">Projects</a><a href="#current-project-data">Project Settings</a><a href="#general-settings">General Settings</a><a href="#component-settings">Component properties</a><a href="#local-components">Local Components</a><a href="#global-components">Global Components</a>
-
-
-      </div>
+<div class="tab-buttons tab-horizontal" data-tilepieces-component="tilepieces/tabs" id="tabs">
+  <a class="tab-prev" href="javascript:void(0)">...</a>
+  <a class="tab-next" href="javascript:void(0)">...</a>
+  <div class="tab-buttons-wrap">
+    <div class="tab-buttons-inside">
+      <a href="#projects-list" class="selected">Projects</a><a href="#current-project-data">Project Settings</a><a href="#general-settings">General Settings</a><a href="#component-settings">Component properties</a><a href="#local-components">Local Components</a><a href="#global-components">Global Components</a>
     </div>
   </div>
-</nav>
+</div>
 <div id="projects">
   <div id="projects-list" data-tilepieces-component="tilepieces/package-manager/project-list">
-  <h2 class="main-h2">Projects</h2>
   <div class="flex-box top-button-actions">
     <button id="new-project" class="button-bg-fill">+ Create</button>
     <div class="upload-button"><label class="as-button"><span>
@@ -99,7 +86,6 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
   </div>
 </div>
   <div id="current-project-data" style="display:none" data-tilepieces-component="tilepieces/package-manager/current-project-data">
-  <h2 class="main-h2">Project Settings</h2>
   <div ${hiddenattr}="">
     <fieldset>
       <legend><input type="checkbox" data-bind="project.sandboxFrame">sandbox page<a href="#" class="info-round-icon" target="_blank"></a>
@@ -142,7 +128,6 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
   </div>
 </div>
   <div id="general-settings" style="display:none" data-tilepieces-component="tilepieces/package-manager/general-settings">
-  <h2 class="main-h2">General Settings</h2>
   <fieldset>
     <legend>Panels dock positions</legend>
     <div>
@@ -195,7 +180,7 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
 <div id="components">
 
 
-  <div id="component-settings" hidden="" data-tilepieces-component="tilepieces/package-manager/component-settings"><h2 class="main-h2">Component settings</h2>
+  <div id="component-settings" hidden="" data-tilepieces-component="tilepieces/package-manager/component-settings">
   <form id="component-settings-form">
     <div class="flex-box top-button-actions"><button data-if="iscomponent == 'hidden'" class="component-settings-save button-bg-fill">+ Create</button></div>
     <div ${iscomponent}="">
@@ -433,7 +418,6 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
   </form>
 </div>
   <div id="local-components" hidden="" data-tilepieces-component="tilepieces/package-manager/local-components">
-  <h2 class="main-h2">Local Components</h2>
   <div class="flex-box top-button-actions">
     <button data-if="isComponent" class="add-new-local-component button-bg-fill" data-parent="${projectName}">+
       Create
@@ -503,7 +487,6 @@ Select all</span>
   </div>
 </div>
   <div id="global-components" hidden="" data-tilepieces-component="tilepieces/package-manager/global-components">
-  <h2 class="main-h2">Global Components</h2>
   <div class="flex-box top-button-actions">
     <div class="upload-button"><label class="as-button button-bg-fill"><input type="file" id="import-global-components">
       <span>

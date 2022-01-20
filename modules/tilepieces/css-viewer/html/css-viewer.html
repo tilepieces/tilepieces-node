@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html><head><title> css viewer</title>
-    <link href="../bundle/css-viewer.bundle.css" rel="stylesheet" data-tilepieces-component="css-viewer/bundle"></head><body style="display:none">
+  <link href="../bundle/css-viewer.bundle.css" rel="stylesheet" data-tilepieces-component="css-viewer/bundle">
+</head>
+<body style="display:none">
 <div id="css-viewer" class="${isVisible}" data-tilepieces-component="tilepieces/css-viewer">
-    <div class="css-selector">
-      <details>
-        <summary>Grouping rule:
-          <span data-if="grChosen">
+  <div class="css-selector">
+    <details>
+      <summary>Grouping rule:
+        <span data-if="grChosen">
             <span data-if="grChosen.inheritedConditionText">${grChosen.inheritedConditionText},</span>
             ${grChosen.conditionText}
           </span>
-          <button id="add-gr-rule">+</button>
-        </summary>
-        <ul>
-          <li data-foreach="groupingRules" data-foreach-key-name="gr" data-index="${gr.index}" data-iscurrent="${gr.isCurrentGr}" class="grouping-rule-item">
+        <button id="add-gr-rule">+</button>
+      </summary>
+      <ul>
+        <li data-foreach="groupingRules" data-foreach-key-name="gr" data-index="${gr.index}" data-iscurrent="${gr.isCurrentGr}" class="grouping-rule-item">
             <span class="grouping-condition">
               <span data-if="gr.inheritedConditionText">${gr.inheritedConditionText},</span>
               ${gr.conditionText}
             </span>
-            <button class="delete-gr-rule" data-index="${gr.index}">-</button>
-          </li>
-        </ul>
-      </details>
-      <div><span>Rule:</span>
-        <span data-bind="currentSelector" data-bind-events="blur,input" contenteditable="" spellcheck="false"></span>
-        <div class="related-selectors">
-          <a href="#" class="related-selectors-select">${relatedSelectors.length}</a> affected by this rule
-        </div>
-        <div data-if="!selectorMatch" class="rule-sector-wrong">Selector doesn't apply to current element</div></div>
+          <button class="delete-gr-rule" data-index="${gr.index}">-</button>
+        </li>
+      </ul>
+    </details>
+    <div><span>Rule:</span>
+      <span data-bind="currentSelector" data-bind-events="blur,input" contenteditable="" spellcheck="false"></span>
+      <div class="related-selectors">
+        <a href="#" class="related-selectors-select">${relatedSelectors.length}</a> affected by this rule
+      </div>
+      <div data-if="!selectorMatch" class="rule-sector-wrong">Selector doesn't apply to current element</div>
     </div>
+  </div>
   <!-- modal new gr -->
-  <div id="modal-new-gr" >
+  <div id="modal-new-gr">
     <section>
       <div class="modal-new-gr-close"></div>
       <div class="modal-new-gr-select">
@@ -66,7 +69,8 @@
               <option value="screen">screen</option>
               <option value="speech">speech</option>
             </select>
-            <button data-if="!mediaQueryUIMaskFeatures.length" class="add-media-feature" title="add media feature">+</button>
+            <button data-if="!mediaQueryUIMaskFeatures.length" class="add-media-feature" title="add media feature">+
+            </button>
           </div>
           <div data-foreach="mediaQueryUIMaskFeatures">
             <div>
@@ -92,7 +96,8 @@
               <option value="portrait">portrait</option>
             </select>
             <button data-index="${key.index}" class="delete-feature" title="delete media feature">-</button>
-            <button data-if="key.index == mediaQueryUIMaskFeatures.length-1" class="add-media-feature" title="add media feature">+</button>
+            <button data-if="key.index == mediaQueryUIMaskFeatures.length-1" class="add-media-feature" title="add media feature">+
+            </button>
           </div>
         </div>
         <div data-if="mediaQueryUIMask == 'freehand'">
@@ -110,23 +115,25 @@
 </div>
 
 <nav class="tab-vertical" data-tilepieces-component="tilepieces/vertical-tab">
-  <button><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23" style="enable-background:new 0 0 23 23;" xml:space="preserve">
+  <button>
+    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23" style="enable-background:new 0 0 23 23;" xml:space="preserve">
 <g>
 	
 		<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:0.35;fill:#FFFFFF;" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
-	<path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
+  <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
 		C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
-	<path style="fill: rgb(153, 153, 153);" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
+  <path style="fill: rgb(153, 153, 153);" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
 		C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
 </g>
-</svg></button>
-    <div class="tab-buttons">
-      <div class="tab-buttons-wrap">
-          <div class="tab-buttons-inside">
-              
-              
-          <a href="#css-inspector" class="selected">inspector</a><a href="#layout-box">layout</a><a href="#css-text">text</a><a href="#background-box">background</a><a href="#border-style">border</a><a href="#transform">transform</a><a href="#animations">animations</a><a href="#fonts">fonts</a></div>
-      </div>
+</svg>
+  </button>
+  <div class="tab-buttons">
+    <div class="tab-buttons-wrap">
+      <div class="tab-buttons-inside">
+
+
+        <a href="#css-inspector" class="selected">inspector</a><a href="#layout-box">layout</a><a href="#css-text">text</a><a href="#background-box">background</a><a href="#border-style">border</a><a href="#transform">transform</a><a href="#animations">animations</a><a href="#fonts">fonts</a></div>
+    </div>
   </div>
 </nav>
 
@@ -166,7 +173,8 @@
       <div class="remove-color-stop" data-if="colorStops.length>2" data-index="${colorStop.index}">-</div>
     </div>
   </div>
-</section></template><template id="css-properties-list" data-tilepieces-component="tilepieces/css-rule-modification">
+</section></template>
+<template id="css-properties-list" data-tilepieces-component="tilepieces/css-rule-modification">
     <ul class="rule-block__list" data-bind-dom-prop="__css-viewer-rule,rule">
         <li data-foreach="rule.properties" data-foreach-key-name="property" data-index="${property.index}" class="rule__property ${property.isInheritedClass} ${rule.contenteditable}">
             <input class="rule-block__checked" type="checkbox" data-bind="property.checked" ${property.disabled}="">
@@ -176,7 +184,8 @@
         </li>
     </ul>
     <button class="rule-block__add-property">+</button>
-</template><div id="css-inspector" class="${isVisible}" data-tilepieces-component="tilepieces/css-inspector">
+</template>
+<div id="css-inspector" class="${isVisible}" data-tilepieces-component="tilepieces/css-inspector">
   <div class="css-inspector__menu-bar">
     <span id="css-target-new-rule">+</span>
     <span id="css-target-delete-rule" class="${deleteRuleDisabled}">-</span>
@@ -197,7 +206,7 @@
         </div>
         <div class="css-inspector__rule__selector-name">
           <div data-if="!rule.editSelector">
-                        <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="rule-selector selector ${selector.match}">${selector.selectorText} </span>{
+            <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="rule-selector selector ${selector.match}">${selector.selectorText} </span>{
           </div>
           <div data-if="rule.editSelector" class="rule-selector-edit" contenteditable="">${rule.rule.selectorText}
           </div>
@@ -254,7 +263,8 @@
       </div>
     </div>
   </div>
-</div><template id="css-rule" data-tilepieces-component="tilepieces/css-inspector">
+</div>
+<template id="css-rule" data-tilepieces-component="tilepieces/css-inspector">
   <!-- params : rule -->
   <div class="css-inspector__rule__selector">
     <div data-if="rule.parentRules.length">
@@ -263,18 +273,19 @@
       </div>
     </div>
     <div class="css-inspector__rule__selector-name">
-            <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="selector ${selector.match}">${selector.selectorText}</span>{
+      <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="selector ${selector.match}">${selector.selectorText}</span>{
     </div>
   </div>
   <a data-if="!rule.isStyle" class="css-inspector__href" href="#" title="${rule.loc}">${rule.locPop}</a>
   <div data-use="css-properties-list" data-params="rule,rule"></div>
-</template><section id="border-style" class="${isVisible}" data-tilepieces-component="tilepieces/border" style="display: none;">
+</template>
+<section id="border-style" class="${isVisible}" data-tilepieces-component="tilepieces/border" style="display: none;">
   <div class="tab-buttons tab-horizontal" id="tab-border">
     <a class="tab-prev" href="javascript:void(0)">...</a>
     <a class="tab-next" href="javascript:void(0)">...</a>
     <div class="tab-buttons-wrap">
       <div class="tab-buttons-inside">
-        <a href="#border-border" class="selected">General</a>
+        <a href="#border-border" class="selected">Border</a>
         <a href="#border-image">Border image</a>
         <a href="#box-shadow">Box Shadow</a>
         <a href="#outline">Outline</a>
@@ -682,7 +693,9 @@
       </div>
     </fieldset>
   </div>
-</section><section id="fonts" data-tilepieces-component="tilepieces/fonts" style="display: none;">
+</section>
+<section id="fonts" data-tilepieces-component="tilepieces/fonts" style="display: none;">
+  <h2>Fonts</h2>
   <div class="tab-buttons tab-horizontal" id="font-tabs">
     <a class="tab-prev" href="javascript:void(0)">...</a>
     <a class="tab-next" href="javascript:void(0)">...</a>
@@ -760,7 +773,8 @@
       <input id="font-font-variation-setting" data-bind="font.mapped.fontVariationSettings" ${font.disabled}="">
     </fieldset>
   </div>
-</section><section id="background-box" class="${isVisible}" data-tilepieces-component="tilepieces/background" style="display: none;">
+</section>
+<section id="background-box" class="${isVisible}" data-tilepieces-component="tilepieces/background" style="display: none;">
   <fieldset>
     <legend><a href="#background-color" tabindex="-1">Background color:</a></legend>
     <div class="input-css-style">
@@ -861,13 +875,14 @@
       </fieldset>
     </div>
   </div>
-</section><section id="layout-box" class="${isVisible}" data-tilepieces-component="tilepieces/layout" style="display: none;">
+</section>
+<section id="layout-box" class="${isVisible}" data-tilepieces-component="tilepieces/layout" style="display:none">
   <div class="tab-buttons tab-horizontal" id="tab-layout">
     <a class="tab-prev" href="javascript:void(0)">...</a>
     <a class="tab-next" href="javascript:void(0)">...</a>
     <div class="tab-buttons-wrap">
       <div class="tab-buttons-inside">
-        <a href="#layout" class="selected">General</a>
+        <a href="#layout" class="selected">Layout</a>
         <a href="#box-model">Box model</a>
       </div>
     </div>
@@ -1251,14 +1266,15 @@
       <div class="input-css-style"><div id="property-object-position" class="input-css autocomplete" data-css-prop="object-position" data-css-prop-js="objectPosition" data-value="${objectPosition}" data-auto-global-suggestion="cssDefaults.object-position" data-bind="objectPosition" contenteditable=""></div></div>
     </fieldset>
   </div>
-</section><section id="transform" class="${isVisible}" data-tilepieces-component="tilepieces/transform" style="display: none;">
+</section>
+<section id="transform" class="${isVisible}" data-tilepieces-component="tilepieces/transform" style="display: none;">
   <div class="tab-buttons tab-horizontal" id="transform-tabs">
     <a class="tab-prev" href="javascript:void(0)">...</a>
     <a class="tab-next" href="javascript:void(0)">...</a>
     <div class="tab-buttons-wrap">
       <div class="tab-buttons-inside">
-        <a href="#general-transform" class="selected">General</a>
-        <a href="#transform-functions">Transform functions</a>
+        <a href="#general-transform" class="selected">Transform</a>
+        <a href="#transform-functions">Functions</a>
       </div>
     </div>
   </div>
@@ -1353,14 +1369,15 @@
       <button class="add-function">+ function</button>
     </div>
   </div>
-</section><section class="${isVisible}" id="animations" data-tilepieces-component="tilepieces/animations" style="display: none;">
+</section>
+<section class="${isVisible}" id="animations" data-tilepieces-component="tilepieces/animations" style="display: none;">
   <div class="tab-buttons tab-horizontal" id="tab-animations" data-tilepieces-component="tilepieces/tabs">
     <a class="tab-prev" href="javascript:void(0)">...</a>
     <a class="tab-next" href="javascript:void(0)">...</a>
     <div class="tab-buttons-wrap">
       <div class="tab-buttons-inside">
-        <a href="#general-animations" class="selected">General</a>
-        <a href="#keyframes">Animations</a>
+        <a href="#general-animations" class="selected">Animations</a>
+        <a href="#keyframes">@keyframes</a>
       </div>
     </div>
   </div>
@@ -1558,13 +1575,16 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
       </div>
     </form>
   </section>
-</div><section id="css-text" class="${isVisible}" data-tilepieces-component="tilepieces/css-text" style="display: none;">
+</div>
+
+
+<section id="css-text" class="${isVisible}" data-tilepieces-component="tilepieces/css-text">
   <div class="tab-buttons tab-horizontal" id="tab-css-text">
     <a class="tab-prev" href="javascript:void(0)">...</a>
     <a class="tab-next" href="javascript:void(0)">...</a>
     <div class="tab-buttons-wrap">
       <div class="tab-buttons-inside">
-        <a href="#css-text-general" class="selected">General</a>
+        <a href="#css-text-general" class="selected">Css Text</a>
         <a href="#text-shadow-tab">Text Shadow</a>
       </div>
     </div>
@@ -1736,4 +1756,8 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
       </div>
     </fieldset>
   </div>
-</section><div class="autocomplete-hint" data-tilepieces-component="tilepieces/autocomplete"></div><script src="../bundle/css-viewer.bundle.js" data-tilepieces-component="tilepieces/css-viewer/bundle"></script></body></html>
+</section>
+<div class="autocomplete-hint" data-tilepieces-component="tilepieces/autocomplete"></div>
+<script src="../bundle/css-viewer.bundle.js" data-tilepieces-component="tilepieces/css-viewer/bundle"></script>
+
+</body></html>

@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html>
-<head><title>Html Inspector</title>
-  <link href="bundle/html-inspector.bundle.css" rel="stylesheet"
-        data-tilepieces-component="tilepieces/html-inspector/bundle">
+<html><head><title>Html Inspector</title>
+  <link href="bundle/html-inspector.bundle.css" rel="stylesheet" data-tilepieces-component="tilepieces/html-inspector/bundle">
 </head>
 <body>
-<div class="menu-bar">
-  <div class="menu-bar-trigger">
+<div class="tab-buttons tab-horizontal" data-tilepieces-component="tilepieces/tabs/template">
+  <a class="tab-prev" href="javascript:void(0)">...</a>
+  <a class="tab-next" href="javascript:void(0)">...</a>
+  <div class="tab-buttons-wrap">
+    <div class="tab-buttons-inside">
+      
+      
     <a id="search-trigger" href="javascript:void(0)">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
         <g>
           <path style="fill:#727272;" d="M9.8,2.5l1.6,1.6c1.1-1.1,2.6-1.8,4.2-1.8c1.6,0,3.1,0.6,4.2,1.8c1.1,1.1,1.7,2.7,1.7,4.3
 		c0,1.6-0.6,3.1-1.7,4.3s-2.6,1.8-4.2,1.8c-1.6,0-3.1-0.6-4.2-1.8c-1.1-1.1-1.7-2.7-1.7-4.3c0-1.6,0.6-3.1,1.7-4.3L9.8,2.5 M9.8,2.5
 		C8.3,4,7.4,6.1,7.4,8.3c0,4.6,3.6,8.3,8.1,8.3c2.2,0,4.3-0.9,5.7-2.4c1.5-1.5,2.4-3.6,2.4-5.9C23.7,3.8,20,0,15.6,0
-		C13.3,0,11.3,1,9.8,2.5L9.8,2.5z"/>
+		C13.3,0,11.3,1,9.8,2.5L9.8,2.5z"></path>
           <path style="fill:#727272;" d="M0.7,23.5c-0.6-0.6-0.6-1.5,0-2.1l5.6-5.7l3.3-3.4l1.8,2.3l-3.1,3.2l-5.6,5.8
-		C2.2,24.1,1.3,24.1,0.7,23.5z"/>
+		C2.2,24.1,1.3,24.1,0.7,23.5z"></path>
         </g>
       </svg>
-    </a>
-    <a id="multiselect" href="javascript:void(0)">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" height=24 width=24>
+    </a><a id="multiselect" href="javascript:void(0)">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" height="24" width="24">
       <g>
         <g>
           <path style="fill:#ccc;" d="M13.5,2.6H4.4c-0.9,0-1.7,0.8-1.7,1.7v9.1c0,0.9,0.8,1.7,1.7,1.7h9.1c0.9,0,1.7-0.8,1.7-1.7V4.4
@@ -48,24 +50,29 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
         </g>
       </g>
     </svg>
-    </a>
-    <a id="css" href="#css-view" class="menu-bar-tabs">CSS</a>
-    <a id="js" href="#js-view" class="menu-bar-tabs">JS</a>
+    </a><a id="css" href="#css-view" class="menu-bar-tabs">CSS</a><a id="js" href="#js-view" class="menu-bar-tabs">JS</a></div>
+  </div>
+</div><div class="menu-bar">
+  <div class="menu-bar-trigger">
+    
+    
+    
+    
   </div>
   <div id="search-bar">
     <input id="find-button" placeholder="Find by Css selector">
     <span id="search-bar-entries"><b></b>/<sub></sub></span>
     <button id="search-bar-up" disabled=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="transform:rotate(270deg)">
       <path style="fill:#727272;" d="M0.1,12c0-0.8,0.7-1.5,1.5-1.5l20.9,0c0.8,0,1.5,0.7,1.5,1.5s-0.7,1.5-1.5,1.5l-20.9,0
-	C0.7,13.5,0.1,12.8,0.1,12z"/>
+	C0.7,13.5,0.1,12.8,0.1,12z"></path>
       <path style="fill:#727272;" d="M14.9,18c0-0.4,0.2-0.8,0.5-1.1l5-4.9l-4.8-4.9c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l5.9,6
-	c0.6,0.6,0.6,1.5,0,2.1l-6,6c-0.6,0.6-1.5,0.6-2.1,0C15,18.7,14.9,18.3,14.9,18z"/>
+	c0.6,0.6,0.6,1.5,0,2.1l-6,6c-0.6,0.6-1.5,0.6-2.1,0C15,18.7,14.9,18.3,14.9,18z"></path>
     </svg></button>
     <button id="search-bar-down" disabled=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="transform:rotate(90deg)">
       <path style="fill:#727272;" d="M0.1,12c0-0.8,0.7-1.5,1.5-1.5l20.9,0c0.8,0,1.5,0.7,1.5,1.5s-0.7,1.5-1.5,1.5l-20.9,0
-	C0.7,13.5,0.1,12.8,0.1,12z"/>
+	C0.7,13.5,0.1,12.8,0.1,12z"></path>
       <path style="fill:#727272;" d="M14.9,18c0-0.4,0.2-0.8,0.5-1.1l5-4.9l-4.8-4.9c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l5.9,6
-	c0.6,0.6,0.6,1.5,0,2.1l-6,6c-0.6,0.6-1.5,0.6-2.1,0C15,18.7,14.9,18.3,14.9,18z"/>
+	c0.6,0.6,0.6,1.5,0,2.1l-6,6c-0.6,0.6-1.5,0.6-2.1,0C15,18.7,14.9,18.3,14.9,18z"></path>
     </svg></button>
   </div>
 </div>
@@ -161,8 +168,7 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
   </div>
   <div class="tilepieces-dialog-close" aria-label="close"></div>
 </div>
-<div class="tilepieces-dialog" id="tilepieces-confirm-dialog" tabindex="-1"
-     data-tilepieces-component="tilepieces/dialog">
+<div class="tilepieces-dialog" id="tilepieces-confirm-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
   <div class="tilepieces-dialog-content">
     <span id="tilepieces-confirm-dialog-label"></span>
     <div>
@@ -178,8 +184,7 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
   </div>
   <div class="tilepieces-dialog-close" aria-label="close"></div>
 </div>
-<div class="tilepieces-dialog" id="tilepieces-prompt-dialog" tabindex="-1"
-     data-tilepieces-component="tilepieces/dialog">
+<div class="tilepieces-dialog" id="tilepieces-prompt-dialog" tabindex="-1" data-tilepieces-component="tilepieces/dialog">
   <div class="tilepieces-dialog-content">
     <form id="tilepieces-dialog-prompt-form">
       <label for="tilepieces-dialog-prompt">
@@ -194,5 +199,5 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
   <div class="tilepieces-dialog-close" aria-label="close"></div>
 </div>
 <script src="bundle/html-inspector.bundle.js" data-tilepieces-component="tilepieces/html-inspector/bundle"></script>
-</body>
-</html>
+
+</body></html>

@@ -220,17 +220,16 @@ body.__drag-cursor-grabbing *{
   .tilepieces-dialog.open { display: block; }
   .tilepieces-dialog-content { max-width: 100%; width: 100%; max-height: 100%; height: 100%; min-width: 100%; padding: 40px 20px; }
   .tilepieces-dialog-close { background-color: rgba(10, 10, 10, 0.1); top: 5px; right: 25px; }
-}#tilepieces-prompt-dialog-button { display: block; clear: both; margin: 1.5em auto; }#tilepieces-alert-dialog svg.error { max-height: 100%; float: left; width: 25%; display: none; }#tilepieces-alert-dialog.error svg.error { display: block; }div.tilepieces-alert-dialog-content { display: flex; }div.tilepieces-dialog-footer { text-align: center; }#tilepieces-prompt-dialog-label-error { color: red; display: none; }[data-invalid] + #tilepieces-prompt-dialog-label-error { display: block; }.tab-horizontal.tab-buttons { position: relative; padding: 0em 0px 0px; box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 4px; font: 1.3em sans-serif; margin-bottom: 1em; overflow-x: hidden; }
-.tab-horizontal.tab-buttons > a { position: absolute; text-decoration: none; color: rgb(51, 51, 51); display: none; font-size: 1.2em; z-index: 2; background: url("/modules/tilepieces/tabs/svg-ico-freccia.svg") 50% 50% / 68% no-repeat scroll rgb(255, 255, 255); text-indent: -9999px; padding: 0.6em 0.9em 0.3em; height: 100%; box-sizing: border-box; }
+}#tilepieces-prompt-dialog-button { display: block; clear: both; margin: 1.5em auto; }#tilepieces-alert-dialog svg.error { max-height: 100%; float: left; width: 25%; display: none; }#tilepieces-alert-dialog.error svg.error { display: block; }div.tilepieces-alert-dialog-content { display: flex; }div.tilepieces-dialog-footer { text-align: center; }#tilepieces-prompt-dialog-label-error { color: red; display: none; }[data-invalid] + #tilepieces-prompt-dialog-label-error { display: block; }.tab-horizontal.tab-buttons { position: relative; padding: 0em 0px 0px; font: 1.3em sans-serif; margin-bottom: 1em; overflow-x: hidden; }
+.tab-horizontal.tab-buttons > a { position: absolute; text-decoration: none; color: rgb(51, 51, 51); display: none; font-size: 1.2em; z-index: 2; background: url("/modules/tilepieces/tabs/svg-ico-freccia.svg") 50% 50% / 47% no-repeat scroll rgb(255, 255, 255); text-indent: -9999px; padding: 0.6em 0.9em 0.3em; height: calc(100% - 2px); box-sizing: border-box; }
 .tab-horizontal.tab-buttons > a:hover { }
-.tab-horizontal.tab-buttons > .tab-prev { left: 0px; transform: rotate(180deg); }
+.tab-horizontal.tab-buttons > .tab-prev { left: 0px; transform: rotate(180deg);}
 .tab-horizontal.tab-buttons > .tab-next { right: 0px; }
 .tab-horizontal .tab-buttons-wrap { position: relative; overflow: hidden; }
-.tab-horizontal .tab-buttons-inside { transform: translateX(0px); transition: transform 0.2s ease 0s; user-select: none; white-space: nowrap; padding: 0.6em 0px calc(0.3em + 2px); }
-.tab-horizontal .tab-buttons-inside a { text-decoration: none; border-bottom: 1px solid rgb(102, 102, 102); color: rgb(102, 102, 102); }
-.tab-horizontal .tab-buttons-inside a { cursor: pointer; border-radius: 0px; position: relative; text-transform: capitalize; font-size: 1em; color: rgb(153, 153, 153); border-bottom: 2px solid rgb(255, 255, 255); padding: 0.6em 1em 0.3em; }
+.tab-horizontal .tab-buttons-inside { transform: translateX(0px); transition: transform 0.2s ease 0s; user-select: none; white-space: nowrap; padding: 0.6em 0px 0.3em; border-bottom: 2px solid #e8e8e8; }
+.tab-horizontal .tab-buttons-inside a { text-decoration: none; cursor: pointer; border-radius: 0px; position: relative; text-transform: capitalize; font-size: 1em; color: rgb(153, 153, 153); padding: 0.6em 1em 0.3em; }
 .tab-horizontal .tab-buttons-wrap .tab-buttons-inside a.selected { border-bottom: 2px solid rgb(102, 102, 102); color: rgb(102, 102, 102); background: none 0% 0% repeat scroll transparent; }
-.tab-horizontal .tab-buttons-inside a:hover { background: none 0% 0% repeat scroll rgb(231, 231, 231); border-bottom: 2px solid rgb(231, 231, 231); }html, body {
+.tab-horizontal .tab-buttons-inside a:hover { background: transparent; color: rgb(102, 102, 102);}html, body {
   min-height: 100%;
 }
 
@@ -379,7 +378,7 @@ body.content-editable-start::before {
 
 .menu-bar {
   position: sticky;
-  top: 0;
+  top: 46px;
   z-index: 10;
   background: white;
 }
@@ -423,7 +422,7 @@ body.content-editable-start::before {
 #search-bar > * {
   flex-grow: 1
 }
-
+/*
 #search-bar button {
   background: lightgrey;
   color: #333;
@@ -433,20 +432,32 @@ body.content-editable-start::before {
   background: grey;
   color: #fff;
 }
-
+*/
 #search-bar div {
   position: relative;
   display: flex;
   flex-grow: 14;
 }
-
 #search-bar-entries {
   display: none;
 }
 #css-view li, #js-view li {
   padding-left: 2em;
 }
-.tab-horizontal .tab-buttons-inside{
-  display: inline-flex;
-  padding: 0;
+.tab-horizontal .tab-buttons-inside a svg{
+  width:1em;
+  height:1em;
 }
+.tab-horizontal.tab-buttons{
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 9;
+  margin-bottom:0
+}
+#search-bar button svg{
+  width:18px;
+  height:18px;
+}
+#search-bar button { background: none; border-radius: 7px; border: 1px solid rgb(204, 204, 204); cursor: pointer; font-size: 1em; margin: 0px 0.2em; text-align: center; color: rgb(153, 153, 153); padding: 0.3em 1em; letter-spacing: 1px; }
+#search-bar button:disabled{ opacity: 0.4; cursor: not-allowed; }

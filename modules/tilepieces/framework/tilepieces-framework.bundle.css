@@ -1,12 +1,12 @@
 input:not([type="checkbox"]):not([type="radio"]), select, textarea { width: 100%; padding: 0.5em; box-sizing: border-box; border: none; margin: 0.5em 0px; background-color: rgb(240, 240, 240); border-radius: 7px; }
 button, .as-button { background: none; border-radius: 7px; border: 1px solid rgb(204, 204, 204); cursor: pointer; font-size: 1em; margin: 0px 0.2em; text-align: center; color: rgb(153, 153, 153); padding: 0.3em 1em; letter-spacing: 1px; }
-body { font-family: sans-serif; background: rgb(255, 255, 255); }
+body { font-family: sans-serif; background: rgb(255, 255, 255); color: rgb(102, 102, 102);}
 .flex-box { align-items: center; display: flex; }
 .flex-box input:not([type="checkbox"]):not([type="radio"]), .start-flex-box { flex: 1 1 auto; position: relative; margin: 0px; width: 1%; }
 .flex-box button:not(:first-child) { border-radius: 7px; background-color: rgb(240, 240, 240); background-image: none; margin: 5px; border: none; }
-fieldset { border-style: solid; border-color: rgb(204, 204, 204); border-image: initial; border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; margin: 0em 0.5em 2em; padding: 0.5em 0px; color: rgb(102, 102, 102); text-transform: inherit; }
+fieldset { border-style: solid; border-color: rgb(204, 204, 204); border-image: initial; border-width: 0px 0px 1px; font-size: 1em; letter-spacing: 1px; margin: 0em 0em 2em; padding: 0.5em 0px; color: rgb(102, 102, 102); text-transform: inherit; }
 .flex-box.two-buttons button:first-child, .flex-box-stroke.two-buttons button:first-child { border-right: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0em; margin-right: 0px; flex: 1 1 auto; }
-legend { display: flex; place-content: center; align-items: center; }
+legend { display: flex; place-content: center; align-items: center; padding: 0px; }
 legend > :first-child { padding: 0.4em; font-size: 1.1em; }
 fieldset.no-border { border: 0px; }
 legend input:not([type="checkbox"]):not([type="radio"]) { margin: 0px; }
@@ -69,8 +69,8 @@ legend > a:first-child { padding-bottom: 0em; }
 .two-buttons button.second-button { padding-left: 5px; padding-right: 5px; }
 .two-buttons button.second-button:hover { background-color: rgba(0, 0, 0, 0.2); }
 .two-buttons button.second-button svg:hover { }
-a.info-round-icon { background-image: url("../../../miscellaneous/svg-circle-info.svg"); width: 1.25em; height: 1.25em; display: inline-block; vertical-align: middle; }
-a.info-icon { background-image: url("../../../miscellaneous/svg-info.svg"); display: inline-block; width: 0.8125em; height: 0.8125em; vertical-align: middle; }.__drag__drop-overlay{
+a.info-round-icon { background-image: url("/modules/tilepieces/stylesheet/svg-circle-info.svg"); width: 1.25em; height: 1.25em; display: inline-block; margin-top: 0.5em; }
+a.info-icon { background-image: url("/modules/tilepieces/stylesheet/svg-info.svg"); display: inline-block; width: 0.8125em; height: 0.8125em; vertical-align: middle; }.__drag__drop-overlay{
     box-shadow:inset 0 0 10px 0 rgba(0,0,0,0.35);
 }
 dummy-drag{
@@ -291,9 +291,15 @@ body {
 
 .menu-bar-trigger > a.opened {
   opacity: 1;
-  background-color: rgb(217, 217, 217) !important;
+  background-color: #a398c6 !important;
+}
+.menu-bar-trigger > a.opened > svg path, .menu-bar-trigger > a.opened > svg circle {
+  fill: #fff !important
 }
 
+#menu-bar svg * {
+  fill: #999 !important
+}
 #menu-bar {
   border-bottom: 1px solid rgb(153, 153, 153);
   cursor: default;
@@ -303,10 +309,13 @@ body {
   left: 2px;
   top: 48px;
   z-index: 42;
-  background: rgb(255, 255, 255);
   display: none;
   min-width: 320px;
   outline: none;
+  background-color: #fff;
+  height: 100vh;
+  margin-top: 0;
+  box-shadow: 6px 7px 5px #00000033;
 }
 
 #menu-bar li.blocked {
@@ -321,8 +330,6 @@ body {
 #menu-bar ul {
   margin: 0;
   padding: 0;
-  border: 1px solid rgb(204, 203, 203);
-  background: rgb(204, 203, 203);
   color:#727272;
 }
 
@@ -333,10 +340,14 @@ body {
   white-space: nowrap;
 }
 #window-list svg {
-  vertical-align: middle;
+  vertical-align: text-top;
 }
 #menu-bar li {
   padding: 10px 20px 10px 7px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 1em auto;
+  color: #727272;
 }
 
 #menu-bar li.hr {
@@ -346,7 +357,8 @@ body {
 }
 
 #menu-bar > div div:hover, #menu-bar li:hover {
-  background: rgb(223 223 223);
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 #menu-bar summary:focus {
@@ -416,11 +428,13 @@ body {
 
 #move-bar {
   display: none;
-  width: 4px;
-  background: black;
+  width: 18px;
   height: 100%;
   position: relative;
   z-index: 10;
+  background: white;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
 }
 #screen-dimensions{
   z-index:45;
@@ -435,6 +449,9 @@ body {
   display: none;
   -webkit-user-select: none;
   user-select: none;
+}
+#mobile-wrapper.top #dock-frames, #mobile-wrapper.left #dock-frames, #mobile-wrapper.right #dock-frames, #mobile-wrapper.bottom #dock-frames {
+  background: rgb(242,242,242);
 }
 @media (min-width: 1024px) {
   #mobile-wrapper.top #move-bar, #mobile-wrapper.bottom #move-bar {

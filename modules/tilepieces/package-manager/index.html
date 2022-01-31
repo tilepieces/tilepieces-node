@@ -43,7 +43,7 @@
   </div>
   <div>
     <input type="checkbox" data-if="projects.length" class="toggle-projects" data-bind="projectsChecked" data-bind-dom-prop="__project,project">
-    <span class="select-all-checkboc-svg">
+    <span class="select-all-checkboc-svg" data-if="projects.length">
       <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 33 33">
 <g>
 <g>
@@ -133,6 +133,10 @@ l2.5,2.5c0.3,0.3,0.9,0.3,1.2,0l4.3-4.3C13.5,22.1,13.5,21.5,13.2,21.2z"></path>
     <div>
       <input type="radio" id="panel-free-position" name="panel-position" data-bind="globalSettings.panelPosition" value="free">
       <label for="panel-free-position">Free</label>
+    </div>
+    <div>
+      <input type="radio" id="panel-dock-to-top" name="panel-position" data-bind="globalSettings.panelPosition" value="top">
+      <label for="panel-dock-to-top">dock to top</label>
     </div>
     <div>
       <input type="radio" id="panel-dock-to-right" name="panel-position" data-bind="globalSettings.panelPosition" value="right">
@@ -348,7 +352,6 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
               <legend>STYLESHEETS:</legend>
               <button data-add-component-property="sources.stylesheet" class="component-properties-add">+</button>
               <button data-if="sources.stylesheets.length" class="concatenate-sources" data-type="stylesheets">Concatenate</button>
-              <button data-if="sources.stylesheets.length" class="minify-source-stylesheets">Minify</button>
               <div data-foreach="sources.stylesheets" data-foreach-key-name="style" class="flex-box">
                 <input data-index="style.index" data-bind="style.value">
                 <button class="component-properties-remove-stylesheet component-properties-remove" data-index="${style.index}" data-remove-component-property="sources.stylesheet">-</button>
@@ -447,7 +450,8 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
     </button>
   </div>
   <div>
-    <input data-if="localComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project"> <span class="select-all-checkboc-svg">
+    <input data-if="localComponents.length" type="checkbox" data-bind="componentsChecked" data-bind-dom-prop="__project,project">
+    <span class="select-all-checkboc-svg" data-if="localComponents.length">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33">
 <g>
 <g>

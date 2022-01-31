@@ -43,5 +43,15 @@ section.addEventListener("click",async e=>{
     await app.core[action]();
   opener.dialog.close();
 });
+// block/unblock on events
+opener.addEventListener("content-editable-start", e => {
+  section.ownerDocument.body.classList.add("content-editable-start")
+});
+opener.addEventListener("content-editable-end", e => {
+  section.ownerDocument.body.classList.remove("content-editable-start")
+});
+if (app.contenteditable) {
+  section.ownerDocument.body.classList.add("content-editable-start")
+}
 
 })();

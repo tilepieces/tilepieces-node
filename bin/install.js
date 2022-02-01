@@ -28,6 +28,7 @@ module.exports = async ()=>{
   await fs.writeFile(processCwd + 'index.html', indexHtml);
   await fs.writeFile(processCwd + 'tp-favi.png', await fs.readFile(basePath + "tp-favi.png"));
   await fs.writeFile(processCwd + 'tp-favi-180.png', await fs.readFile(basePath + "tp-favi-180.png"));
+  await fs.rm(processCwd + "modules",{recursive:true});
   await copyDir(basePath + "modules", processCwd + "modules");
   await copyDir(basePath + "components", processCwd + "components");
   if(isOldSettings) {

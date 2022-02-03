@@ -502,7 +502,9 @@ body.__drag-cursor-grabbing *{
 }#border-style .false, #border-style .undefined { display: none; }
 #border-style .link-button.false { display: block; }
 #border-style .link-button.true { background: rgb(222, 222, 222); border: 1px solid rgb(203, 203, 203); }
-#border-border, #border-image, #box-shadow, #outline { padding: 0px 1em; }[data-dropzone].ondrop{
+#border-border, #border-image, #box-shadow, #outline { padding: 0px 1em; }
+.add-box-shadow { margin: 0.5em 0px 0px 0.5em; }
+fieldset.shadow div > div { margin: 0.2em 0px; }[data-dropzone].ondrop{
     border:2px outset #ff0000;
     background:#FFFF4F;
     box-shadow: inset 0 3px 4px #888;
@@ -601,7 +603,8 @@ body.modal { overflow: hidden; }
 #general-animations, #keyframes { padding: 0px 0.5em; }
 .details-open-summery-child { border-left: 0px; }#css-text .false, #css-text.undefined { display: none; }
 #css-text-general, #text-shadow-tab { padding: 0px 1em; }
-.add-text-shadow { margin-top: 0.5em; }.caret { display: inline-block; width: 0px; height: 0px; margin-left: 2px; padding: 0px; vertical-align: middle; border-top: 6px dashed; border-right: 5px solid transparent; border-left: 5px solid transparent; cursor: pointer; margin-bottom: 3px; }
+.add-text-shadow { margin-top: 0.5em; }
+fieldset.text-shadow > div > div { margin: 0.3em 0px; }.caret { display: inline-block; width: 0px; height: 0px; margin-left: 2px; padding: 0px; vertical-align: middle; border-top: 6px dashed; border-right: 5px solid transparent; border-left: 5px solid transparent; cursor: pointer; margin-bottom: 3px; }
 .caret { transform: rotate(-90deg); }
 .css-selector-gr { user-select: none; }
 .css-selector-gr ul { display: none; }

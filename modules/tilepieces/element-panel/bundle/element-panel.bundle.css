@@ -153,3 +153,4 @@ fieldset.attributes { padding: 0px; border: 0px; }
 #children li { display: flex; }
 span.children-grabber { display: block; padding: 0.4em 0px; cursor: grab; }
 #element-sum a {text-transform: none;}
+#element-sum .tab-horizontal .tab-buttons-inside{border:0}

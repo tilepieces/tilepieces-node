@@ -48,9 +48,9 @@
     <div><span>Rule:</span>
       <span data-bind="currentSelector" data-bind-events="blur,input" contenteditable="" spellcheck="false"></span>
       <div class="related-selectors">
-        <span class="related-selectors-select">${relatedSelectors.length}</span> elements affected by this rule
+        Elements matching this selector: <span class="related-selectors-select">${relatedSelectors.length}</span>
       </div>
-      <div data-if="!selectorMatch" class="rule-sector-wrong">Selector doesn't apply to current element</div>
+      <div data-if="!selectorMatch" class="rule-sector-wrong">Selector doesn't match the selected element</div>
     </div>
   </div>
   <!-- modal new gr -->
@@ -232,7 +232,7 @@
           </div>
           <div data-if="rule.editSelector" class="rule-selector-edit" contenteditable="">${rule.rule.selectorText}
           </div>
-          <div data-if="!rule.selectorMatch" class="rule-sector-wrong">Selector doesn't apply to current element
+          <div data-if="!rule.selectorMatch" class="rule-sector-wrong">Selector doesn't match the selected element
           </div>
         </div>
       </div>
@@ -620,8 +620,8 @@
       </div>
     </fieldset>
     <fieldset data-foreach="boxShadows" data-foreach-key-name="boxShadowValue" data-index="${boxShadowValue.index}" class="shadow">
-      <legend>Box Shadow #${boxShadowValue.index}</legend>
-      <button class="remove-box-shadow" data-index="${boxShadowValue.index}">Remove</button>
+      <legend>Box Shadow #${boxShadowValue.index}<button class="remove-box-shadow" data-index="${boxShadowValue.index}">Remove</button></legend>
+      
       <div style="float:left;width:calc(100% - 220px)">
         <div>
           <select data-bind="boxShadowValue.type" data-shadow="type">
@@ -649,7 +649,7 @@
         <input id="spread-offset-${boxShadowValue.index}" type="number" data-index="${boxShadowValue.index}" min="0" step="0.5" data-shadow="spread" data-bind="boxShadowValue.spread">
           <span>px</span>
         </div>
-        <button data-shadow="color" class="color-button" data-index="${boxShadowValue.index}" style="background:${boxShadowValue.color}"></button>
+        
       </div>
       <div style="float:right">
         <svg data-index="${boxShadowValue.index}" style="border:1px solid;display:block;margin:auto;width:200px;height:200px">
@@ -657,7 +657,7 @@
           <line x1="50%" y1="0%" x2="50%" y2="100%" stroke="black" stroke-width="1" stroke-dasharray="10"></line>
           <line x1="50%" y1="50%" x2="50%" y2="50%" stroke="black" stroke-width="2" class="line-test"></line>
           <circle cx="50%" cy="50%" r="10" fill="lightblue" class="circle-test"></circle>
-        </svg>
+        </svg><div style="float: right; margin-top: 1.3em;">Color<button data-shadow="color" class="color-button" data-index="${boxShadowValue.index}" style="background:${boxShadowValue.color};border-radius:0"></button></div>
       </div>
     </fieldset>
   </div>
@@ -810,7 +810,7 @@
       <a class="tab-next" href="javascript:void(0)">...</a>
       <div class="tab-buttons-wrap">
         <div class="tab-buttons-inside">
-          <button id="add-background">+</button>
+          <a href="javascript:void(0)" id="add-background">+</a>
           <a data-foreach="backgrounds" href="#" data-foreach-key-name="background" class="tab-link ${background.isSelected}" data-target-index="${background.index}">${background.index}</a>
         </div>
       </div>

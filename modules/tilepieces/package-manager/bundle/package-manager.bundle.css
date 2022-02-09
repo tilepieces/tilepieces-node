@@ -31,7 +31,6 @@ iframe { border-width: 1px; border-style: solid; }
 .current-project-data__add-files { padding: 0px; height: 2em; width: 2em; }
 .current-project-data__remove-files { height: 2em; width: 2em; padding: 0px; }
 .flex-box input[type="number"] { height: 2em; min-width: 6% !important; width: auto !important; margin-right: 5px !important; }
-.component-properties-add { padding: 0px; height: 2em; width: 2em; }
 .component-properties-remove { padding: 0px; height: 2em; width: 2em; }
 .tab-component-buttons span { display: block; cursor: pointer; border-radius: 0px; position: relative; text-transform: uppercase; letter-spacing: 2px; font-size: 1.2em; margin: 0.8em; padding-bottom: 0.3em; color: rgb(153, 153, 153); border-bottom: 1px solid rgb(255, 255, 255); }
 .tab-component-buttons span.true, .tab-component-buttons span.selected { border-bottom: 1px solid rgb(102, 102, 102); color: rgb(102, 102, 102); }
@@ -39,7 +38,7 @@ iframe { border-width: 1px; border-style: solid; }
 div.tab-component-buttons { display: flex; flex-wrap: wrap; align-items: center; }
 div.tab-component { margin-bottom: 1em; }
 h3, .h3 { font-size: 1.3em; font-weight: normal; letter-spacing: 1px; color: rgb(102, 102, 102); text-transform: capitalize; margin-bottom: 0.5em; }
-h3 span svg, .h3 span svg { transform: rotate(90deg); margin-right: 0.3em; }
+h3 span svg, .h3 span svg { transform: rotate(90deg); margin-right: 0.3em; vertical-align:top}
 .details-open-summery-child { padding: 0px; margin: 0px 1em; border-left: 1px solid rgb(204, 204, 204); }
 legend > a:first-child { font-size: 1em; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; color: rgb(102, 102, 102); padding-bottom: 0.4em; }
 h2, .h2 { font-size: 1.5em; font-weight: normal; letter-spacing: 1px; color: rgb(102, 102, 102); text-transform: capitalize; margin-bottom: 0.5em; }
@@ -79,10 +78,11 @@ a.info-icon { background-image: url("/modules/tilepieces/stylesheet/svg-info.svg
 .tab-horizontal.tab-buttons > a:hover { }
 .tab-horizontal.tab-buttons > .tab-prev { left: 0px; transform: rotate(180deg);}
 .tab-horizontal.tab-buttons > .tab-next { right: 0px; }
-.tab-horizontal .tab-buttons-wrap { position: relative; overflow: hidden; }
-.tab-horizontal .tab-buttons-inside { transform: translateX(0px); transition: transform 0.2s ease 0s; user-select: none; white-space: nowrap; padding: 0.6em 0px 0.3em; border-bottom: 2px solid #e8e8e8; }
+.tab-horizontal .tab-buttons-wrap { position: relative;  border-bottom: 2px solid #e8e8e8;}
+.tab-horizontal .tab-buttons-inside { transform: translateX(0px); transition: transform 0.2s ease 0s; user-select: none; white-space: nowrap; padding: 0.6em 0px 0.3em; }
 .tab-horizontal .tab-buttons-inside a { text-decoration: none; cursor: pointer; border-radius: 0px; position: relative; text-transform: capitalize; font-size: 1em; color: rgb(153, 153, 153); padding: 0.6em 1em 0.3em; }
-.tab-horizontal .tab-buttons-wrap .tab-buttons-inside a.selected { border-bottom: 2px solid rgb(102, 102, 102); color: rgb(102, 102, 102); background: none 0% 0% repeat scroll transparent; }
+.tab-horizontal .tab-buttons-wrap .tab-buttons-inside a.selected { color: rgb(102, 102, 102); background: none 0% 0% repeat scroll transparent; }
+.tab-horizontal .tab-buttons-wrap .tab-buttons-inside a.selected::after {content: "";position: absolute;top: 100%;border-bottom: 2px solid rgb(102, 102, 102);left: 0;width: 100%;}
 .tab-horizontal .tab-buttons-inside a:hover { background: transparent; color: rgb(102, 102, 102);}body { background: rgb(255, 255, 255); margin : 0}
 #projects,#components{width:calc(100% - 1em);margin:auto;}
 #components ul { list-style: none; margin: 0px; }
@@ -118,7 +118,7 @@ h3 { font-size: 1.3em; font-weight: normal; letter-spacing: 1px; color: rgb(102,
 .flex-box button.component-properties-remove { background-color: transparent; border: 1px solid rgb(204, 204, 204); height: 2em; width: 2em; padding: 0px; }
 .details-open-summery-child { border: 0px; }
 .details-open-summery-child fieldset { margin: 0px 0px 1.5em; }
-.component-properties-add { padding: 0px; height: 2em; width: 2em; }
+.component-properties-add { padding: 0px; height: 2em; width: 2em; margin-bottom:1.5em}
 .flex-box button.flex-box-button-border { background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); border-radius: 7px; }
 #projects-list button.component-properties-remove { padding: 0px; }
 iframe { border-radius: 7px; border-color: rgb(214, 214, 214); }

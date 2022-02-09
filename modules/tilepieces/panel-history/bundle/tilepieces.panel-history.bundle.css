@@ -79,3 +79,4 @@ svg.svg-right-arrow { transform: rotate(90deg); vertical-align: text-top}
 #panel-history ul li { border: none; padding: 0.5em 0px; }
 #panel-history .selected { border-radius: 7px; background-color: rgb(242, 242, 242); }
 #panel-history .selected ~ .entry { padding: 0px 1em; }
+.content-editable-start #panel-history{display:none}

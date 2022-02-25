@@ -7,5 +7,9 @@
   "applicationName": "tilepieces",
   "panelPosition": "free",
   "sandboxFrame": true,
-  "componentPath": "components"
+  "componentPath": "components",
+  "miscellaneousDir" : "miscellaneous",
+  "delayUpdateFileMs" : 500,
+  "imageTypeProcess" : 0,
+  "relativePaths" : false
 }

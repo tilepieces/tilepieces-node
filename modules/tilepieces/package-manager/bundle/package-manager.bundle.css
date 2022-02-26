@@ -118,7 +118,7 @@ h3 { font-size: 1.3em; font-weight: normal; letter-spacing: 1px; color: rgb(102,
 .flex-box button.component-properties-remove { background-color: transparent; border: 1px solid rgb(204, 204, 204); height: 2em; width: 2em; padding: 0px; }
 .details-open-summery-child { border: 0px; }
 .details-open-summery-child fieldset { margin: 0px 0px 1.5em; }
-.component-properties-add { padding: 0px; height: 2em; width: 2em; margin-bottom:1.5em}
+[data-add-component-property=miscellaneous].component-properties-add { margin-bottom:1.5em}
 .flex-box button.flex-box-button-border { background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); border-radius: 7px; }
 #projects-list button.component-properties-remove { padding: 0px; }
 iframe { border-radius: 7px; border-color: rgb(214, 214, 214); }

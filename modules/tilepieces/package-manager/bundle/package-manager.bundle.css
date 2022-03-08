@@ -83,8 +83,8 @@ a.info-icon { background-image: url("/modules/tilepieces/stylesheet/svg-info.svg
 .tab-horizontal .tab-buttons-inside a { text-decoration: none; cursor: pointer; border-radius: 0px; position: relative; text-transform: capitalize; font-size: 1em; color: rgb(153, 153, 153); padding: 0.6em 1em 0.3em; }
 .tab-horizontal .tab-buttons-wrap .tab-buttons-inside a.selected { color: rgb(102, 102, 102); background: none 0% 0% repeat scroll transparent; }
 .tab-horizontal .tab-buttons-wrap .tab-buttons-inside a.selected::after {content: "";position: absolute;top: 100%;border-bottom: 2px solid rgb(102, 102, 102);left: 0;width: 100%;}
-.tab-horizontal .tab-buttons-inside a:hover { background: transparent; color: rgb(102, 102, 102);}body { background: rgb(255, 255, 255); margin : 0}
-#projects,#components{width:calc(100% - 1em);margin:auto;}
+.tab-horizontal .tab-buttons-inside a:hover { background: transparent; color: rgb(102, 102, 102);}body { background: rgb(255, 255, 255); margin: 0px; }
+#projects, #components { width: calc(100% - 1em); margin: auto; }
 #components ul { list-style: none; margin: 0px; }
 #global-components .global-local .add-new-local-component { display: none; }
 .global-local input[type="checkbox"] { display: none; }
@@ -118,7 +118,7 @@ h3 { font-size: 1.3em; font-weight: normal; letter-spacing: 1px; color: rgb(102,
 .flex-box button.component-properties-remove { background-color: transparent; border: 1px solid rgb(204, 204, 204); height: 2em; width: 2em; padding: 0px; }
 .details-open-summery-child { border: 0px; }
 .details-open-summery-child fieldset { margin: 0px 0px 1.5em; }
-[data-add-component-property=miscellaneous].component-properties-add { margin-bottom:1.5em}
+[data-add-component-property="miscellaneous"].component-properties-add { margin-bottom: 1.5em; }
 .flex-box button.flex-box-button-border { background-color: rgb(255, 255, 255); border: 1px solid rgb(204, 204, 204); border-radius: 7px; }
 #projects-list button.component-properties-remove { padding: 0px; }
 iframe { border-radius: 7px; border-color: rgb(214, 214, 214); }
@@ -139,4 +139,6 @@ legend input[type="checkbox"] { margin-bottom: 0px; }
 .block-tags summary svg { vertical-align: top; }
 h2.main-h2 { margin: 1em 0.4em; display: inline-block; border-bottom: 1px solid; padding-bottom: 2px; }
 fieldset { margin: 0px 0.5em 2em; }
-a.info-round-icon {margin-top: 0;vertical-align: bottom;margin-left: 0.3em;}
+a.info-round-icon { margin-top: 0px; vertical-align: bottom; margin-left: 0.3em; }
+fieldset legend { font-size: 1.1em; }
+legend > :first-child { font-size: 1.1rem; }

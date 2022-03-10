@@ -28,7 +28,17 @@ module.exports = async ()=>{
   await fs.writeFile(processCwd + 'index.html', indexHtml);
   await fs.writeFile(processCwd + 'tp-favi.png', await fs.readFile(basePath + "tp-favi.png"));
   await fs.writeFile(processCwd + 'tp-favi-180.png', await fs.readFile(basePath + "tp-favi-180.png"));
-  await fs.rm(processCwd + "modules",{recursive:true});
+  var accessToModules;
+  try{
+    accessToModules = await fs.access(processCwd + 'modules', fs.F_OK);
+    await fs.rm(processCwd + "modules",{recursive:true});
+  }
+  catch(e){
+    if(accessToModules){
+      console.error("[error on remove old modules]");
+      console.error(e);
+    }
+  }
   await copyDir(basePath + "modules", processCwd + "modules");
   await copyDir(basePath + "components", processCwd + "components");
   if(isOldSettings) {

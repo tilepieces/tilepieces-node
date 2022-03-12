@@ -1,6 +1,6 @@
 input:not([type="checkbox"]):not([type="radio"]), select, textarea { width: 100%; padding: 0.5em; box-sizing: border-box; border: none; margin: 0.5em 0px; background-color: rgb(240, 240, 240); border-radius: 7px; }
 button, .as-button { background: none; border-radius: 7px; border: 1px solid rgb(204, 204, 204); cursor: pointer; font-size: 1em; margin: 0px 0.2em; text-align: center; color: rgb(153, 153, 153); padding: 0.3em 1em; letter-spacing: 1px; }
-body { font-family: sans-serif; background: rgb(255, 255, 255); color: rgb(102, 102, 102);}
+body { font-family: sans-serif; background: rgb(255, 255, 255); color: rgb(102, 102, 102); }
 .flex-box { align-items: center; display: flex; }
 .flex-box input:not([type="checkbox"]):not([type="radio"]), .start-flex-box { flex: 1 1 auto; position: relative; margin: 0px; width: 1%; }
 .flex-box button:not(:first-child) { border-radius: 7px; background-color: rgb(240, 240, 240); background-image: none; margin: 5px; border: none; }
@@ -18,8 +18,8 @@ details summary svg { transform: rotate(90deg); margin-right: 5px; cursor: point
 details summary > span:first-child { vertical-align: middle; }
 details[open] > summary svg { transform: rotate(180deg); }
 details ul { padding-left: 26px; }
-ul summary { padding: 0px; }
-summary { list-style-type: none; padding: 1em 0px; cursor: pointer; }
+ul summary { padding-top: 0; padding-bottom:0}
+summary { list-style-type: none; padding: 1em 0px; cursor: pointer; padding-inline-start: 23px; position: relative; }
 small.tilepieces-small-error { display: none; color: red; }
 small.tilepieces-small-error.show { display: block; }
 ul { list-style: none; padding: 0px; }
@@ -38,7 +38,7 @@ iframe { border-width: 1px; border-style: solid; }
 div.tab-component-buttons { display: flex; flex-wrap: wrap; align-items: center; }
 div.tab-component { margin-bottom: 1em; }
 h3, .h3 { font-size: 1.3em; font-weight: normal; letter-spacing: 1px; color: rgb(102, 102, 102); text-transform: capitalize; margin-bottom: 0.5em; }
-h3 span svg, .h3 span svg { transform: rotate(90deg); margin-right: 0.3em; vertical-align:top}
+h3 span svg, .h3 span svg { transform: rotate(90deg); margin-right: 0.3em; vertical-align: top; }
 .details-open-summery-child { padding: 0px; margin: 0px 1em; border-left: 1px solid rgb(204, 204, 204); }
 legend > a:first-child { font-size: 1em; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; color: rgb(102, 102, 102); padding-bottom: 0.4em; }
 h2, .h2 { font-size: 1.5em; font-weight: normal; letter-spacing: 1px; color: rgb(102, 102, 102); text-transform: capitalize; margin-bottom: 0.5em; }
@@ -69,12 +69,17 @@ legend > a:first-child { padding-bottom: 0em; }
 .two-buttons button.second-button:hover { background-color: rgba(0, 0, 0, 0.2); }
 .two-buttons button.second-button svg:hover { }
 a.info-round-icon { background-image: url("/modules/tilepieces/stylesheet/svg-circle-info.svg"); width: 1.25em; height: 1.25em; display: inline-block; margin-top: 0.5em; }
-a.info-icon { background-image: url("/modules/tilepieces/stylesheet/svg-info.svg"); display: inline-block; width: 0.8125em; height: 0.8125em; vertical-align: middle; }.tilepieces-dialog { align-items: center; display: none; flex-direction: column; justify-content: center; overflow: hidden; position: fixed; z-index: 45; inset: 0px; font: 14px Helvetica, Arial, sans-serif; }.tilepieces-dialog-content { position: absolute; overflow: auto; padding: 20px; border: 1px solid rgb(204, 204, 204); max-width: 80vw; min-width: 940px; background-color: rgb(255, 255, 255); border-radius: 6px; box-shadow: rgba(10, 10, 10, 0.1) 0px 2px 3px, rgba(10, 10, 10, 0.1) 0px 0px 0px 1px; color: rgb(74, 74, 74); font: 14px Helvetica, Arial, sans-serif; max-height: calc(100vh - 40px); box-sizing: border-box; }.tilepieces-dialog.open { display: flex; }.tilepieces-dialog.open.on-top { z-index: 46; }.tilepieces-dialog::before { content: ""; position: absolute; inset: 0px; background-color: rgba(10, 10, 10, 0.3); }.tilepieces-dialog-close { height: 32px; width: 32px; position: fixed; right: 20px; top: 20px; cursor: pointer; border-radius: 100%; }.tilepieces-dialog-close::before { height: 2px; width: 50%; }.tilepieces-dialog-close::after { height: 50%; width: 2px; }.tilepieces-dialog-close:hover { background-color: rgba(10, 10, 10, 0.3); }.tilepieces-dialog-close::after, .tilepieces-dialog-close::before { background-color: rgb(255, 255, 255); content: ""; display: block; left: 50%; position: absolute; top: 50%; transform: translateX(-50%) translateY(-50%) rotate(45deg); transform-origin: center center; }@media (max-width: 1024px) {
+a.info-icon { background-image: url("/modules/tilepieces/stylesheet/svg-info.svg"); display: inline-block; width: 0.8125em; height: 0.8125em; vertical-align: middle; }
+details > summary svg { display: none; }
+summary::before { width: 17px; height: 17px; background-image: url("/modules/tilepieces/stylesheet/svg-summary.svg"); background-repeat: no-repeat; content: ""; position: absolute; left: -4px; top: 50%; transform: translate(0px, -50%) rotate(90deg); }
+details > summary h3 span, details > summary .h3 span { display: none; }
+details > summary h3, details > summary .h3 { margin: 0px; padding: 0px; }
+details[open] > summary::before { transform: translate(0px, -50%) rotate(180deg); }.tilepieces-dialog { align-items: center; display: none; flex-direction: column; justify-content: center; overflow: hidden; position: fixed; z-index: 45; inset: 0px; font: 14px Helvetica, Arial, sans-serif; }.tilepieces-dialog-content { position: absolute; overflow: auto; padding: 20px; border: 1px solid rgb(204, 204, 204); max-width: 80vw; min-width: 940px; background-color: rgb(255, 255, 255); border-radius: 6px; box-shadow: rgba(10, 10, 10, 0.1) 0px 2px 3px, rgba(10, 10, 10, 0.1) 0px 0px 0px 1px; color: rgb(74, 74, 74); font: 14px Helvetica, Arial, sans-serif; max-height: calc(100vh - 40px); box-sizing: border-box; }.tilepieces-dialog.open { display: flex; }.tilepieces-dialog.open.on-top { z-index: 46; }.tilepieces-dialog::before { content: ""; position: absolute; inset: 0px; background-color: rgba(10, 10, 10, 0.3); }.tilepieces-dialog-close { height: 32px; width: 32px; position: fixed; right: 20px; top: 20px; cursor: pointer; border-radius: 100%; }.tilepieces-dialog-close::before { height: 2px; width: 50%; }.tilepieces-dialog-close::after { height: 50%; width: 2px; }.tilepieces-dialog-close:hover { background-color: rgba(10, 10, 10, 0.3); }.tilepieces-dialog-close::after, .tilepieces-dialog-close::before { background-color: rgb(255, 255, 255); content: ""; display: block; left: 50%; position: absolute; top: 50%; transform: translateX(-50%) translateY(-50%) rotate(45deg); transform-origin: center center; }@media (max-width: 1024px) {
   .tilepieces-dialog.open { display: block; }
   .tilepieces-dialog-content { max-width: 100%; width: 100%; max-height: 100%; height: 100%; min-width: 100%; padding: 40px 20px; }
   .tilepieces-dialog-close { background-color: rgba(10, 10, 10, 0.1); top: 5px; right: 25px; }
 }#tilepieces-prompt-dialog-button { display: block; clear: both; margin: 1.5em auto; }#tilepieces-alert-dialog svg.error { max-height: 100%; float: left; width: 25%; display: none; }#tilepieces-alert-dialog.error svg.error { display: block; }div.tilepieces-alert-dialog-content { display: flex; }div.tilepieces-dialog-footer { text-align: center; }#tilepieces-prompt-dialog-label-error { color: red; display: none; }[data-invalid] + #tilepieces-prompt-dialog-label-error { display: block; }.tab-horizontal.tab-buttons { position: relative; padding: 0em 0px 0px; font: 1.3em sans-serif; margin-bottom: 1em; overflow-x: hidden; }
-.tab-horizontal.tab-buttons > a { position: absolute; text-decoration: none; color: rgb(51, 51, 51); display: none; font-size: 1.2em; z-index: 2; background: url("/modules/tilepieces/tabs/svg-ico-freccia.svg") 50% 57% / 38% no-repeat scroll rgb(255, 255, 255); text-indent: -9999px; padding: 0.6em 0.9em 0.3em; height: calc(100% - 3px); box-sizing: border-box; }
+.tab-horizontal.tab-buttons > a { position: absolute; text-decoration: none; color: rgb(51, 51, 51); display: none; font-size: 1.2em; z-index: 2; background: url("/modules/tilepieces/tabs/svg-ico-freccia.svg") 50% 60% / 35% no-repeat scroll rgb(255, 255, 255); text-indent: -9999px; padding: 0.6em 0.9em 0.3em; height: calc(100% - 3px); box-sizing: border-box; }
 .tab-horizontal.tab-buttons > a:hover { }
 .tab-horizontal.tab-buttons > .tab-prev { left: 0px; transform: rotate(180deg); background-position-y: 38%;}
 .tab-horizontal.tab-buttons > .tab-next { right: 0px; }

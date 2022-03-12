@@ -44,15 +44,6 @@
 <section id="standard-tags" data-tilepieces-component="tilepieces/component-panel">
   <details class="block-tags">
     <summary>
-      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
-        <g>
-          <ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
-          <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
-        C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
-          <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
-        C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
-        </g>
-      </svg>
       Main tags</summary>
     <h2>Heading tags</h2>
     <div class="flex-box-stroke two-buttons"><button disabled="" class="first-button">H1</button><button class="second-button"><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/h1" target="_blank" class="info-icon"></a></button></div>
@@ -141,15 +132,6 @@
   </details>
   <details class="inline-tags">
     <summary>
-      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23">
-        <g>
-          <ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
-          <path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
-        C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
-          <path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
-        C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
-        </g>
-      </svg>
       Text tags</summary>
     <div class="flex-box-stroke two-buttons"><button disabled="" class="first-button">A
       <svg width="24" height="24">
@@ -220,9 +202,10 @@ ins" target="_blank" class="info-icon"></a></button></div>
           C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
           </g>
         </svg>
-        <a href="#" class="component-highlight" data-bind-dom-prop="__component,component">${component.name}</a>
+        ${component.name}
       </span>
-      <a data-if="!component.components || !Object.keys(component.components).length" href="#" class="component-highlight" data-bind-dom-prop="__component,component">${component.name}</a>
+      <span data-if="!component.components || !Object.keys(component.components).length">${component.name}</span>
+      <button class="component-highlight" data-bind-dom-prop="__component,component">INFO</button>
       <button class="add-component-html" data-if="component.html" data-name="${component.name}">HTML</button>
       <button class="add-component-css" data-if="component.bundle.stylesheet.href" data-name="${component.name}">CSS
       </button>
@@ -244,9 +227,10 @@ ins" target="_blank" class="info-icon"></a></button></div>
         C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
         </g>
       </svg>
-      <a href="#" class="component-highlight" data-bind-dom-prop="__component,component">${component.name}</a>
+      ${component.name}
     </span>
-    <a data-if="!component.components || !Object.keys(component.components).length" href="#" class="component-highlight" data-bind-dom-prop="__component,component">${component.name}</a>
+    <span data-if="!component.components || !Object.keys(component.components).length">${component.name}</span>
+    <button class="component-highlight" data-bind-dom-prop="__component,component">INFO</button>
     <button class="add-component-html" data-if="component.html" data-name="${component.name}">HTML</button>
     <button class="add-component-css" data-if="component.bundle.stylesheet.href" data-name="${component.name}">CSS</button>
     <button class="add-component-js" data-if="component.bundle.script.src" data-name="${component.name}">JS
@@ -3408,7 +3392,7 @@ ins" target="_blank" class="info-icon"></a></button></div>
     <button>ğŸ’Š</button>
     <button>ğŸ’‹</button>
     <button>ğŸ’Œ</button>
-    <button>í ½í²</button>
+    <button>ğŸ’</button>
     <button>ğŸ’</button>
     <button>ğŸ’</button>
     <button>ğŸ’</button>

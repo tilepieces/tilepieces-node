@@ -228,7 +228,7 @@
         </div>
         <div class="css-inspector__rule__selector-name">
           <div data-if="!rule.editSelector">
-            <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="rule-selector selector ${selector.match}">${selector.selectorText} </span>{
+                        <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="rule-selector selector ${selector.match}">${selector.selectorText} </span>{
           </div>
           <div data-if="rule.editSelector" class="rule-selector-edit" contenteditable="">${rule.rule.selectorText}
           </div>
@@ -236,7 +236,7 @@
           </div>
         </div>
       </div>
-      <a data-if="!rule.isStyle" class="css-inspector__href" href="#" title="${rule.loc}">${rule.locPop}</a>
+      <a data-if="!rule.isStyle" class="css-inspector__href" href="${rule.loc}" title="${rule.loc}" target="_blank">${rule.locPop}</a>
       <div data-use="css-properties-list" data-params="rule,rule"></div>
       }
     </div>
@@ -255,7 +255,7 @@
           <div>
             <span class="selector-style">element.style</span>{
           </div>
-          <a data-if="!ancestor.ancestorstyle.isStyle" class="css-inspector__href" href="#" title="${rule.loc}">${rule.locPop}</a>
+          <a data-if="!ancestor.ancestorstyle.isStyle" class="css-inspector__href" href="${rule.loc}" title="${rule.loc}" target="_blank">${rule.locPop}</a>
           <div data-use="css-properties-list" data-params="rule,ancestor.ancestorstyle"></div>
           }
         </div>
@@ -294,7 +294,7 @@
       </div>
     </div>
     <div class="css-inspector__rule__selector-name">
-      <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="selector ${selector.match}">${selector.selectorText}</span>{
+            <span data-foreach="rule.selectors" data-foreach-key-name="selector" class="selector ${selector.match}">${selector.selectorText}</span>{
     </div>
   </div>
   <a data-if="!rule.isStyle" class="css-inspector__href" href="#" title="${rule.loc}">${rule.locPop}</a>
@@ -1392,7 +1392,7 @@
     </div>
   </div>
 </section>
-<section class="${isVisible}" id="animations" data-tilepieces-component="tilepieces/animations" style="display: none;">
+<section class="${isVisible}" id="animations" data-tilepieces-component="tilepieces/animations" style="display:none">
   <div class="tab-buttons tab-horizontal" id="tab-animations" data-tilepieces-component="tilepieces/tabs">
     <a class="tab-prev" href="javascript:void(0)">...</a>
     <a class="tab-next" href="javascript:void(0)">...</a>
@@ -1414,16 +1414,7 @@
     </fieldset>
     <details>
       <summary>
-        <span class="h3"><span> <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23" style="enable-background:new 0 0 23 23;" xml:space="preserve">
-<g>
-
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
-<path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
-C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
-<path style="fill:rgb(153, 153, 153);" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
-C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
-</g>
-</svg></span>animation properties
+        <span class="h3">animation properties
         </span>
       </summary>
       <div class="details-open-summery-child" style="">
@@ -1487,16 +1478,7 @@ C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
     </fieldset>
     <details>
       <summary>
-        <span class="h3"><span> <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="17" height="17" viewBox="0 0 23 23" style="enable-background:new 0 0 23 23;" xml:space="preserve">
-<g>
-
-<ellipse transform="matrix(0.4833 -0.8755 0.8755 0.4833 -4.1254 16.0107)" style="opacity:1;fill:#fff; stroke:rgb(153, 153, 153); stroke-widht:2px" cx="11.5" cy="11.5" rx="11" ry="11"></ellipse>
-<path style="fill: rgb(153, 153, 153);" d="M12.2,8.2l5.2,5.2c0.4,0.4,0.4,1,0,1.4l0,0c-0.4,0.4-1,0.4-1.4,0l-5.2-5.2c-0.4-0.4-0.4-1,0-1.4l0,0
-C11.2,7.8,11.8,7.8,12.2,8.2z"></path>
-<path style="fill:rgb(153, 153, 153);;" d="M10.8,8.2l-5.2,5.2c-0.4,0.4-0.4,1,0,1.4l0,0c0.4,0.4,1,0.4,1.4,0l5.2-5.2c0.4-0.4,0.4-1,0-1.4l0,0
-C11.8,7.8,11.2,7.8,10.8,8.2z"></path>
-</g>
-</svg>transition properties</span></span>
+        <span class="h3">transition properties</span>
       </summary>
       <div class="details-open-summery-child">
         <fieldset>

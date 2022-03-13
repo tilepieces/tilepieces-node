@@ -18,8 +18,8 @@ details summary svg { transform: rotate(90deg); margin-right: 5px; cursor: point
 details summary > span:first-child { vertical-align: middle; }
 details[open] > summary svg { transform: rotate(180deg); }
 details ul { padding-left: 26px; }
-ul summary { padding-top: 0; padding-bottom:0}
-summary { list-style-type: none; padding: 1em 0px; cursor: pointer; padding-inline-start: 23px; position: relative; }
+ul summary { padding-top: 0px; padding-bottom: 0px; }
+summary { list-style-type: none; padding: 1em 0px; cursor: pointer; position: relative; padding-inline-start: 23px !important; }
 small.tilepieces-small-error { display: none; color: red; }
 small.tilepieces-small-error.show { display: block; }
 ul { list-style: none; padding: 0px; }
@@ -72,7 +72,6 @@ a.info-round-icon { background-image: url("/modules/tilepieces/stylesheet/svg-ci
 a.info-icon { background-image: url("/modules/tilepieces/stylesheet/svg-info.svg"); display: inline-block; width: 0.8125em; height: 0.8125em; vertical-align: middle; }
 details > summary svg { display: none; }
 summary::before { width: 17px; height: 17px; background-image: url("/modules/tilepieces/stylesheet/svg-summary.svg"); background-repeat: no-repeat; content: ""; position: absolute; left: -4px; top: 50%; transform: translate(0px, -50%) rotate(90deg); }
-details > summary h3 span, details > summary .h3 span { display: none; }
 details > summary h3, details > summary .h3 { margin: 0px; padding: 0px; }
 details[open] > summary::before { transform: translate(0px, -50%) rotate(180deg); }nav.tab-vertical.tab-vertical-open .tab-buttons .tab-buttons-wrap .tab-buttons-inside { display: inline-flex; height: 100%; flex-direction: column; justify-content: center; }
 body { padding-left: 35px; margin: 0px; }
@@ -297,7 +296,6 @@ body {
   -webkit-user-select: none;
   user-select: none;
 }
-
 .css-inspector__hide,
 #css-inspector .false,
 #css-inspector.false,
@@ -550,19 +548,20 @@ body.modal #css-viewer { position: static; }
 .modal-new-gr-close::after { height: 50%; width: 2px; }
 .modal-new-gr-close:hover { background-color: rgba(10, 10, 10, 0.3); }
 .modal-new-gr-close::after, .modal-new-gr-close::before { background-color: rgb(0, 0, 0); content: ""; display: block; left: 50%; position: absolute; top: 50%; transform: translateX(-50%) translateY(-50%) rotate(45deg); transform-origin: center center; }
-.modal-media-content { text-align: center;margin: 1em 0;}
+.modal-media-content { text-align: center; margin: 1em 0px; }
 .modal-new-gr-select { margin: 25px auto; width: 80%; }
 .modal-new-gr-select select { width: 100%; }
 input[data-bind="mediaQueryUIFreeHand"] { width: 100%; }
 body > .true[hidden] { display: none; }
 #css-viewer { position: sticky; top: 0px; padding: 0.3em; background: rgb(255, 255, 255); z-index: 2; }
-.css-selector > details > summary { padding: 0; }
-.grouping-condition { cursor:pointer;margin: 5px; border: none; padding: 0.3em 1em 0.3em 0.3em; text-align: center; color: rgb(153, 153, 153); font-size: 1em; letter-spacing: 1px; }
+.css-selector > details > summary { padding: 0px; }
+.grouping-condition { cursor: pointer; margin: 5px; border: none; padding: 0.3em 1em 0.3em 0.3em; text-align: center; color: rgb(153, 153, 153); font-size: 1em; letter-spacing: 1px; }
 .grouping-condition svg { transform: rotate(90deg); opacity: 0.2; vertical-align: sub; }
 .css-viewer-media-rules div.flex-box-stroke { margin-bottom: 0em; padding-bottom: 0px; }
 .grouping-rule-item[data-iscurrent="true"] > span { background-color: rgb(240, 240, 240); border-radius: 7px; background-image: none; margin: 5px; border: none; padding: 0.3em 1em 0.3em 0.3em; text-align: center; color: rgb(153, 153, 153); font-size: 1em; letter-spacing: 1px; }
 .grouping-rule-item[data-iscurrent="true"] svg { transform: rotate(90deg); vertical-align: sub; }
-.css-selector{user-select:none;-webkit-user-select: none}
-.css-selector ul,.css-selector li{margin:0;padding:0}
-#css-viewer .flex-box-stroke span:first-of-type{padding:0}
-span[data-bind="currentSelector"]{padding:0 0.2em}
+.css-selector { user-select: none; }
+.css-selector ul, .css-selector li { margin: 0px; padding: 0px; }
+#css-viewer .flex-box-stroke span:first-of-type { padding: 0px; }
+span[data-bind="currentSelector"] { padding: 0px 0.2em; }
+.css-inspector__href span { display: none; }

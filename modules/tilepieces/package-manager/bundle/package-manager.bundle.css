@@ -19,7 +19,7 @@ details summary > span:first-child { vertical-align: middle; }
 details[open] > summary svg { transform: rotate(180deg); }
 details ul { padding-left: 26px; }
 ul summary { padding-top: 0; padding-bottom:0}
-summary { list-style-type: none; padding: 1em 0px; cursor: pointer; padding-inline-start: 23px; position: relative; }
+summary { list-style-type: none; padding: 1em 0px; cursor: pointer; padding-inline-start: 23px!important; position: relative; }
 small.tilepieces-small-error { display: none; color: red; }
 small.tilepieces-small-error.show { display: block; }
 ul { list-style: none; padding: 0px; }
@@ -147,3 +147,8 @@ fieldset { margin: 0px 0.5em 2em; }
 a.info-round-icon { margin-top: 0px; vertical-align: bottom; margin-left: 0.3em; }
 fieldset legend { font-size: 1.1em; }
 legend > :first-child { font-size: 1.1rem; }
+#tabs{position:sticky;top:0;background:#fff;z-index:2}
+.html-info{position:relative;}
+.svg-link{position:absolute;top:0;right:0;z-index:3;cursor:pointer;padding:0 5px;height:100%;display: flex;align-items: center}
+.svg-link svg{pointer-events: none}
+.html-info > input:focus + .svg-link{display:none}

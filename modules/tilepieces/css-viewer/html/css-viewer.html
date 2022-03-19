@@ -127,8 +127,9 @@
         <div data-if="mediaQueryUIMask == 'freehand'">
           <input data-bind="mediaQueryUIFreeHand" data-bind-events="input">
         </div>
-        <div>
-          Set css in this media query <input type="checkbox" data-bind="mediaQueryUICheck">
+        <div class="label-for-mediaQueryUICheck">
+          <label for="mediaQueryUICheck">Set css in this media query</label>
+          <input type="checkbox" data-bind="mediaQueryUICheck" id="mediaQueryUICheck">
         </div>
         <div>
           <button class="modal-media-done" ${mediaqueryuidisabled}="">Done</button>

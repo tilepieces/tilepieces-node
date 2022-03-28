@@ -21,7 +21,7 @@
     }
   }
   if(!isInstalled && !checkIfInstalled(processCwd)){
-    console.log("tilepieces appears not to be installed in directory " + processCwd + ". Run 'tilepieces install'");
+    console.log("tilepieces does not appear to be installed in directory " + processCwd + ". Run 'tilepieces install'");
     process.exit(1);
   }
   startServer(require(startPath + "settings.json"),startPath);

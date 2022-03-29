@@ -1,2 +1,2 @@
-const tilepiecesAPIs = require("@tilepieces/node-API");
+const tilepiecesAPIs = require("@tilepieces-official/node-API");
 module.exports = tilepiecesAPIs;

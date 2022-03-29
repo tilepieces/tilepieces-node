@@ -1,4 +1,4 @@
-const server = require("@tilepieces/node-server");
+const server = require("@tilepieces-official/node-server");
 const open = require('open');
 function startServer(settings,basePath) {
   var a = server(settings,basePath);

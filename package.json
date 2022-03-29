@@ -1,26 +1,26 @@
 {
   "name": "tilepieces",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The tilepieces node version. For more info, tilepieces.net/applications.html",
   "main": "startTilepiecesServer",
-  "keywords": [],
-  "author": "",
+  "author": "simone di nuovo",
   "license": "MIT",
   "bin": {
     "tilepieces": "./bin/tilepieces.js"
   },
+  "keywords": [
+    "devtools",
+    "productivity",
+    "utilities"
+  ],
   "scripts": {
     "start": "node index",
     "start-dev": "node --trace-warnings --inspect index"
   },
   "dependencies": {
     "@tilepieces-official/node-api": "latest",
-    "@tilepieces-official/node-server": "latest",
-    "busboy": "^1.4.0",
-    "fs-extra": "^10.0.1",
-    "glob": "^7.1.6",
-    "minimatch": "^3.0.4",
-    "open": "^8.0.2"
+    "@tilepieces-official/node-server": "^0.1.3",
+    "open": "^7.0.0"
   },
   "repository": {
     "type": "git",

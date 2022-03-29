@@ -1,7 +1,7 @@
 {
   "name": "tilepieces",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.1.1",
+  "description": "The tilepieces node version. For more info, tilepieces.net/applications.html",
   "main": "startTilepiecesServer",
   "keywords": [],
   "author": "",
@@ -14,21 +14,17 @@
     "start-dev": "node --trace-warnings --inspect index"
   },
   "dependencies": {
-    "@tilepieces/node-API": "file:../node-API",
-    "@tilepieces/node-server": "file:../node-server",
+    "@tilepieces-official/node-api": "latest",
+    "@tilepieces-official/node-server": "latest",
     "busboy": "^1.4.0",
     "fs-extra": "^10.0.1",
     "glob": "^7.1.6",
     "minimatch": "^3.0.4",
     "open": "^8.0.2"
   },
-  "bundleDependencies": [
-    "@tilepieces/node-API",
-    "@tilepieces/node-server",
-    "open",
-    "busboy",
-    "glob",
-    "minimatch",
-    "fs-extra"
-  ]
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tilepieces/tilepieces-node"
+  },
+  "homepage": "https://tilepieces.net"
 }

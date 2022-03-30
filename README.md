@@ -30,5 +30,5 @@ npx tilepieces install
 ```
 npx tilepieces
 ```
-For more info about different tilepieces applications, please visit [applications](https://tilepieces.net/applications.html).
+For more info about different tilepieces applications, please visit [releases](https://tilepieces.net/releases.html).
 

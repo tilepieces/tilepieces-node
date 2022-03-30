@@ -1,0 +1,108 @@
+[
+  {
+    "author": {
+      "name": "Julian Gruber",
+      "email": "mail@juliangruber.com",
+      "url": "http://juliangruber.com"
+    },
+    "library": "balanced-match"
+  },
+  {
+    "author": {
+      "name": "Julian Gruber",
+      "email": "mail@juliangruber.com",
+      "url": "http://juliangruber.com"
+    },
+    "library": "brace-expansion"
+  },
+  {
+    "author": "Brian White <mscdex@mscdex.net>",
+    "library": "busboy"
+  },
+  {
+    "author": {
+      "name": "James Halliday",
+      "email": "mail@substack.net",
+      "url": "http://substack.net"
+    },
+    "library": "concat-map"
+  },
+  {
+    "author": "JP Richardson <jprichardson@gmail.com>",
+    "library": "fs-extra"
+  },
+  {
+    "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)",
+    "library": "fs.realpath"
+  },
+  {
+    "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)",
+    "library": "glob"
+  },
+  {
+    "library": "graceful-fs"
+  },
+  {
+    "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)",
+    "library": "inflight"
+  },
+  {
+    "library": "inherits"
+  },
+  {
+    "author": {
+      "name": "Sindre Sorhus",
+      "email": "sindresorhus@gmail.com",
+      "url": "https://sindresorhus.com"
+    },
+    "library": "is-docker"
+  },
+  {
+    "author": {
+      "name": "Sindre Sorhus",
+      "email": "sindresorhus@gmail.com",
+      "url": "sindresorhus.com"
+    },
+    "library": "is-wsl"
+  },
+  {
+    "author": "JP Richardson <jprichardson@gmail.com>",
+    "library": "jsonfile"
+  },
+  {
+    "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me)",
+    "library": "minimatch"
+  },
+  {
+    "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)",
+    "library": "once"
+  },
+  {
+    "author": {
+      "name": "Sindre Sorhus",
+      "email": "sindresorhus@gmail.com",
+      "url": "https://sindresorhus.com"
+    },
+    "library": "open"
+  },
+  {
+    "author": {
+      "name": "Sindre Sorhus",
+      "email": "sindresorhus@gmail.com",
+      "url": "sindresorhus.com"
+    },
+    "library": "path-is-absolute"
+  },
+  {
+    "author": "Brian White <mscdex@mscdex.net>",
+    "library": "streamsearch"
+  },
+  {
+    "author": "Ryan Zimmerman <opensrc@ryanzim.com>",
+    "library": "universalify"
+  },
+  {
+    "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)",
+    "library": "wrappy"
+  }
+]

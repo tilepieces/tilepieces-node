@@ -1,3 +1,4 @@
+console.log("This is tilepieces version 0.1.3");
 const server = require("@tilepieces-official/node-server");
 const open = require('open');
 function startServer(settings,basePath) {

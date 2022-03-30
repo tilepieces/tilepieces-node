@@ -1,9 +1,9 @@
 {
   "name": "tilepieces",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "The tilepieces node version. For more info, tilepieces.net/applications.html",
   "main": "startTilepiecesServer",
-  "author": "simone di nuovo",
+  "author": "simone di nuovo <mantainer@tilepieces.com>",
   "license": "MIT",
   "bin": {
     "tilepieces": "./bin/tilepieces.js"

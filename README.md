@@ -4,14 +4,14 @@ To start, you must have [node.js](https://node.js) installed and then write in y
 ```
 npm install tilepieces -g
 ```
-Then navigate (still from the terminal console) to the directory where you want to install the application.
+Then navigate to the directory where you want to install the application.
 Here you type
 ```
 tilepieces install
 ```
 to install the application. Use this command every time you want to update the application.
 A page will open to you in your favorite browser.
-Server port and host are set in settings.json.
+Server port and host are set in [settings.json](https://github.com/tilepieces/tilepieces-node/blob/main/settings.json).
 For subsequent times, just type
 ```
 tilepieces

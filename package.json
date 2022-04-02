@@ -1,6 +1,6 @@
 {
   "name": "tilepieces",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "The tilepieces node version. For more info, tilepieces.net/releases.html",
   "main": "startTilepiecesServer",
   "author": "simone di nuovo <dinuovos@gmail.com>",

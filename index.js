@@ -1,4 +1,4 @@
-console.log("This is index.js tilepieces version 0.1.6");
+console.log("This is index.js tilepieces version 0.1.7");
 const path = require("path");
 const pathPase = __dirname + path.sep;
 const settingsPath = pathPase + "settings.json";

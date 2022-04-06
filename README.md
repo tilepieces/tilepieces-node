@@ -1,6 +1,6 @@
 # Tilepieces - node version
 This is the node version of the [tilepieces](https://tilepieces.net) application.
-To start, you must have [node.js](https://node.js) installed and then write in your terminal console
+To start, you must have [node.js](https://nodejs.org) installed and then write in your terminal console
 ```
 npm install tilepieces -g
 ```

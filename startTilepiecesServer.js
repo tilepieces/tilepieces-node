@@ -1,4 +1,4 @@
-console.log("This is startTilepiecesServer.js tilepieces version 0.1.8");
+console.log("This is startTilepiecesServer.js tilepieces version 0.1.9");
 const server = require("@tilepieces-official/node-server");
 const open = require('open');
 function startServer(settings,basePath) {

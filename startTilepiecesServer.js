@@ -1,8 +1,8 @@
 const pkg = require("./package.json");
-console.log("This is startTilepiecesServer.js tilepieces version " + pkg.version);
 const server = require("@tilepieces-official/node-server");
 const open = require('open');
 function startServer(settings,basePath) {
+  console.log("This is node.js tilepieces version " + pkg.version);
   var a = server(settings,basePath);
   a.then(res=> {
     console.log("application name response",res.applicationName);

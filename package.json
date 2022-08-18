@@ -1,6 +1,6 @@
 {
   "name": "tilepieces",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "A node.js application to visually editing HTML documents and Web applications projects",
   "main": "startTilepiecesServer",
   "author": "simone di nuovo <dinuovos@gmail.com>",

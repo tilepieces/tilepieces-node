@@ -1,1 +1,6 @@
-{}
+{
+  "test": {
+    "name": "test",
+    "path": "www\\test"
+  }
+}

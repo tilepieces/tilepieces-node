@@ -1,6 +1,6 @@
 {
   "name": "tilepieces",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "A node.js application to visually editing HTML documents and Web applications projects",
   "main": "startTilepiecesServer",
   "author": "simone di nuovo <dinuovos@gmail.com>",
@@ -25,7 +25,7 @@
     "start-dev": "node --trace-warnings --inspect index"
   },
   "dependencies": {
-    "@tilepieces-official/node-api": "^0.1.6",
+    "@tilepieces-official/node-api": "^0.1.7",
     "@tilepieces-official/node-server": "^0.1.5",
     "open": "^7.0.0"
   },
